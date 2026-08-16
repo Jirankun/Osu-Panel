@@ -1,0 +1,38 @@
+# ── Android / Gradle ──
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/app/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.keystore
+*.jks
+*.p12
+
+# ── Secrets — never commit signing keys, env files, or OAuth keys ──
+*.environment_variable.sh
+.env
+.env.*
+keystore/
+signing/
+key.txt
+
+# ── Kotlin ──
+*.class
+*.log
+.kotlin
+
+# ── GitHub Actions / release artifacts ──
+release/
+*.apk
+*.aab
+
+# ── Misc ──
+.freebuff/
+*.tmp

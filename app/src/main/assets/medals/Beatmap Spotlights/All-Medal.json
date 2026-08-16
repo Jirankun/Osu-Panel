@@ -1,0 +1,222 @@
+[
+  {
+    "slug": "spotlight-2017-01",
+    "name": "2017 01",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-01.png",
+    "medal_name": "January/February 2017 Spotlight",
+    "description": "Two for the price of one.",
+    "achievement_id": 162
+  },
+  {
+    "slug": "spotlight-2017-03",
+    "name": "2017 03",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-03.png",
+    "medal_name": "March 2017 Spotlight",
+    "description": "March ever onwards.",
+    "achievement_id": 163
+  },
+  {
+    "slug": "spotlight-2017-04",
+    "name": "2017 04",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-04.png",
+    "medal_name": "April 2017 Spotlight",
+    "description": "Pitch.. WHAT?",
+    "achievement_id": 164
+  },
+  {
+    "slug": "spotlight-2017-05",
+    "name": "2017 05",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-05.png",
+    "medal_name": "May 2017 Spotlight",
+    "description": "May your accuracy forever be swift and true.",
+    "achievement_id": 165
+  },
+  {
+    "slug": "spotlight-2017-06",
+    "name": "2017 06",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-06.png",
+    "medal_name": "June 2017 Spotlight",
+    "description": "Innocence destroyed.",
+    "achievement_id": 166
+  },
+  {
+    "slug": "spotlight-2017-07",
+    "name": "2017 07",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-07.png",
+    "medal_name": "July 2017 Spotlight",
+    "description": "Where it all begins.",
+    "achievement_id": 167
+  },
+  {
+    "slug": "spotlight-2017-08",
+    "name": "2017 08",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-08.png",
+    "medal_name": "August 2017 Spotlight",
+    "description": "Ah, yes. Something just like this.",
+    "achievement_id": 169
+  },
+  {
+    "slug": "spotlight-2017-09",
+    "name": "2017 09",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-09.png",
+    "medal_name": "September 2017 Spotlight",
+    "description": "New beginnings, time travelers, and airborne robots. Oh my!",
+    "achievement_id": 180
+  },
+  {
+    "slug": "spotlight-2017-10",
+    "name": "2017 10",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-10.png",
+    "medal_name": "October 2017 Spotlight",
+    "description": "First, one must distract a punk rock girl. Then, they must put on the radio.",
+    "achievement_id": 181
+  },
+  {
+    "slug": "spotlight-2017-11",
+    "name": "2017 11",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-11.png",
+    "medal_name": "November 2017 Spotlight",
+    "description": "The end of an era, and the start of something new!",
+    "achievement_id": 182
+  },
+  {
+    "slug": "spotlight-2017-12",
+    "name": "2017 12",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2017-12.png",
+    "medal_name": "December 2017 Spotlight",
+    "description": "Impulse to end the year!",
+    "achievement_id": 183
+  },
+  {
+    "slug": "spotlight-2018-01",
+    "name": "2018 01",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2018-01.png",
+    "medal_name": "January 2018 Spotlight",
+    "description": "Reality distorts.",
+    "achievement_id": 184
+  },
+  {
+    "slug": "spotlight-2018-02",
+    "name": "2018 02",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2018-02.png",
+    "medal_name": "February 2018 Spotlight",
+    "description": "Let's jump for dreams of future candy!",
+    "achievement_id": 186
+  },
+  {
+    "slug": "spotlight-2018-03",
+    "name": "2018 03",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2018-03.png",
+    "medal_name": "March 2018 Spotlight",
+    "description": "Transport me to Nirvana on the backs of angels!",
+    "achievement_id": 187
+  },
+  {
+    "slug": "spotlight-2018-04",
+    "name": "2018 04",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2018-04.png",
+    "medal_name": "April 2018 Spotlight",
+    "description": "A lesson from a DJ: drop kick captivatingly.",
+    "achievement_id": 188
+  },
+  {
+    "slug": "spotlight-2018-summer",
+    "name": "2018 Summer",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2018-summer.png",
+    "medal_name": "Summer 2018 Beatmap Spotlights",
+    "description": "The hottest beatmaps from Summer 2018!",
+    "achievement_id": 205
+  },
+  {
+    "slug": "spotlight-2018-autumn",
+    "name": "2018 Autumn",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2018-autumn.png",
+    "medal_name": "Fall 2018 Beatmap Spotlights",
+    "description": "The most fabulous beatmaps from Fall 2018!",
+    "achievement_id": 207
+  },
+  {
+    "slug": "spotlight-2019-winter",
+    "name": "2019 Winter",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2019-winter.png",
+    "medal_name": "Winter 2019 Beatmap Spotlights",
+    "description": "The chillest beatmaps from Winter 2019!",
+    "achievement_id": 209
+  },
+  {
+    "slug": "spotlight-2019-spring",
+    "name": "2019 Spring",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2019-spring.png",
+    "medal_name": "Spring 2019 Beatmap Spotlights",
+    "description": "A bloomin' good time from Spring 2019!",
+    "achievement_id": 210
+  },
+  {
+    "slug": "spotlight-2019-summer",
+    "name": "2019 Summer",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2019-summer.png",
+    "medal_name": "Summer 2019 Beatmap Spotlights",
+    "description": "Blaze a trail through the best of Summer 2019!",
+    "achievement_id": 215
+  },
+  {
+    "slug": "spotlight-2019-autumn",
+    "name": "2019 Autumn",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2019-autumn.png",
+    "medal_name": "Autumn 2019 Beatmap Spotlights",
+    "description": "Fall straight into the best maps of Autumn 2019!",
+    "achievement_id": 228
+  },
+  {
+    "slug": "spotlight-2020-winter",
+    "name": "2020 Winter",
+    "grouping": "Beatmap Spotlights",
+    "mode": null,
+    "file": "spotlight-2020-winter.png",
+    "medal_name": "Winter 2020 Beatmap Spotlights",
+    "description": "The best of Winter 2020 in beatmap form!",
+    "achievement_id": 241
+  }
+]

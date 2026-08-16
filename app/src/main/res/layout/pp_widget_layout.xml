@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Osu! Panel — PP Widget Layout (gaya osu-stats-signature MINI 400x120)
+
+  Satu ImageView berisi bitmap signature mini yang dirender oleh
+  SignatureRenderer: avatar, username, flag + country rank + level di atas,
+  lalu global rank, PP, acc, dan play count di baris bawah.
+  Bitmap diskalakan proporsional (fitCenter) mengikuti ukuran widget.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pp_widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/pp_signature_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/widget_pp_desc" />
+</FrameLayout>

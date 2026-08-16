@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MIT License
+  Copyright (c) 2026 Zhyllan Fyllah (Jirankun) - Aokaze Studio
+-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Card generator PNGs (cacheDir/cardgen/) — shared via the system share sheet. -->
+    <cache-path
+        name="cardgen"
+        path="cardgen/" />
+</paths>

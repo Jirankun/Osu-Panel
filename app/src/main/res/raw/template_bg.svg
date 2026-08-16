@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 550 320" width="550" height="320">
+	<defs>
+		
+		<clipPath id="clip-path">
+			<rect xmlns="http://www.w3.org/2000/svg" y="0" width="550" height="50" rx="8"/>
+			<rect xmlns="http://www.w3.org/2000/svg" y="10" width="550" height="110" rx="0"/>
+		</clipPath>
+		<clipPath id="clip-path-2" transform="translate(0 2)">
+			<rect id="SVGID" x="345" y="126.061" width="32" height="16" />
+		</clipPath>
+		<mask id="mask" x="343.679" y="119.061" width="35.316" height="30" maskUnits="userSpaceOnUse">
+			<g transform="translate(0 2)">
+				<g id="mask0">
+					<path fill="#de31ae" d="M353,126.061h16a8,8,0,0,1,8,8h0a8,8,0,0,1-8,8H353a8,8,0,0,1-8-8h0A8,8,0,0,1,353,126.061Z" />
+				</g>
+			</g>
+		</mask>
+		<linearGradient id="gradient_2" x1="361.09" y1="273.859" x2="361.09" y2="259.939" gradientTransform="matrix(1, 0, 0, -1, 0, 402)" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#fff" />
+			<stop offset="1" stop-color="#aadff0" />
+		</linearGradient>
+		<clipPath id="clip-path-3" transform="translate(0 2)">
+			<rect id="SVGID-2" data-name="SVGID" x="383.598" y="126.061" width="32" height="16" />
+		</clipPath>
+		<mask id="mask-2" x="382.277" y="119.061" width="35.316" height="30" maskUnits="userSpaceOnUse">
+			<g transform="translate(0 2)">
+				<g id="mask0-2" data-name="mask0">
+					<path fill="#de31ae" d="M391.6,126.061h16a8,8,0,0,1,8,8h0a8,8,0,0,1-8,8h-16a8,8,0,0,1-8-8h0A8,8,0,0,1,391.6,126.061Z" />
+				</g>
+			</g>
+		</mask>
+		<linearGradient id="gradient_3" x1="399.688" y1="273.859" x2="399.688" y2="259.939" gradientTransform="matrix(1, 0, 0, -1, 0, 402)" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#ffe7a8" />
+			<stop offset="1" stop-color="#ffb800" />
+		</linearGradient>
+		<clipPath id="clip-path-4" transform="translate(0 2)">
+			<rect id="SVGID-3" data-name="SVGID" x="422.195" y="126.061" width="32" height="16" />
+		</clipPath>
+		<mask id="mask-3" x="420.875" y="119.061" width="35.316" height="30" maskUnits="userSpaceOnUse">
+			<g transform="translate(0 2)">
+				<g id="mask0-3" data-name="mask0">
+					<path fill="#02b5c3" d="M430.2,126.061h16a8,8,0,0,1,8,8h0a8,8,0,0,1-8,8h-16a8,8,0,0,1-8-8h0A8,8,0,0,1,430.2,126.061Z" />
+				</g>
+			</g>
+		</mask>
+		<linearGradient id="gradient_2-2" x1="438.286" y1="273.859" x2="438.286" y2="259.939" >
+			<stop offset="0" stop-color="#fff" />
+			<stop offset="1" stop-color="#aadff0" />
+		</linearGradient>
+		<clipPath id="clip-path-5" transform="translate(0 2)">
+			<rect id="SVGID-4" data-name="SVGID" x="460.793" y="126.061" width="32" height="16" />
+		</clipPath>
+		<mask id="mask-4" x="459.472" y="119.061" width="35.316" height="30" maskUnits="userSpaceOnUse">
+			<g transform="translate(0 2)">
+				<g id="mask0-4" data-name="mask0">
+					<path fill="#02b5c3" d="M468.793,126.061h16a8,8,0,0,1,8,8h0a8,8,0,0,1-8,8h-16a8,8,0,0,1-8-8h0A8,8,0,0,1,468.793,126.061Z" />
+				</g>
+			</g>
+		</mask>
+		<linearGradient id="gradient_3-2" x1="476.883" y1="273.859" x2="476.883" y2="259.939" >
+			<stop offset="0" stop-color="#ffe7a8" />
+			<stop offset="1" stop-color="#ffb800" />
+		</linearGradient>
+		<clipPath id="clip-path-6" transform="translate(0 2)">
+			<rect id="SVGID-5" data-name="SVGID" x="499.39" y="126.061" width="32" height="16" />
+		</clipPath>
+		<mask id="mask-5" x="498.07" y="119.061" width="35.316" height="30" maskUnits="userSpaceOnUse">
+			<g transform="translate(0 2)">
+				<g id="mask0-5" data-name="mask0">
+					<path fill="#88da20" d="M507.39,126.061h16a8,8,0,0,1,8,8h0a8,8,0,0,1-8,8h-16a8,8,0,0,1-8-8h0A8,8,0,0,1,507.39,126.061Z" />
+				</g>
+			</g>
+		</mask>
+		<clipPath id="clip-path-7" transform="translate(0 2)">
+			<path id="avatar_clip" d="M101,103H24a4.012,4.012,0,0,1-4-4V22a4.012,4.012,0,0,1,4-4h77a4.012,4.012,0,0,1,4,4V99A4.012,4.012,0,0,1,101,103Z" />
+		</clipPath>
+		
+	</defs>
+	<g id="bg">
+		<rect fill="{{hsl-b5" y="0" width="550" height="320" rx="8" />
+		<rect fill="{{hsl-b4" y="120" width="550" height="43.785" />
+		<g id="head">
+			<g clip-path="url(#clip-path)">
+				
+			</g>
+		</g>
+	</g>
+	</svg>

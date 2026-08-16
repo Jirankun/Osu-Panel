@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--
+  MIT License
+  Copyright (c) 2026 Zhyllan Fyllah (Jirankun) - Aokaze Studio
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Osu! Panel Contributors</title>
+
+<style>
+/* HIDE THE SCROLLBAR BUT STILL ALLOW SCROLLING */
+::-webkit-scrollbar { display: none; }
+* { box-sizing: border-box; margin: 0; padding: 0; scrollbar-width: none; -ms-overflow-style: none; }
+
+/*
+  TORUS FONT — no font file duplication in assets.
+  The host (screen / WebView) injects the @font-face Torus from
+  `res/font/torus_*.otf` (base64) into <style id="host-fonts">.
+  Without injection (standalone/offline preview) → sans-serif fallback.
+*/
+
+/* ============ PALETTE NATIVE (res/values/colors.xml) ============ */
+:root {
+  --bg: #22191C;
+  --card: rgba(81, 67, 71, 0.35);
+  --card-solid: #352A2E;
+  --pink: #E86E9E;
+  --pink-glow: rgba(232, 110, 158, 0.45);
+  --text: #EDE0E3;
+  --text-dim: #D5C2C7;
+  --border: rgba(213, 194, 199, 0.14);
+  --font: 'Torus', sans-serif;
+}
+
+body {
+  user-select: none;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 20px;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ============ LASER TRIANGLES (canvas — triangles.js) ============ */
+#bg-triangles {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cool-layer {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(232,110,158,0.07) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(34,25,28,0.85) 0%, transparent 12%, transparent 88%, rgba(34,25,28,1) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============ MAIN CONTENT ============ */
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--pink);
+  text-shadow: 0 0 20px var(--pink-glow);
+}
+
+.sub {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin: 4px 0 20px;
+  font-weight: 400;
+}
+
+.lab {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ============ CONTRIBUTOR LIST ============ */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/*
+  HOW TO ADD A CONTRIBUTOR: copy one .card block below, replace
+  src avatar (https://github.com/<username>.png), href, .username,
+  .name, and .label (e.g. "Dev" / "Designer" / "Tester").
+*/
+.card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  background: rgba(213,194,199,0.08);
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.username {
+  display: block;
+  color: var(--pink);
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: underline;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.username:active { opacity: 0.7; }
+
+.name {
+  color: var(--text-dim);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.label {
+  flex-shrink: 0;
+  background: rgba(232,110,158,0.12);
+  border: 1px solid rgba(232,110,158,0.35);
+  color: var(--pink);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+.note {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.foot {
+  margin-top: 30px;
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+}
+</style>
+<!-- The host injects the @font-face Torus (base64 from res/font) into this element. -->
+<style id="host-fonts"></style>
+</head>
+<body>
+
+<canvas id="bg-triangles"></canvas>
+<div class="cool-layer"></div>
+
+<div class="content-wrapper">
+  <h1>CONTRIBUTORS</h1>
+  <p class="sub">Osu! Panel</p>
+
+  <div class="lab">CONTRIBUTOR</div>
+  <div class="list">
+    <div class="card">
+      <img class="avatar" src="https://github.com/Jirankun.png" alt="Jirankun" onerror="this.style.visibility='hidden'">
+      <div class="info">
+        <a class="username" href="https://github.com/Jirankun">Jirankun</a>
+        <span class="name">Zhyllan Fyllah (Jirankun)</span>
+      </div>
+      <span class="label">Dev</span>
+    </div>
+  </div>
+
+  <hr>
+  <p class="note">Data from GitHub — tap a username to open their profile.</p>
+  <p class="foot">&copy; 2026 Osu! Panel &mdash; Zhyllan Fyllah (Jirankun)</p>
+</div>
+
+<script src="triangles.js"></script>
+</body>
+</html>

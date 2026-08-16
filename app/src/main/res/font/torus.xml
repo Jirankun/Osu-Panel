@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Font resmi osu! (Torus) — semua bobot, untuk dipakai TextView (termasuk
+  RemoteViews widget). textStyle="bold" akan ter-resolve ke torus_bold (700).
+-->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="100"
+        android:font="@font/torus_thin" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="300"
+        android:font="@font/torus_light" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/torus_regular" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        android:font="@font/torus_semibold" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        android:font="@font/torus_bold" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="900"
+        android:font="@font/torus_heavy" />
+</font-family>

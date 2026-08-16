@@ -1,0 +1,147 @@
+=====================================================================
+DAFTAR LISENSI PAKET PIHAK KETIGA
+Osu! Panel (Android Native — Jetpack Compose + Material 3)
+=====================================================================
+
+Daftar ini mencantumkan nama paket (dependency), jenis lisensi,
+pemilik/hak cipta paket, dan tahun lisensi dibuat. Lisensi lengkap
+tiap paket tersedia di sumber resmi masing-masing.
+
+---------------------------------------------------------------------
+RUNTIME DEPENDENCIES
+---------------------------------------------------------------------
+
+[1] androidx.core:core-ktx 1.13.1
+    Lisensi : Apache License 2.0
+    Pemilik : Google LLC / The Android Open Source Project
+    Tahun   : 2005–2024
+
+[2] androidx.lifecycle (lifecycle-runtime-ktx, -runtime-compose,
+    -viewmodel-compose) 2.8.6
+    Lisensi : Apache License 2.0
+    Pemilik : Google LLC / The Android Open Source Project
+    Tahun   : 2017–2024
+
+[3] androidx.activity:activity-compose 1.9.2
+    Lisensi : Apache License 2.0
+    Pemilik : Google LLC / The Android Open Source Project
+    Tahun   : 2018–2024
+
+[4] androidx.navigation:navigation-compose 2.8.1
+    Lisensi : Apache License 2.0
+    Pemilik : Google LLC / The Android Open Source Project
+    Tahun   : 2018–2024
+
+[5] Jetpack Compose (compose-bom 2024.09.03: ui, ui-graphics,
+    ui-tooling-preview, material3)
+    Lisensi : Apache License 2.0
+    Pemilik : Google LLC / The Android Open Source Project
+    Tahun   : 2019–2024
+
+[6] androidx.compose.material:material-icons-extended
+    (ikon Material Design)
+    Lisensi : Apache License 2.0
+    Pemilik : Google LLC (Material Design icons)
+    Tahun   : 2014–2024
+
+[7] OkHttp 4.12.0 (com.squareup.okhttp3:okhttp,
+    com.squareup.okhttp3:logging-interceptor)
+    Lisensi : Apache License 2.0
+    Pemilik : Square, Inc. (Jesse Wilson, Colin White, dkk.)
+    Tahun   : 2013–2024
+
+[8] Retrofit 2.11.0 (com.squareup.retrofit2:retrofit,
+    com.squareup.retrofit2:converter-kotlinx-serialization)
+    Lisensi : Apache License 2.0
+    Pemilik : Square, Inc.
+    Tahun   : 2013–2024
+
+[9] kotlinx.serialization-json 1.6.3
+    (org.jetbrains.kotlinx:kotlinx-serialization-json)
+    Lisensi : Apache License 2.0
+    Pemilik : JetBrains s.r.o.
+    Tahun   : 2017–2024
+
+[10] kotlinx.coroutines (dependency transitif, dipakai langsung
+     untuk coroutine/flow)
+     Lisensi : Apache License 2.0
+     Pemilik : JetBrains s.r.o.
+     Tahun   : 2017–2024
+
+[11] AppAuth-Android 0.11.1 (net.openid:appauth)
+     Lisensi : Apache License 2.0
+     Pemilik : OpenID Foundation / The AppAuth for Android Authors
+     Tahun   : 2015–2024
+
+[12] androidx.security:security-crypto 1.1.0-alpha06
+     (Enkripsi token via Android Keystore)
+     Lisensi : Apache License 2.0
+     Pemilik : Google LLC / The Android Open Source Project
+     Tahun   : 2018–2024
+
+[13] Coil 2.7.0 (io.coil-kt:coil-compose, io.coil-kt:coil-gif)
+     Lisensi : Apache License 2.0
+     Pemilik : Coil Contributors (dibuat oleh Colin White;
+               kini dikelola Chris Banes dkk.)
+     Tahun   : 2019–2024
+
+[14] androidx.media3:media3-exoplayer 1.4.1
+     (pemutar audio preview, penerus ExoPlayer)
+     Lisensi : Apache License 2.0
+     Pemilik : Google LLC / The Android Open Source Project
+     Tahun   : 2014–2024
+
+[15] Kotlin Standard Library (org.jetbrains.kotlin)
+     Lisensi : Apache License 2.0
+     Pemilik : JetBrains s.r.o.
+     Tahun   : 2010–2024
+
+[16] osu-lazer assets and logical stringles
+     Lisensi : MIT License
+     Pemilik : ppy Pty Ltd
+     Tahun : 2025
+
+[17] osu-stats-signature
+     Lisensi : MIT License
+     Pemilik : solstice23
+     Tahun : 2021
+
+[18] Osu! Panel
+    Lisensi : MIT License
+    Pemilik : Zhyllan Fyllah (Jirankun)
+    Tahun : 2026
+
+---------------------------------------------------------------------
+TEST DEPENDENCY
+---------------------------------------------------------------------
+
+[16] JUnit 4.13.2 (junit:junit)
+     Lisensi : Eclipse Public License 1.0
+     Pemilik : JUnit Project (Kent Beck, Erich Gamma,
+               David Saff, Stefan Birkner, Marc Philipp, dkk.)
+     Tahun   : 2002–2024
+
+---------------------------------------------------------------------
+ASSET PIHAK KETIGA (di-bundle di app/src/main/assets)
+---------------------------------------------------------------------
+
+[19] Twemoji 14.0.2 — bendera negara
+     (app/src/main/assets/icon/Flags/*.png)
+     Lisensi : CC-BY 4.0
+     Pemilik : Twitter, Inc. / Twemoji contributors
+     Tahun   : 2012–2022
+     Catatan : digenerate dari aset Twemoji via
+               app/src/main/assets/icon/Flags/osu_flags.sh
+
+---------------------------------------------------------------------
+CATATAN
+---------------------------------------------------------------------
+- Semua lisensi di atas adalah lisensi permisif (boleh dipakai,
+  dimodifikasi, dan didistribusikan ulang dengan mencantumkan
+  pemberitahuan hak cipta — inilah file pemberitahuan tersebut).
+- Aset dalam folder app/src/main/assets (medal, ikon) diambil dari
+  osu!lazer (ppy/osu) — lisensi MIT — dan dari osu! (game),
+  digunakan untuk keperluan tampilan non-komersial.
+- Bendera negara (app/src/main/assets/icon/Flags) digenerate dari
+  Twemoji 14.0.2 — CC-BY 4.0 (lihat entri [19] di atas).
+- Font & ikon Material Design: Apache License 2.0 (Google LLC).

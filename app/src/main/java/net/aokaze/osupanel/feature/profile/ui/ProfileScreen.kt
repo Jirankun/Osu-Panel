@@ -1,0 +1,1335 @@
+/*
+ * MIT License
+ * Copyright (c) 2026 Zhyllan Fyllah (Jirankun) - Aokaze Studio
+ */
+
+package net.aokaze.osupanel.feature.profile.ui
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Badge
+import androidx.compose.material.icons.rounded.EmojiEvents
+import androidx.compose.material.icons.rounded.Flag
+import androidx.compose.material.icons.rounded.Link
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Public
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Score
+import androidx.compose.material.icons.rounded.Stars
+import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.rounded.TouchApp
+import androidx.compose.material.icons.rounded.TrendingUp
+import androidx.compose.material.icons.rounded.WorkspacePremium
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import net.aokaze.osupanel.R
+import net.aokaze.osupanel.core.theme.OsuColors
+import net.aokaze.osupanel.core.util.accuracyPercent
+import net.aokaze.osupanel.core.util.formatDuration
+import net.aokaze.osupanel.core.util.formatLongDate
+import net.aokaze.osupanel.core.util.formatNumber
+import net.aokaze.osupanel.data.medal.MedalDisplay
+import net.aokaze.osupanel.data.medal.MedalService
+import net.aokaze.osupanel.data.model.GradeCountsDto
+import net.aokaze.osupanel.data.model.UserDto
+import net.aokaze.osupanel.feature.cardgen.ui.CardGenScreen
+import net.aokaze.osupanel.feature.profile.ProfileUiState
+import net.aokaze.osupanel.feature.profile.ProfileViewModel
+import net.aokaze.osupanel.ui.components.BadgeImage
+import net.aokaze.osupanel.ui.components.CountryFlagImage
+import net.aokaze.osupanel.ui.components.MapCoverImage
+import net.aokaze.osupanel.ui.components.MedalExpandButton
+import net.aokaze.osupanel.ui.components.MedalImage
+import net.aokaze.osupanel.ui.components.OsuSpinner
+import net.aokaze.osupanel.ui.components.RetryButton
+import net.aokaze.osupanel.ui.components.SimpleGrid
+import net.aokaze.osupanel.ui.components.SupporterBadge
+import net.aokaze.osupanel.ui.components.rememberMapPlaceholderPainter
+import kotlin.math.min
+
+
+/** Number of medals shown before pressing "Show all" (Flutter counterpart). */
+private const val MEDALS_INITIAL_SHOW = 9
+
+/**
+ * Profile — counterpart of the Flutter `ProfilePage`. A full page pushed
+ * from Dashboard / Rankings. Collapsible header (cover), statistics,
+ * rank history chart, progress, detail, grade counts, badges, groups,
+ * medals (expandable), kudosu, yearly playcount, best scores, most played.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProfileScreen(
+    userId: Int,
+    onBack: () -> Unit,
+    onOpenBeatmapDetail: (Int) -> Unit = {},
+    viewModel: ProfileViewModel = viewModel(),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    androidx.compose.runtime.LaunchedEffect(userId) {
+        viewModel.load(userId)
+    }
+
+    val colorScheme = MaterialTheme.colorScheme
+
+    if (state.isLoading) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.Rounded.ArrowBack, contentDescription = stringResource(R.string.profile_back))
+                        }
+                    },
+                )
+            },
+        ) { padding ->
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center,
+            ) {
+                OsuSpinner(size = 48.dp)
+            }
+        }
+        return
+    }
+
+    if (state.error != null || state.user == null) {
+        // Error layout identical to Beatmap detail: centered error text
+        // (same color) + a "Try Again" button below it to retry the load.
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.profile_title), fontWeight = FontWeight.Bold) },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.Rounded.ArrowBack, contentDescription = stringResource(R.string.profile_back))
+                        }
+                    },
+                )
+            },
+        ) { padding ->
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        state.error ?: stringResource(R.string.error_generic),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        color = colorScheme.error,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    RetryButton(
+                        isLoading = state.isLoading,
+                        onClick = { viewModel.load(userId) },
+                    )
+                }
+            }
+        }
+        return
+    }
+
+    val user = state.user!!
+    val stats = user.statistics
+    val coverUrl = user.cover?.url
+
+    // ── Medals — virtualized grid (same as Dashboard): when expanded,
+    // 352 tiles are chunked into rows (3 columns) as lazy items, so only
+    // visible rows are composed (anti-lag scrolling).
+    var medalsExpanded by remember { mutableStateOf(false) }
+    val medalItems = remember(user.achievements) {
+        val achievedIds = user.achievements.mapNotNull { it.medal?.achievementId ?: it.achievementId }.toSet()
+        val achievedSlugs = user.achievements.mapNotNull { it.medal?.slug }.toSet()
+        val achievedAtById = user.achievements.mapNotNull { um ->
+            um.medal?.achievementId?.let { id -> um.achievedAt?.let { id to it } }
+        }.toMap()
+        MedalService.buildAllMedalDisplay(achievedIds, achievedSlugs, achievedAtById)
+    }
+    val medalAchievedCount = medalItems.count { it.achieved }
+    val medalHasMore = medalItems.size > MEDALS_INITIAL_SHOW
+    val medalRows = remember(medalItems, medalsExpanded) {
+        val all = medalItems.chunked(3)
+        if (medalsExpanded) all else all.take((MEDALS_INITIAL_SHOW + 2) / 3)
+    }
+
+    // Card generator layer (bottom-right FAB → expands into a screen layer).
+    var generatorOpen by remember { mutableStateOf(false) }
+
+    Box {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { generatorOpen = true },
+                containerColor = colorScheme.primary,
+                contentColor = colorScheme.onPrimary,
+            ) {
+                Icon(
+                    Icons.Rounded.Badge,
+                    contentDescription = stringResource(R.string.cardgen_fab),
+                )
+            }
+        },
+    ) { innerPadding ->
+        val listState = rememberLazyListState()
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            // ── Header ──
+            item {
+                ProfileHeader(
+                    user = user,
+                    coverUrl = coverUrl,
+                    onBack = onBack,
+                    onRefresh = { viewModel.refresh(userId) },
+                )
+            }
+
+            // ── Stats grid (4 columns) ──
+            if (stats != null) {
+                item {
+                    MiniStatsGrid(stats)
+                }
+
+                // ── Rank history chart ──
+                stats.rankHistory?.data?.takeIf { it.isNotEmpty() }?.let { history ->
+                    item {
+                        RankHistoryCard(history)
+                    }
+                }
+
+                // ── Progress ──
+                item {
+                    ProfileProgressCard(stats)
+                }
+
+                // ── Detailed stats ──
+                item {
+                    DetailedStatsCard(user, stats)
+                }
+
+                // ── Grade counts ──
+                stats.gradeCounts?.let { grades ->
+                    if (grades.ss + grades.ssh + grades.s + grades.sh + grades.a > 0) {
+                        item {
+                            GradeCountsCard(grades)
+                        }
+                    }
+                }
+            }
+
+            // ── Badges ──
+            item {
+                BadgesCard(user.badges)
+            }
+
+            // ── Groups ──
+            if (user.groups.isNotEmpty()) {
+                item {
+                    GroupsCard(user.groups)
+                }
+            }
+
+            // ── Medals ──
+            item {
+                MedalHeaderCard(
+                    achievedCount = medalAchievedCount,
+                    totalCount = medalItems.size,
+                )
+            }
+            if (medalItems.isEmpty()) {
+                item {
+                    EmptySection(
+                        icon = Icons.Rounded.EmojiEvents,
+                        text = stringResource(R.string.profile_no_medals),
+                    )
+                }
+            } else {
+                items(medalRows) { rowItems ->
+                    MedalGridRow(rowItems)
+                }
+                if (medalHasMore) {
+                    item {
+                        MedalExpandButton(
+                            expanded = medalsExpanded,
+                            totalCount = medalItems.size,
+                            onToggle = { medalsExpanded = !medalsExpanded },
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                    }
+                }
+            }
+
+            // ── Kudosu ──
+            item {
+                KudosuCard(user)
+            }
+
+            // ── Best scores ──
+            if (state.bestScores.isNotEmpty()) {
+                item {
+                    BestScoresCard(state.bestScores, onOpenBeatmapDetail)
+                }
+            }
+
+            // ── Most played ──
+            if (state.mostPlayed.isNotEmpty()) {
+                item {
+                    MostPlayedCard(state.mostPlayed, onOpenBeatmapDetail)
+                }
+            }
+
+            item { Spacer(Modifier.height(32.dp)) }
+        }
+    }
+
+    // Full-screen card generator layer — expands from the bottom-right corner
+    // (the FAB position), covering the whole profile.
+    AnimatedVisibility(
+        visible = generatorOpen,
+        enter = expandVertically(
+            expandFrom = Alignment.Bottom,
+            animationSpec = tween(420, easing = FastOutSlowInEasing),
+        ) + fadeIn(tween(250)),
+        exit = shrinkVertically(
+            shrinkTowards = Alignment.Bottom,
+            animationSpec = tween(350),
+        ) + fadeOut(tween(200)),
+    ) {
+        CardGenScreen(
+            userId = userId,
+            user = user,
+            onClose = { generatorOpen = false },
+        )
+    }
+    }
+}
+
+// ── Header ──
+
+@Composable
+private fun ProfileHeader(
+    user: UserDto,
+    coverUrl: String?,
+    onBack: () -> Unit,
+    onRefresh: () -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val profileColor = remember(user.profileColour) {
+        parseHexColor(user.profileColour)
+    }
+    val stats = user.statistics
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp),
+    ) {
+        // Cover
+        AsyncImage(
+            model = coverUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize(),
+            error = rememberMapPlaceholderPainter(),
+        )
+
+        // Gradient overlay
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.15f),
+                            colorScheme.surface.copy(alpha = 0.92f),
+                        ),
+                    ),
+                ),
+        )
+
+        // Top band behind the buttons: dark scrim + white laser triangles
+        // (triangles_header.png from res/drawable) — keeps the white top
+        // buttons visible on ANY cover (especially white ones).
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(Color.Black.copy(alpha = 0.5f), Color.Transparent),
+                    ),
+                ),
+        ) {
+            Image(
+                painter = painterResource(R.drawable.triangles_header),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds,
+                colorFilter = ColorFilter.tint(Color.White),
+            )
+        }
+
+        // Back & refresh buttons
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    Icons.Rounded.ArrowBack,
+                    contentDescription = stringResource(R.string.profile_back),
+                    tint = Color.White,
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            IconButton(onClick = onRefresh) {
+                Icon(
+                    Icons.Rounded.Refresh,
+                    contentDescription = stringResource(R.string.dashboard_refresh),
+                    tint = Color.White,
+                )
+            }
+        }
+
+        // Bottom content
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            // Avatar
+            Box(
+                modifier = Modifier
+                    .size(88.dp)
+                    .clip(CircleShape)
+                    .background(colorScheme.surface),
+                contentAlignment = Alignment.Center,
+            ) {
+                AsyncImage(
+                    model = user.avatarUrl,
+                    contentDescription = user.username,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape),
+                )
+            }
+            Spacer(Modifier.width(16.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                // Username.
+                Text(
+                    user.username ?: "Unknown",
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = profileColor ?: colorScheme.onSurface,
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Spacer(Modifier.height(4.dp))
+                // flag | country code | user id (+ online status + supporter)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    user.countryCode?.let { code ->
+                        CountryFlagImage(countryCode = code, size = 16.dp)
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            code,
+                            fontSize = 13.sp,
+                            color = colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(Modifier.width(10.dp))
+                    }
+                    Text(
+                        "#${user.id}",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(if (user.isOnline) OsuColors.green else OsuColors.gray),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        stringResource(if (user.isOnline) R.string.profile_online else R.string.profile_offline),
+                        fontSize = 13.sp,
+                        color = colorScheme.onSurfaceVariant,
+                    )
+                    if (user.isSupporter) {
+                        Spacer(Modifier.width(8.dp))
+                        SupporterBadge(supportLevel = user.supportLevel, height = 14.dp)
+                    }
+                }
+                user.joinDate?.let {
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        stringResource(R.string.profile_joined, it.take(10)),
+                        fontSize = 12.sp,
+                        color = colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+            stats?.globalRank?.let { rank ->
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        "#$rank",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = colorScheme.primary,
+                        ),
+                    )
+                    Text(
+                        stringResource(R.string.profile_global),
+                        fontSize = 12.sp,
+                        color = colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** Parse "#RRGGBB" → Color (null when invalid). */
+private fun parseHexColor(hex: String?): Color? {
+    if (hex == null || !hex.matches(Regex("^#[0-9a-fA-F]{6}$"))) return null
+    return Color(("FF" + hex.substring(1)).toLong(16))
+}
+
+// ── Mini stats grid ──
+
+@Composable
+private fun MiniStatsGrid(stats: net.aokaze.osupanel.data.model.UserStatisticsDto) {
+    val colorScheme = MaterialTheme.colorScheme
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        MiniStat(
+            label = stringResource(R.string.profile_pp),
+            value = "${stats.pp.toInt()}",
+            icon = Icons.Rounded.TrendingUp,
+            color = OsuColors.blue,
+            modifier = Modifier.weight(1f),
+        )
+        MiniStat(
+            label = stringResource(R.string.profile_acc),
+            value = String.format("%.2f", accuracyPercent(stats.accuracy)),
+            icon = Icons.Rounded.TouchApp,
+            color = OsuColors.orange,
+            modifier = Modifier.weight(1f),
+        )
+        MiniStat(
+            label = stringResource(R.string.profile_ranked),
+            value = formatNumber(stats.rankedScore),
+            icon = Icons.Rounded.Score,
+            color = OsuColors.purple,
+            modifier = Modifier.weight(1f),
+        )
+        MiniStat(
+            label = stringResource(R.string.profile_lvl),
+            value = "${stats.levelCurrent}",
+            icon = Icons.Rounded.Stars,
+            color = OsuColors.teal,
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+private fun MiniStat(
+    label: String,
+    value: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(colorScheme.surfaceContainerHighest.copy(alpha = 0.5f))
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(20.dp))
+        Spacer(Modifier.height(6.dp))
+        Text(
+            value,
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            label,
+            fontSize = 11.sp,
+            color = colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+// ── Rank history chart (Canvas) ──
+
+@Composable
+private fun RankHistoryCard(history: List<Int>) {
+    val colorScheme = MaterialTheme.colorScheme
+    val ranks = history.map { it.toFloat() }
+    val maxY = (ranks.maxOrNull() ?: 0f) + 50f
+    val minY = ((ranks.minOrNull() ?: 0f) - 50f).coerceAtLeast(0f)
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(R.string.profile_rank_history),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
+            Spacer(Modifier.height(8.dp))
+            LineChart(
+                values = ranks,
+                minY = minY,
+                maxY = maxY,
+                color = colorScheme.primary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun LineChart(
+    values: List<Float>,
+    minY: Float,
+    maxY: Float,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Canvas(modifier) {
+        val w = size.width
+        val h = size.height
+        val range = (maxY - minY).coerceAtLeast(1f)
+
+        // Horizontal grid
+        for (i in 0..4) {
+            val y = h - (h * i / 4f)
+            drawLine(
+                color = colorScheme.outlineVariant.copy(alpha = 0.5f),
+                start = Offset(0f, y),
+                end = Offset(w, y),
+                strokeWidth = 1f,
+            )
+        }
+
+        if (values.isEmpty()) return@Canvas
+
+        val step = w / (values.size - 1).coerceAtLeast(1)
+        val path = Path()
+        values.forEachIndexed { index, v ->
+            val x = index * step
+            val y = h - ((v - minY) / range) * h
+            if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
+        }
+
+        // Area under the line
+        val area = Path().apply {
+            addPath(path)
+            lineTo(w, h)
+            lineTo(0f, h)
+            close()
+        }
+        drawPath(area, color.copy(alpha = 0.1f))
+
+        drawPath(
+            path,
+            color = color,
+            style = Stroke(width = 2.5f),
+        )
+    }
+}
+
+// ── Progress ──
+
+@Composable
+private fun ProfileProgressCard(stats: net.aokaze.osupanel.data.model.UserStatisticsDto) {
+    val colorScheme = MaterialTheme.colorScheme
+    val level = stats.levelCurrent
+    val progress = (stats.levelProgress * 100).toInt()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Rounded.Stars,
+                    contentDescription = null,
+                    tint = OsuColors.amber600,
+                    modifier = Modifier.size(22.dp),
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    stringResource(R.string.profile_progress),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+            }
+            Spacer(Modifier.height(16.dp))
+            Row {
+                Text(
+                    stringResource(R.string.profile_lvl) + " $level",
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(Modifier.weight(1f))
+                Text(
+                    "$progress%",
+                    fontSize = 12.sp,
+                    color = colorScheme.onSurfaceVariant,
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = { stats.levelProgress.toFloat() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = OsuColors.amber,
+                trackColor = colorScheme.surfaceContainerHighest,
+            )
+            Spacer(Modifier.height(16.dp))
+            Row {
+                ProfileProgressStat(
+                    icon = Icons.Rounded.Timer,
+                    label = stringResource(R.string.profile_play_time),
+                    value = formatDuration(stats.playTime),
+                    color = OsuColors.blue,
+                    modifier = Modifier.weight(1f),
+                )
+                Spacer(Modifier.width(12.dp))
+                ProfileProgressStat(
+                    icon = Icons.Rounded.PlayArrow,
+                    label = stringResource(R.string.profile_play_count),
+                    value = formatNumber(stats.playCount.toLong()),
+                    color = OsuColors.purple,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileProgressStat(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    value: String,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(color.copy(alpha = 0.08f))
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(20.dp))
+        Spacer(Modifier.width(8.dp))
+        Column {
+            Text(value, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = color)
+            Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+// ── Detailed stats ──
+
+@Composable
+private fun DetailedStatsCard(
+    user: UserDto,
+    stats: net.aokaze.osupanel.data.model.UserStatisticsDto,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val items = mutableListOf<Triple<String, String, androidx.compose.ui.graphics.vector.ImageVector>>(
+        Triple(stringResource(R.string.profile_play_count), "${stats.playCount}", Icons.Rounded.PlayArrow),
+        Triple(stringResource(R.string.profile_play_time), formatDuration(stats.playTime), Icons.Rounded.Timer),
+        Triple(stringResource(R.string.profile_total_hits), "${stats.totalHits}", Icons.Rounded.TouchApp),
+        Triple(stringResource(R.string.profile_max_combo), "${stats.maximumCombo}x", Icons.Rounded.Link),
+        Triple(stringResource(R.string.profile_total_score), formatNumber(stats.totalScore), Icons.Rounded.Score),
+        Triple(stringResource(R.string.profile_ranked_score), formatNumber(stats.rankedScore), Icons.Rounded.WorkspacePremium),
+        Triple(stringResource(R.string.profile_country_rank), "#${stats.countryRank ?: "N/A"}", Icons.Rounded.Flag),
+        Triple(stringResource(R.string.profile_global_rank), "#${stats.globalRank ?: "N/A"}", Icons.Rounded.Public),
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(R.string.profile_detailed_stats),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
+            Spacer(Modifier.height(8.dp))
+            items.forEach { (label, value, icon) ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        tint = colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Text(label, color = colorScheme.onSurfaceVariant)
+                    Spacer(Modifier.weight(1f))
+                    Text(value, fontWeight = FontWeight.SemiBold)
+                }
+            }
+        }
+    }
+}
+
+// ── Grade counts (bar chart Canvas) ──
+
+@Composable
+private fun GradeCountsCard(grades: GradeCountsDto) {
+    val colorScheme = MaterialTheme.colorScheme
+    val items = listOf(
+        "SS" to grades.ss to OsuColors.gradeSS,
+        "SSH" to grades.ssh to OsuColors.gradeSSH,
+        "S" to grades.s to OsuColors.gradeS,
+        "SH" to grades.sh to OsuColors.gradeSH,
+        "A" to grades.a to OsuColors.gradeA,
+    )
+    val maxGrade = (items.map { it.first.second }.maxOrNull() ?: 1) * 1.2f
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(R.string.profile_grade_counts),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
+            Spacer(Modifier.height(8.dp))
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp),
+            ) {
+                val slot = size.width / items.size
+                val barWidth = 24.dp.toPx()
+                items.forEachIndexed { index, item ->
+                    val (labelValue, color) = item
+                    val value = labelValue.second.toFloat()
+                    val h = if (maxGrade > 0) (value / maxGrade) * (size.height - 24f) else 0f
+                    val x = index * slot + (slot - barWidth) / 2
+                    drawRoundRect(
+                        color = color,
+                        topLeft = Offset(x, size.height - 24f - h),
+                        size = Size(barWidth, h),
+                        cornerRadius = CornerRadius(4f, 4f),
+                    )
+                }
+            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                items.forEach { item ->
+                    val (labelValue, color) = item
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            labelValue.first,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            color = color,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ── Badges ──
+
+@Composable
+private fun BadgesCard(badges: List<net.aokaze.osupanel.data.model.BadgeDto>) {
+    val colorScheme = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Rounded.EmojiEvents,
+                    contentDescription = null,
+                    tint = OsuColors.amber600,
+                    modifier = Modifier.size(22.dp),
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    stringResource(R.string.profile_badges) + " (${badges.size})",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+            }
+            Spacer(Modifier.height(12.dp))
+            if (badges.isEmpty()) {
+                EmptySection(icon = Icons.Rounded.EmojiEvents, text = stringResource(R.string.profile_no_badges))
+            } else {
+                SimpleGrid(
+                    items = badges,
+                    columns = 5,
+                    horizontalSpacing = 8.dp,
+                    verticalSpacing = 8.dp,
+                ) { badge ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(colorScheme.surfaceContainerHighest)
+                            .padding(6.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        BadgeImage(
+                            badge = badge,
+                            size = 44.dp,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ── Groups ──
+
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun GroupsCard(groups: List<net.aokaze.osupanel.data.model.UserGroupDto>) {
+    val colorScheme = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(R.string.profile_groups),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
+            Spacer(Modifier.height(12.dp))
+            androidx.compose.foundation.layout.FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                groups.forEach { group ->
+                    val color = parseHexColor(group.colour) ?: colorScheme.primary
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(color.copy(alpha = 0.15f))
+                            .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(20.dp))
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                    ) {
+                        Text(
+                            group.shortName?.takeIf { it.isNotEmpty() } ?: group.name ?: "",
+                            color = color,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 12.sp,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ── Medals ──
+
+/** Medal card header — its grid tiles are rendered lazily per row in the LazyColumn. */
+@Composable
+private fun MedalHeaderCard(achievedCount: Int, totalCount: Int) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                Icons.Rounded.EmojiEvents,
+                contentDescription = null,
+                tint = OsuColors.amber600,
+                modifier = Modifier.size(22.dp),
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                stringResource(R.string.profile_medals) + " ($achievedCount/$totalCount)",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
+        }
+    }
+}
+
+/** One medal grid row (3 columns) — a lazy item in the profile LazyColumn. */
+@Composable
+private fun MedalGridRow(rowItems: List<MedalDisplay>) {
+    val colorScheme = MaterialTheme.colorScheme
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        rowItems.forEach { display ->
+            Box(modifier = Modifier.weight(1f)) {
+                val m = display.medal
+                val name = if (m.medalName.isNotEmpty()) m.medalName else m.name
+                Column(
+                    // FIXED tile height — all tiles stay uniform even when the
+                    // name wraps to 2 lines or there is no date (previously uneven).
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(colorScheme.surfaceContainerHighest)
+                        .border(
+                            1.dp,
+                            colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            RoundedCornerShape(14.dp),
+                        )
+                        .padding(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    MedalImage(
+                        name = name,
+                        grouping = m.grouping,
+                        slug = m.slug,
+                        description = m.description,
+                        achievementId = m.achievementIdInt,
+                        achievedAt = display.achievedAt,
+                        achieved = display.achieved,
+                        size = 48.dp,
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        name,
+                        // minLines 2: name space is always reserved → content
+                        // height stays consistent, text still fits (ellipsis).
+                        minLines = 2,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 11.sp,
+                    )
+                    display.achievedAt?.let {
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            formatLongDate(it),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            fontSize = 10.sp,
+                            color = colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ── Kudosu ──
+
+@Composable
+private fun KudosuCard(user: UserDto) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                Icons.Rounded.AutoAwesome,
+                contentDescription = null,
+                tint = OsuColors.amber,
+                modifier = Modifier.size(28.dp),
+            )
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    stringResource(R.string.profile_kudosu),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    "${user.kudosu?.total ?: 0}",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+            }
+        }
+    }
+}
+
+// ── Best scores ──
+
+@Composable
+private fun BestScoresCard(
+    scores: List<net.aokaze.osupanel.data.model.ScoreDto>,
+    onOpenBeatmapDetail: (Int) -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(R.string.profile_best_scores),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
+            Spacer(Modifier.height(8.dp))
+            scores.take(10).forEach { score ->
+                val bms = score.beatmapset
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { bms?.id?.let(onOpenBeatmapDetail) }
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    MapCoverImage(
+                        url = bms?.covers?.list,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(6.dp)),
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            bms?.title ?: "Unknown",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 13.sp,
+                        )
+                        Text(
+                            "${String.format("%.2f%%", score.accuracy * 100)}  ${score.pp?.toInt() ?: 0}pp",
+                            fontSize = 11.sp,
+                            color = colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Text(
+                        score.rank ?: "?",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = colorScheme.primary,
+                    )
+                }
+            }
+        }
+    }
+}
+
+// ── Most played ──
+
+@Composable
+private fun MostPlayedCard(
+    items: List<net.aokaze.osupanel.data.model.MostPlayedBeatmapDto>,
+    onOpenBeatmapDetail: (Int) -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(R.string.profile_most_played),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
+            Spacer(Modifier.height(8.dp))
+            items.take(10).forEach { item ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { item.beatmapset?.id?.let(onOpenBeatmapDetail) }
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    MapCoverImage(
+                        url = item.beatmapset?.covers?.list,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(6.dp)),
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            item.beatmapset?.title ?: "Unknown",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 13.sp,
+                        )
+                        Text(
+                            "${item.count} plays",
+                            fontSize = 11.sp,
+                            color = colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptySection(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    text: String,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Icon(
+            icon,
+            contentDescription = null,
+            tint = colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+            modifier = Modifier.size(40.dp),
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(text, color = colorScheme.onSurfaceVariant)
+    }
+}

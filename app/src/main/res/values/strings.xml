@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App name (also used as the login & home top bar title) -->
+    <string name="app_name">Osu! Panel</string>
+
+    <!-- ── Login ── -->
+    <string name="login_subtitle">Login with osu...</string>
+    <string name="login_button">Login</string>
+    <string name="login_loading">Logging in…</string>
+    <string name="error_login_generic">Login failed. Try again.</string>
+
+    <!-- ── Home ── -->
+    <string name="home_unknown_username">Unknown</string>
+    <string name="error_retry_title">Something went wrong. Try again.</string>
+
+    <!-- ── Common error messages (used by AuthViewModel & ApiError) ── -->
+    <string name="error_no_internet">No internet connection. Check your connection and try again.</string>
+    <string name="error_request_timeout">Request timed out. Try again.</string>
+    <string name="error_worker">There is a problem with the app server. Try again in a moment.</string>
+    <string name="error_osu_server">The osu! server is having issues. Try again in a moment.</string>
+    <string name="error_login_too_many">Too many login attempts. Please wait a moment.</string>
+    <string name="error_app">An error occurred in the app. Try again.</string>
+    <string name="error_generic">Something went wrong. Try again.</string>
+
+    <!-- ── Shell (bottom nav) ── -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_maps">Maps</string>
+    <string name="nav_rankings">Rankings</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- ── Dashboard ── -->
+    <string name="dashboard_refresh">Refresh</string>
+    <string name="dashboard_supporter">Supporter</string>
+    <string name="dashboard_performance">Performance</string>
+    <string name="dashboard_global_rank">Global Rank</string>
+    <string name="dashboard_country_rank">Country Rank</string>
+    <string name="dashboard_accuracy">Accuracy</string>
+    <string name="dashboard_progress">Progress</string>
+    <string name="dashboard_level">Level</string>
+    <string name="dashboard_play_time">Play Time</string>
+    <string name="dashboard_play_count">Play Count</string>
+    <string name="dashboard_detailed_stats">Detailed Stats</string>
+    <string name="dashboard_total_hits">Total Hits</string>
+    <string name="dashboard_max_combo">Max Combo</string>
+    <string name="dashboard_ranked_score">Ranked Score</string>
+    <string name="dashboard_medals">Medals</string>
+    <string name="dashboard_badges">Badges</string>
+    <string name="dashboard_no_medals">No medals yet</string>
+    <string name="dashboard_no_badges">No badges yet</string>
+
+    <!-- ── Medal ── -->
+    <string name="medal_no_description">No description available.</string>
+    <string name="medal_not_achieved">Not achieved yet</string>
+    <string name="medal_okey">OK</string>
+
+    <!-- ── Maps ── -->
+    <string name="maps_last_play">Last Play</string>
+    <string name="maps_best_scores">Best Scores</string>
+    <string name="maps_most_played">Most Played</string>
+    <string name="maps_loved">Loved</string>
+    <string name="maps_login_needed">Log in to view this data.</string>
+    <string name="maps_no_recent">No recent plays</string>
+    <string name="maps_no_best">No best scores yet</string>
+    <string name="maps_no_most_played">No most played data</string>
+    <string name="maps_no_favourites">No favourite beatmaps</string>
+    <string name="maps_by">by</string>
+    <string name="maps_pts">pts</string>
+
+    <!-- ── Rankings ── -->
+    <string name="rankings_country_all">Country: All</string>
+    <string name="rankings_country">Country</string>
+    <string name="rankings_clear">Clear</string>
+    <string name="rankings_search_hint">Search by username or ID...</string>
+    <string name="rankings_no_data">No ranking data</string>
+    <string name="rankings_no_matching">No users matching</string>
+
+    <!-- ── Settings ── -->
+    <string name="settings_widget_section">Widget</string>
+    <string name="settings_widget_mode">Widget mode</string>
+    <string name="settings_widget_mode_desc">Game mode shown in the home screen widget — the icon, rank, PP, accuracy and other stats follow it.</string>
+    <string name="settings_license">License</string>
+    <string name="settings_contributor">Contributor</string>
+    <string name="settings_logout">Logout</string>
+    <string name="settings_goodbye">Goodbye, %1$s!</string>
+    <string name="settings_version">Version : %1$s</string>
+    <string name="settings_about_section">About</string>
+    <string name="settings_source_code">Source Code</string>
+    <string name="settings_source_code_desc">View this app on GitHub</string>
+    <string name="settings_license_desc">Third-party licenses &amp; open source credits</string>
+    <string name="settings_contributor_desc">People behind Osu! Panel</string>
+    <string name="settings_logout_title">Log out?</string>
+    <string name="settings_logout_confirm">Are you sure you want to log out of your osu! account?</string>
+    <string name="settings_logout_button">Log out</string>
+    <string name="settings_confirm">Log Out</string>
+    <string name="settings_cancel">Cancel</string>
+
+    <!-- ── Profile ── -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_back">Back</string>
+    <string name="profile_online">Online</string>
+    <string name="profile_offline">Offline</string>
+    <string name="profile_joined">Joined %1$s</string>
+    <string name="profile_global">Global</string>
+    <string name="profile_pp">PP</string>
+    <string name="profile_acc">Acc</string>
+    <string name="profile_ranked">Ranked</string>
+    <string name="profile_lvl">Lvl</string>
+    <string name="profile_rank_history">Rank History</string>
+    <string name="profile_progress">Progress</string>
+    <string name="profile_detailed_stats">Detailed Stats</string>
+    <string name="profile_play_count">Play Count</string>
+    <string name="profile_play_time">Play Time</string>
+    <string name="profile_total_hits">Total Hits</string>
+    <string name="profile_max_combo">Max Combo</string>
+    <string name="profile_total_score">Total Score</string>
+    <string name="profile_ranked_score">Ranked Score</string>
+    <string name="profile_country_rank">Country Rank</string>
+    <string name="profile_global_rank">Global Rank</string>
+    <string name="profile_kudosu">Kudosu</string>
+    <string name="profile_grade_counts">Grade Counts</string>
+    <string name="profile_badges">Badges</string>
+    <string name="profile_no_badges">No badges yet</string>
+    <string name="profile_groups">Groups / Clubs</string>
+    <string name="profile_medals">Medals</string>
+    <string name="profile_no_medals">No medals yet</string>
+    <string name="profile_show_all">Show all (%1$d)</string>
+    <string name="profile_show_less">Show less</string>
+    <string name="profile_best_scores">Best Scores</string>
+    <string name="profile_most_played">Most Played</string>
+
+    <!-- ── Beatmap Detail ── -->
+    <string name="beatmap_title">Beatmap</string>
+    <string name="beatmap_status_unknown">UNKNOWN</string>
+    <string name="rankings_all">All</string>
+    <string name="beatmap_back">Back</string>
+    <string name="beatmap_refresh">Refresh Data</string>
+    <string name="beatmap_copy_link">Copy Link</string>
+    <string name="beatmap_link_copied">Link copied: %1$s</string>
+    <string name="beatmap_mapped_by">mapped by %1$s</string>
+    <string name="beatmap_bpm">BPM</string>
+    <string name="beatmap_length">Length</string>
+    <string name="beatmap_plays">Plays</string>
+    <string name="beatmap_fav">Fav</string>
+    <string name="beatmap_difficulties">Difficulties (%1$d)</string>
+    <string name="beatmap_leaderboard">Leaderboard</string>
+    <string name="beatmap_no_scores">No scores yet</string>
+    <string name="beatmap_creator">Creator</string>
+    <string name="beatmap_info">Info</string>
+    <string name="beatmap_play_preview">Play preview</string>
+    <string name="beatmap_failed_preview">Failed to play preview</string>
+    <string name="beatmap_not_available">Data not available</string>
+
+    <!-- Full-screen error retry (shared by Beatmap detail, Profile, …) -->
+    <string name="try_again">Try Again</string>
+    <string name="retrying">Retrying...</string>
+
+    <!-- ── No Internet ── -->
+
+    <!-- ── Home Screen Widgets ── -->
+    <string name="widget_profile_large_desc">Detailed profile card: cover, avatar, and all your osu! stats</string>
+    <string name="widget_stats_desc">Your global rank, country rank, and level progress at a glance</string>
+    <string name="widget_pp_desc">Your total performance points (PP)</string>
+
+    <string name="widget_global_rank_label">Global Rank</string>
+    <string name="widget_country_rank_label">Country Rank</string>
+
+    <string name="widget_zero">0</string>
+    <string name="widget_zero_percent">0%</string>
+    <string name="widget_rank_na">#N/A</string>
+    <string name="widget_username_placeholder">Username</string>
+    <string name="widget_signature_desc">Profile signature card</string>
+
+    <!-- Formatted (used from code) -->
+    <string name="widget_level_value">Level %1$s</string>
+
+    <!-- Update available popup (text only, no icon) -->
+    <string name="update_available">Update available!</string>
+    <string name="update_prompt">please update me to v%1$s</string>
+    <string name="update_lets_update">Let\'s Update</string>
+    <string name="update_not_now">Not Now</string>
+
+    <!-- Large widget layout (stats / skills) -->
+    <string name="settings_widget_layout">Layout</string>
+    <string name="settings_widget_layout_desc">Large widget appearance (profile)</string>
+    <string name="settings_layout_stats">with stats</string>
+    <string name="settings_layout_skills">with skills</string>
+
+    <!-- ── Card Generator (Profile → FAB) ── -->
+    <string name="cardgen_title">Card Generator</string>
+    <string name="cardgen_fab">Generate card</string>
+    <string name="cardgen_close">Close</string>
+    <string name="cardgen_preview">Card preview</string>
+    <string name="cardgen_mode">Game mode</string>
+    <string name="cardgen_template">Template</string>
+    <string name="cardgen_template_stats">Full stats</string>
+    <string name="cardgen_template_skills">Skills</string>
+    <string name="cardgen_template_mini">Mini</string>
+    <string name="cardgen_complete">Complete</string>
+    <string name="cardgen_share_title">Share card</string>
+</resources>

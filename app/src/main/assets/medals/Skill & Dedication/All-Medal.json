@@ -1,0 +1,962 @@
+[
+  {
+    "slug": "osu-combo-500",
+    "name": "500",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-combo-500.png",
+    "medal_name": "500 Combo",
+    "description": "500 big ones! You're moving up in the world!",
+    "achievement_id": 1
+  },
+  {
+    "slug": "osu-combo-750",
+    "name": "750",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-combo-750.png",
+    "medal_name": "750 Combo",
+    "description": "750 notes back to back? Woah.",
+    "achievement_id": 3
+  },
+  {
+    "slug": "osu-combo-1000",
+    "name": "1000",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-combo-1000.png",
+    "medal_name": "1,000 Combo",
+    "description": "A thousand reasons why you rock at this game.",
+    "achievement_id": 4
+  },
+  {
+    "slug": "osu-combo-2000",
+    "name": "2000",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-combo-2000.png",
+    "medal_name": "2,000 Combo",
+    "description": "Nothing can stop you now.",
+    "achievement_id": 5
+  },
+  {
+    "slug": "fruits-hits-20000",
+    "name": "20000",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-hits-20000.png",
+    "medal_name": "Catch 20,000 fruits",
+    "description": "That is a lot of dietary fiber.",
+    "achievement_id": 13
+  },
+  {
+    "slug": "osu-plays-5000",
+    "name": "5000",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-plays-5000.png",
+    "medal_name": "5,000 Plays",
+    "description": "There's a lot more where that came from.",
+    "achievement_id": 20
+  },
+  {
+    "slug": "osu-plays-15000",
+    "name": "15000",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-plays-15000.png",
+    "medal_name": "15,000 Plays",
+    "description": "Must.. click.. circles..",
+    "achievement_id": 21
+  },
+  {
+    "slug": "osu-plays-25000",
+    "name": "25000",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-plays-25000.png",
+    "medal_name": "25,000 Plays",
+    "description": "There's no going back.",
+    "achievement_id": 22
+  },
+  {
+    "slug": "fruits-hits-200000",
+    "name": "200000",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-hits-200000.png",
+    "medal_name": "Catch 200,000 fruits",
+    "description": "So, I heard you like fruit...",
+    "achievement_id": 23
+  },
+  {
+    "slug": "fruits-hits-2000000",
+    "name": "2000000",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-hits-2000000.png",
+    "medal_name": "Catch 2,000,000 fruits",
+    "description": "Downright healthy.",
+    "achievement_id": 24
+  },
+  {
+    "slug": "osu-plays-50000",
+    "name": "50000",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-plays-50000.png",
+    "medal_name": "50,000 Plays",
+    "description": "You're here forever.",
+    "achievement_id": 28
+  },
+  {
+    "slug": "taiko-hits-30000",
+    "name": "30000",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-hits-30000.png",
+    "medal_name": "30,000 Drum Hits",
+    "description": "Did that drum have a face?",
+    "achievement_id": 31
+  },
+  {
+    "slug": "taiko-hits-300000",
+    "name": "300000",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-hits-300000.png",
+    "medal_name": "300,000 Drum Hits",
+    "description": "The rhythm never stops.",
+    "achievement_id": 32
+  },
+  {
+    "slug": "taiko-hits-3000000",
+    "name": "3000000",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-hits-3000000.png",
+    "medal_name": "3,000,000 Drum Hits",
+    "description": "Truly, the Don of dons.",
+    "achievement_id": 33
+  },
+  {
+    "slug": "mania-hits-40000",
+    "name": "40000",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-hits-40000.png",
+    "medal_name": "40,000 Keys",
+    "description": "Just the start of the rainbow.",
+    "achievement_id": 46
+  },
+  {
+    "slug": "mania-hits-400000",
+    "name": "400000",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-hits-400000.png",
+    "medal_name": "400,000 Keys",
+    "description": "Four hundred thousand and still not even close.",
+    "achievement_id": 47
+  },
+  {
+    "slug": "mania-hits-4000000",
+    "name": "4000000",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-hits-4000000.png",
+    "medal_name": "4,000,000 Keys",
+    "description": "Is this the end of the rainbow?",
+    "achievement_id": 48
+  },
+  {
+    "slug": "all-skill-highranker-1",
+    "name": "Highranker 1",
+    "grouping": "Skill & Dedication",
+    "mode": null,
+    "file": "all-skill-highranker-1.png",
+    "medal_name": "I Can See The Top",
+    "description": "Your dedication has paid off. Welcome to the top 50,000!",
+    "achievement_id": 50
+  },
+  {
+    "slug": "all-skill-highranker-2",
+    "name": "Highranker 2",
+    "grouping": "Skill & Dedication",
+    "mode": null,
+    "file": "all-skill-highranker-2.png",
+    "medal_name": "The Gradual Rise",
+    "description": "There's no stopping you, is there? Welcome to the top 10,000!",
+    "achievement_id": 51
+  },
+  {
+    "slug": "all-skill-highranker-3",
+    "name": "Highranker 3",
+    "grouping": "Skill & Dedication",
+    "mode": null,
+    "file": "all-skill-highranker-3.png",
+    "medal_name": "Scaling Up",
+    "description": "Welcome to the top 5,000. Never give up!",
+    "achievement_id": 52
+  },
+  {
+    "slug": "all-skill-highranker-4",
+    "name": "Highranker 4",
+    "grouping": "Skill & Dedication",
+    "mode": null,
+    "file": "all-skill-highranker-4.png",
+    "medal_name": "Approaching The Summit",
+    "description": "Pro tier. Welcome to the top 1,000!",
+    "achievement_id": 53
+  },
+  {
+    "slug": "osu-skill-pass-1",
+    "name": "Pass 1",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-1.png",
+    "medal_name": "Rising Star",
+    "description": "Can't go forward without the first steps.",
+    "achievement_id": 55
+  },
+  {
+    "slug": "osu-skill-pass-2",
+    "name": "Pass 2",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-2.png",
+    "medal_name": "Constellation Prize",
+    "description": "Definitely not a consolation prize. Now things start getting hard!",
+    "achievement_id": 56
+  },
+  {
+    "slug": "osu-skill-pass-3",
+    "name": "Pass 3",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-3.png",
+    "medal_name": "Building Confidence",
+    "description": "Oh, you've SO got this.",
+    "achievement_id": 57
+  },
+  {
+    "slug": "osu-skill-pass-4",
+    "name": "Pass 4",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-4.png",
+    "medal_name": "Insanity Approaches",
+    "description": "You're not twitching, you're just ready.",
+    "achievement_id": 58
+  },
+  {
+    "slug": "osu-skill-pass-5",
+    "name": "Pass 5",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-5.png",
+    "medal_name": "These Clarion Skies",
+    "description": "Everything seems so clear now.",
+    "achievement_id": 59
+  },
+  {
+    "slug": "osu-skill-pass-6",
+    "name": "Pass 6",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-6.png",
+    "medal_name": "Above and Beyond",
+    "description": "A cut above the rest.",
+    "achievement_id": 60
+  },
+  {
+    "slug": "osu-skill-pass-7",
+    "name": "Pass 7",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-7.png",
+    "medal_name": "Supremacy",
+    "description": "All marvel before your prowess.",
+    "achievement_id": 61
+  },
+  {
+    "slug": "osu-skill-pass-8",
+    "name": "Pass 8",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-8.png",
+    "medal_name": "Absolution",
+    "description": "My god, you're full of stars!",
+    "achievement_id": 62
+  },
+  {
+    "slug": "osu-skill-fc-1",
+    "name": "Fc 1",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-1.png",
+    "medal_name": "Totality",
+    "description": "All the notes. Every single one.",
+    "achievement_id": 63
+  },
+  {
+    "slug": "osu-skill-fc-2",
+    "name": "Fc 2",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-2.png",
+    "medal_name": "Business As Usual",
+    "description": "Two to go, please.",
+    "achievement_id": 64
+  },
+  {
+    "slug": "osu-skill-fc-3",
+    "name": "Fc 3",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-3.png",
+    "medal_name": "Building Steam",
+    "description": "Hey, this isn't so bad.",
+    "achievement_id": 65
+  },
+  {
+    "slug": "osu-skill-fc-4",
+    "name": "Fc 4",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-4.png",
+    "medal_name": "Moving Forward",
+    "description": "Bet you feel good about that.",
+    "achievement_id": 66
+  },
+  {
+    "slug": "osu-skill-fc-5",
+    "name": "Fc 5",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-5.png",
+    "medal_name": "Paradigm Shift",
+    "description": "Surprisingly difficult.",
+    "achievement_id": 67
+  },
+  {
+    "slug": "osu-skill-fc-6",
+    "name": "Fc 6",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-6.png",
+    "medal_name": "Anguish Quelled",
+    "description": "Don't choke.",
+    "achievement_id": 68
+  },
+  {
+    "slug": "osu-skill-fc-7",
+    "name": "Fc 7",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-7.png",
+    "medal_name": "Never Give Up",
+    "description": "Excellence is its own reward.",
+    "achievement_id": 69
+  },
+  {
+    "slug": "osu-skill-fc-8",
+    "name": "Fc 8",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-8.png",
+    "medal_name": "Aberration",
+    "description": "They said it couldn't be done. They were wrong.",
+    "achievement_id": 70
+  },
+  {
+    "slug": "taiko-skill-pass-1",
+    "name": "Pass 1",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-1.png",
+    "medal_name": "My First Don",
+    "description": "Marching to the beat of your own drum. Literally.",
+    "achievement_id": 71
+  },
+  {
+    "slug": "taiko-skill-pass-2",
+    "name": "Pass 2",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-2.png",
+    "medal_name": "Katsu Katsu Katsu",
+    "description": "Hora! Ikuzo!",
+    "achievement_id": 72
+  },
+  {
+    "slug": "taiko-skill-pass-3",
+    "name": "Pass 3",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-3.png",
+    "medal_name": "Not Even Trying",
+    "description": "Muzukashii? Not even.",
+    "achievement_id": 73
+  },
+  {
+    "slug": "taiko-skill-pass-4",
+    "name": "Pass 4",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-4.png",
+    "medal_name": "Face Your Demons",
+    "description": "The first trials are now behind you, but are you a match for the Oni?",
+    "achievement_id": 74
+  },
+  {
+    "slug": "taiko-skill-pass-5",
+    "name": "Pass 5",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-5.png",
+    "medal_name": "The Demon Within",
+    "description": "No rest for the wicked.",
+    "achievement_id": 75
+  },
+  {
+    "slug": "taiko-skill-pass-6",
+    "name": "Pass 6",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-6.png",
+    "medal_name": "Drumbreaker",
+    "description": "Too strong.",
+    "achievement_id": 76
+  },
+  {
+    "slug": "taiko-skill-pass-7",
+    "name": "Pass 7",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-7.png",
+    "medal_name": "The Godfather",
+    "description": "You are the Don of Dons.",
+    "achievement_id": 77
+  },
+  {
+    "slug": "taiko-skill-pass-8",
+    "name": "Pass 8",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-pass-8.png",
+    "medal_name": "Rhythm Incarnate",
+    "description": "Feel the beat. Become the beat.",
+    "achievement_id": 78
+  },
+  {
+    "slug": "fruits-skill-pass-1",
+    "name": "Pass 1",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-1.png",
+    "medal_name": "A Slice Of Life",
+    "description": "Hey, this fruit catching business isn't bad.",
+    "achievement_id": 79
+  },
+  {
+    "slug": "fruits-skill-pass-2",
+    "name": "Pass 2",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-2.png",
+    "medal_name": "Dashing Ever Forward",
+    "description": "Fast is how you do it.",
+    "achievement_id": 80
+  },
+  {
+    "slug": "fruits-skill-pass-3",
+    "name": "Pass 3",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-3.png",
+    "medal_name": "Zesty Disposition",
+    "description": "No scurvy for you, not with that much fruit.",
+    "achievement_id": 81
+  },
+  {
+    "slug": "fruits-skill-pass-4",
+    "name": "Pass 4",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-4.png",
+    "medal_name": "Hyperdash ON!",
+    "description": "Time and distance is no obstacle to you.",
+    "achievement_id": 82
+  },
+  {
+    "slug": "fruits-skill-pass-5",
+    "name": "Pass 5",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-5.png",
+    "medal_name": "It's Raining Fruit",
+    "description": "And you can catch them all.",
+    "achievement_id": 83
+  },
+  {
+    "slug": "fruits-skill-pass-6",
+    "name": "Pass 6",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-6.png",
+    "medal_name": "Fruit Ninja",
+    "description": "Legendary techniques.",
+    "achievement_id": 84
+  },
+  {
+    "slug": "fruits-skill-pass-7",
+    "name": "Pass 7",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-7.png",
+    "medal_name": "Dreamcatcher",
+    "description": "No fruit, only dreams now.",
+    "achievement_id": 85
+  },
+  {
+    "slug": "fruits-skill-pass-8",
+    "name": "Pass 8",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-pass-8.png",
+    "medal_name": "Lord of the Catch",
+    "description": "Your kingdom kneels before you.",
+    "achievement_id": 86
+  },
+  {
+    "slug": "mania-skill-pass-1",
+    "name": "Pass 1",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-1.png",
+    "medal_name": "First Steps",
+    "description": "It isn't 9-to-5, but 1-to-9. Keys, that is.",
+    "achievement_id": 87
+  },
+  {
+    "slug": "mania-skill-pass-2",
+    "name": "Pass 2",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-2.png",
+    "medal_name": "No Normal Player",
+    "description": "Not anymore, at least.",
+    "achievement_id": 88
+  },
+  {
+    "slug": "mania-skill-pass-3",
+    "name": "Pass 3",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-3.png",
+    "medal_name": "Impulse Drive",
+    "description": "Not quite hyperspeed, but getting close.",
+    "achievement_id": 89
+  },
+  {
+    "slug": "mania-skill-pass-4",
+    "name": "Pass 4",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-4.png",
+    "medal_name": "Hyperspeed",
+    "description": "Woah.",
+    "achievement_id": 90
+  },
+  {
+    "slug": "mania-skill-pass-5",
+    "name": "Pass 5",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-5.png",
+    "medal_name": "Ever Onwards",
+    "description": "Another challenge is just around the corner.",
+    "achievement_id": 91
+  },
+  {
+    "slug": "mania-skill-pass-6",
+    "name": "Pass 6",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-6.png",
+    "medal_name": "Another Surpassed",
+    "description": "Is there no limit to your skills?",
+    "achievement_id": 92
+  },
+  {
+    "slug": "mania-skill-pass-7",
+    "name": "Pass 7",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-7.png",
+    "medal_name": "Extra Credit",
+    "description": "See me after class.",
+    "achievement_id": 93
+  },
+  {
+    "slug": "mania-skill-pass-8",
+    "name": "Pass 8",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-pass-8.png",
+    "medal_name": "Maniac",
+    "description": "There's just no stopping you.",
+    "achievement_id": 94
+  },
+  {
+    "slug": "taiko-skill-fc-1",
+    "name": "Fc 1",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-1.png",
+    "medal_name": "Keeping Time",
+    "description": "Don, then katsu. Don, then katsu..",
+    "achievement_id": 95
+  },
+  {
+    "slug": "taiko-skill-fc-2",
+    "name": "Fc 2",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-2.png",
+    "medal_name": "To Your Own Beat",
+    "description": "Straight and steady.",
+    "achievement_id": 96
+  },
+  {
+    "slug": "taiko-skill-fc-3",
+    "name": "Fc 3",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-3.png",
+    "medal_name": "Big Drums",
+    "description": "Bigger scores to match.",
+    "achievement_id": 97
+  },
+  {
+    "slug": "taiko-skill-fc-4",
+    "name": "Fc 4",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-4.png",
+    "medal_name": "Adversity Overcome",
+    "description": "Difficult? Not for you.",
+    "achievement_id": 98
+  },
+  {
+    "slug": "taiko-skill-fc-5",
+    "name": "Fc 5",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-5.png",
+    "medal_name": "Demonslayer",
+    "description": "An Oni felled forevermore.",
+    "achievement_id": 99
+  },
+  {
+    "slug": "taiko-skill-fc-6",
+    "name": "Fc 6",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-6.png",
+    "medal_name": "Rhythm's Call",
+    "description": "Heralding true skill.",
+    "achievement_id": 100
+  },
+  {
+    "slug": "taiko-skill-fc-7",
+    "name": "Fc 7",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-7.png",
+    "medal_name": "Time Everlasting",
+    "description": "Not a single beat escapes you.",
+    "achievement_id": 101
+  },
+  {
+    "slug": "taiko-skill-fc-8",
+    "name": "Fc 8",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-skill-fc-8.png",
+    "medal_name": "The Drummer's Throne",
+    "description": "Percussive brilliance befitting royalty alone.",
+    "achievement_id": 102
+  },
+  {
+    "slug": "fruits-skill-fc-1",
+    "name": "Fc 1",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-1.png",
+    "medal_name": "Sweet And Sour",
+    "description": "Apples and oranges, literally.",
+    "achievement_id": 103
+  },
+  {
+    "slug": "fruits-skill-fc-2",
+    "name": "Fc 2",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-2.png",
+    "medal_name": "Reaching The Core",
+    "description": "The seeds of future success.",
+    "achievement_id": 104
+  },
+  {
+    "slug": "fruits-skill-fc-3",
+    "name": "Fc 3",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-3.png",
+    "medal_name": "Clean Platter",
+    "description": "Clean only of failure. It is completely full, otherwise.",
+    "achievement_id": 105
+  },
+  {
+    "slug": "fruits-skill-fc-4",
+    "name": "Fc 4",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-4.png",
+    "medal_name": "Between The Rain",
+    "description": "No umbrella needed.",
+    "achievement_id": 106
+  },
+  {
+    "slug": "fruits-skill-fc-5",
+    "name": "Fc 5",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-5.png",
+    "medal_name": "Addicted",
+    "description": "That was an overdose?",
+    "achievement_id": 107
+  },
+  {
+    "slug": "fruits-skill-fc-6",
+    "name": "Fc 6",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-6.png",
+    "medal_name": "Quickening",
+    "description": "A dash above normal limits.",
+    "achievement_id": 108
+  },
+  {
+    "slug": "fruits-skill-fc-7",
+    "name": "Fc 7",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-7.png",
+    "medal_name": "Supersonic",
+    "description": "Faster than is reasonably necessary.",
+    "achievement_id": 109
+  },
+  {
+    "slug": "fruits-skill-fc-8",
+    "name": "Fc 8",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-skill-fc-8.png",
+    "medal_name": "Dashing Scarlet",
+    "description": "Speed beyond mortal reckoning.",
+    "achievement_id": 110
+  },
+  {
+    "slug": "mania-skill-fc-1",
+    "name": "Fc 1",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-1.png",
+    "medal_name": "Keystruck",
+    "description": "The beginning of a new story.",
+    "achievement_id": 111
+  },
+  {
+    "slug": "mania-skill-fc-2",
+    "name": "Fc 2",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-2.png",
+    "medal_name": "Keying In",
+    "description": "Finding your groove.",
+    "achievement_id": 112
+  },
+  {
+    "slug": "mania-skill-fc-3",
+    "name": "Fc 3",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-3.png",
+    "medal_name": "Hyperflow",
+    "description": "You can *feel* the rhythm.",
+    "achievement_id": 113
+  },
+  {
+    "slug": "mania-skill-fc-4",
+    "name": "Fc 4",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-4.png",
+    "medal_name": "Breakthrough",
+    "description": "Many skills mastered, rolled into one.",
+    "achievement_id": 114
+  },
+  {
+    "slug": "mania-skill-fc-5",
+    "name": "Fc 5",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-5.png",
+    "medal_name": "Everything Extra",
+    "description": "Giving your all is giving everything you have.",
+    "achievement_id": 115
+  },
+  {
+    "slug": "mania-skill-fc-6",
+    "name": "Fc 6",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-6.png",
+    "medal_name": "Level Breaker",
+    "description": "Finesse beyond reason.",
+    "achievement_id": 116
+  },
+  {
+    "slug": "mania-skill-fc-7",
+    "name": "Fc 7",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-7.png",
+    "medal_name": "Step Up",
+    "description": "A precipice rarely seen.",
+    "achievement_id": 117
+  },
+  {
+    "slug": "mania-skill-fc-8",
+    "name": "Fc 8",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-skill-fc-8.png",
+    "medal_name": "Behind The Veil",
+    "description": "Supernatural!",
+    "achievement_id": 118
+  },
+  {
+    "slug": "osu-skill-pass-9",
+    "name": "Pass 9",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-9.png",
+    "medal_name": "Event Horizon",
+    "description": "No force dares to pull you under.",
+    "achievement_id": 242
+  },
+  {
+    "slug": "osu-skill-fc-9",
+    "name": "Fc 9",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-9.png",
+    "medal_name": "Chosen",
+    "description": "Reign among the Prometheans, where you belong.",
+    "achievement_id": 243
+  },
+  {
+    "slug": "osu-skill-pass-10",
+    "name": "Pass 10",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-pass-10.png",
+    "medal_name": "Phantasm",
+    "description": "Fevered is your passion, extraordinary is your skill.",
+    "achievement_id": 244
+  },
+  {
+    "slug": "osu-skill-fc-10",
+    "name": "Fc 10",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-fc-10.png",
+    "medal_name": "Unfathomable",
+    "description": "You have no equal.",
+    "achievement_id": 245
+  },
+  {
+    "slug": "taiko-hits-30000000",
+    "name": "30000000",
+    "grouping": "Skill & Dedication",
+    "mode": "taiko",
+    "file": "taiko-hits-30000000.png",
+    "medal_name": "30,000,000 Drum Hits",
+    "description": "Your rhythm, eternal.",
+    "achievement_id": 291
+  },
+  {
+    "slug": "fruits-hits-20000000",
+    "name": "20000000",
+    "grouping": "Skill & Dedication",
+    "mode": "fruits",
+    "file": "fruits-hits-20000000.png",
+    "medal_name": "Catch 20,000,000 fruits",
+    "description": "Nothing left behind.",
+    "achievement_id": 292
+  },
+  {
+    "slug": "mania-hits-40000000",
+    "name": "40000000",
+    "grouping": "Skill & Dedication",
+    "mode": "mania",
+    "file": "mania-hits-40000000.png",
+    "medal_name": "40,000,000 Keys",
+    "description": "When someone asks which keys you play, the answer is now 'yes'.",
+    "achievement_id": 293
+  },
+  {
+    "slug": "all-skill-dc-1",
+    "name": "Dc 1",
+    "grouping": "Skill & Dedication",
+    "mode": null,
+    "file": "all-skill-dc-1.png",
+    "medal_name": "Daily Sprout",
+    "description": "Ready for anything.",
+    "achievement_id": 336
+  },
+  {
+    "slug": "all-skill-dc-7",
+    "name": "Dc 7",
+    "grouping": "Skill & Dedication",
+    "mode": null,
+    "file": "all-skill-dc-7.png",
+    "medal_name": "Weekly Sapling",
+    "description": "Circadian rhythm calibrated.",
+    "achievement_id": 337
+  },
+  {
+    "slug": "all-skill-dc-30",
+    "name": "Dc 30",
+    "grouping": "Skill & Dedication",
+    "mode": null,
+    "file": "all-skill-dc-30.png",
+    "medal_name": "Monthly Shrub",
+    "description": "In for the grind.",
+    "achievement_id": 338
+  },
+  {
+    "slug": "osu-skill-cyclone",
+    "name": "Cyclone",
+    "grouping": "Skill & Dedication",
+    "mode": "osu",
+    "file": "osu-skill-cyclone.png",
+    "medal_name": "Cyclone",
+    "description": "Clockwise or anticlockwise, that is the question.",
+    "achievement_id": 354
+  }
+]

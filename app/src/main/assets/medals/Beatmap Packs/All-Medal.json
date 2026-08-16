@@ -1,0 +1,802 @@
+[
+  {
+    "slug": "all-packs-gamer-1",
+    "name": "Gamer 1",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-gamer-1.png",
+    "medal_name": "Video Game Pack vol.1",
+    "description": "A whole pack of video game goodness, done and dusted. Go you!",
+    "achievement_id": 7
+  },
+  {
+    "slug": "all-packs-rhythm-1",
+    "name": "Rhythm 1",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-rhythm-1.png",
+    "medal_name": "Rhythm Game Pack vol.1",
+    "description": "Many beats were clicked, but the rhythm isn't over yet.",
+    "achievement_id": 8
+  },
+  {
+    "slug": "all-packs-internet-1",
+    "name": "Internet 1",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-internet-1.png",
+    "medal_name": "Internet! Pack vol.1",
+    "description": "Did somebody say something about IRC and ICQ?",
+    "achievement_id": 9
+  },
+  {
+    "slug": "all-packs-anime-1",
+    "name": "Anime 1",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-anime-1.png",
+    "medal_name": "Anime Pack vol.1",
+    "description": "I-it's not like I'm proud of you or anything..",
+    "achievement_id": 10
+  },
+  {
+    "slug": "all-packs-gamer-2",
+    "name": "Gamer 2",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-gamer-2.png",
+    "medal_name": "Video Game Pack vol.2",
+    "description": "The sequel was no match for your skills, obviously.",
+    "achievement_id": 11
+  },
+  {
+    "slug": "all-packs-anime-2",
+    "name": "Anime 2",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-anime-2.png",
+    "medal_name": "Anime Pack vol.2",
+    "description": "Truly dedicated to 2D.",
+    "achievement_id": 12
+  },
+  {
+    "slug": "all-packs-gamer-3",
+    "name": "Gamer 3",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-gamer-3.png",
+    "medal_name": "Video Game Pack vol.3",
+    "description": "True dedication to the gaming art.",
+    "achievement_id": 14
+  },
+  {
+    "slug": "all-packs-internet-2",
+    "name": "Internet 2",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-internet-2.png",
+    "medal_name": "Internet! Pack vol.2",
+    "description": "Straight from an albino black sheep. Wait, what?",
+    "achievement_id": 18
+  },
+  {
+    "slug": "all-packs-rhythm-2",
+    "name": "Rhythm 2",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-rhythm-2.png",
+    "medal_name": "Rhythm Game Pack vol.2",
+    "description": "You just can't stop the beat.",
+    "achievement_id": 19
+  },
+  {
+    "slug": "all-packs-anime-3",
+    "name": "Anime 3",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-anime-3.png",
+    "medal_name": "Anime Pack vol.3",
+    "description": "You did it for the waifus.",
+    "achievement_id": 25
+  },
+  {
+    "slug": "all-packs-rhythm-3",
+    "name": "Rhythm 3",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-rhythm-3.png",
+    "medal_name": "Rhythm Game Pack vol.3",
+    "description": "Everyone knows the classics play better on osu! anyway.",
+    "achievement_id": 26
+  },
+  {
+    "slug": "all-packs-internet-3",
+    "name": "Internet 3",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-internet-3.png",
+    "medal_name": "Internet! Pack vol.3",
+    "description": "You didn't stumble upon this one, I'm guessing.",
+    "achievement_id": 27
+  },
+  {
+    "slug": "all-packs-anime-4",
+    "name": "Anime 4",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-anime-4.png",
+    "medal_name": "Anime Pack vol.4",
+    "description": "Has your ship not sailed?",
+    "achievement_id": 34
+  },
+  {
+    "slug": "all-packs-rhythm-4",
+    "name": "Rhythm 4",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-rhythm-4.png",
+    "medal_name": "Rhythm Game Pack vol.4",
+    "description": "A click away? More like, right here.",
+    "achievement_id": 35
+  },
+  {
+    "slug": "all-packs-internet-4",
+    "name": "Internet 4",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-internet-4.png",
+    "medal_name": "Internet! Pack vol.4",
+    "description": "Must... have... more... memes...",
+    "achievement_id": 36
+  },
+  {
+    "slug": "all-packs-gamer-4",
+    "name": "Gamer 4",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-gamer-4.png",
+    "medal_name": "Video Game Pack vol.4",
+    "description": "You are Player 1.",
+    "achievement_id": 37
+  },
+  {
+    "slug": "all-packs-motoloid",
+    "name": "Motoloid",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-motoloid.png",
+    "medal_name": "MOtOLOiD",
+    "description": "Legends made manifest, by the mappers of the Guild.",
+    "achievement_id": 179
+  },
+  {
+    "slug": "all-packs-mappersguild-01",
+    "name": "Mappersguild 01",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-01.png",
+    "medal_name": "Mappers' Guild Pack I",
+    "description": "The first among many to come.",
+    "achievement_id": 185
+  },
+  {
+    "slug": "all-packs-cranky",
+    "name": "Cranky",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-cranky.png",
+    "medal_name": "Cranky",
+    "description": "The grandfather of rhythm gaming music, brought to life by the mappers of the Guild and guests alike.",
+    "achievement_id": 189
+  },
+  {
+    "slug": "all-packs-mappersguild-02",
+    "name": "Mappersguild 02",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-02.png",
+    "medal_name": "Mappers' Guild Pack II",
+    "description": "A variable dream of the future.",
+    "achievement_id": 190
+  },
+  {
+    "slug": "all-packs-highteamusic",
+    "name": "Highteamusic",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-highteamusic.png",
+    "medal_name": "High Tea Music",
+    "description": "Silently journeying to invade the skies.",
+    "achievement_id": 191
+  },
+  {
+    "slug": "all-packs-culprate",
+    "name": "Culprate",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-culprate.png",
+    "medal_name": "Culprate",
+    "description": "A dream of whispers, light, and things to come.",
+    "achievement_id": 206
+  },
+  {
+    "slug": "all-packs-hyun",
+    "name": "Hyun",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-hyun.png",
+    "medal_name": "HyuN",
+    "description": "Digital punk goes into overdrive!",
+    "achievement_id": 208
+  },
+  {
+    "slug": "all-packs-icdd",
+    "name": "Icdd",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-icdd.png",
+    "medal_name": "Imperial Circus Dead Decadence",
+    "description": "A little kite once sang me a song...",
+    "achievement_id": 213
+  },
+  {
+    "slug": "all-packs-tieff",
+    "name": "Tieff",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-tieff.png",
+    "medal_name": "tieff",
+    "description": "Flow.",
+    "achievement_id": 214
+  },
+  {
+    "slug": "all-packs-mappersguild-03",
+    "name": "Mappersguild 03",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-03.png",
+    "medal_name": "Mappers' Guild Pack III",
+    "description": "Sunrise was the end of a very magical night for one very special girl.",
+    "achievement_id": 226
+  },
+  {
+    "slug": "all-packs-mappersguild-04",
+    "name": "Mappersguild 04",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-04.png",
+    "medal_name": "Mappers' Guild Pack IV",
+    "description": "This freeway is a sensation and boy, does it love you!",
+    "achievement_id": 227
+  },
+  {
+    "slug": "all-packs-afterparty",
+    "name": "Afterparty",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-afterparty.png",
+    "medal_name": "Afterparty",
+    "description": "Encore to the core.",
+    "achievement_id": 229
+  },
+  {
+    "slug": "all-packs-benbriggs",
+    "name": "Benbriggs",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-benbriggs.png",
+    "medal_name": "Ben Briggs",
+    "description": "Chiptunes, Pokemon, oh my!",
+    "achievement_id": 230
+  },
+  {
+    "slug": "all-packs-carpooltunnel",
+    "name": "Carpooltunnel",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-carpooltunnel.png",
+    "medal_name": "Carpool Tunnel",
+    "description": "Not to be confused with an injury common to top-end players and people who watch anime.",
+    "achievement_id": 231
+  },
+  {
+    "slug": "all-packs-creo",
+    "name": "Creo",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-creo.png",
+    "medal_name": "Creo",
+    "description": "Dashing geometrically to a beatmap near you.",
+    "achievement_id": 232
+  },
+  {
+    "slug": "all-packs-cysmix",
+    "name": "Cysmix",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-cysmix.png",
+    "medal_name": "cYsmix",
+    "description": "Dead funky. For real.",
+    "achievement_id": 233
+  },
+  {
+    "slug": "all-packs-fractaldreamers",
+    "name": "Fractaldreamers",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-fractaldreamers.png",
+    "medal_name": "Fractal Dreamers",
+    "description": "Shattered dreams and muted skies never sounded so good.",
+    "achievement_id": 234
+  },
+  {
+    "slug": "all-packs-lukhash",
+    "name": "Lukhash",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-lukhash.png",
+    "medal_name": "LukHash",
+    "description": "There's a ghost in this here machine.",
+    "achievement_id": 235
+  },
+  {
+    "slug": "all-packs-namirin",
+    "name": "Namirin",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-namirin.png",
+    "medal_name": "*namirin",
+    "description": "Five colors to make your world sing!",
+    "achievement_id": 236
+  },
+  {
+    "slug": "all-packs-onumi",
+    "name": "Onumi",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-onumi.png",
+    "medal_name": "onumi",
+    "description": "There's a lot going on here.",
+    "achievement_id": 237
+  },
+  {
+    "slug": "all-packs-theflashbulb",
+    "name": "Theflashbulb",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-theflashbulb.png",
+    "medal_name": "The Flashbulb",
+    "description": "Not merely incandescent.",
+    "achievement_id": 238
+  },
+  {
+    "slug": "all-packs-undeadcorporation",
+    "name": "Undeadcorporation",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-undeadcorporation.png",
+    "medal_name": "Undead Corporation",
+    "description": "Diversifying underground assets. Literally.",
+    "achievement_id": 239
+  },
+  {
+    "slug": "all-packs-wispx",
+    "name": "Wispx",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-wispx.png",
+    "medal_name": "Wisp X",
+    "description": "Sunset and the moon.",
+    "achievement_id": 240
+  },
+  {
+    "slug": "all-packs-camellia-1",
+    "name": "Camellia 1",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-camellia-1.png",
+    "medal_name": "Camellia I",
+    "description": "This is the entrance to the jungle.",
+    "achievement_id": 246
+  },
+  {
+    "slug": "all-packs-celldweller",
+    "name": "Celldweller",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-celldweller.png",
+    "medal_name": "Celldweller",
+    "description": "The end of an empire is no obstacle to you.",
+    "achievement_id": 248
+  },
+  {
+    "slug": "all-packs-cranky2",
+    "name": "Cranky2",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-cranky2.png",
+    "medal_name": "Cranky II",
+    "description": "Even crankier than before!",
+    "achievement_id": 249
+  },
+  {
+    "slug": "all-packs-CuteAnimeGirls",
+    "name": "CuteAnimeGirls",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-CuteAnimeGirls.png",
+    "medal_name": "Cute Anime Girls",
+    "description": "Not to be confused with cute flamb\u00e9 grills.",
+    "achievement_id": 250
+  },
+  {
+    "slug": "all-packs-ELFENSJoN",
+    "name": "ELFENSJoN",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-ELFENSJoN.png",
+    "medal_name": "ELFENSJoN",
+    "description": "A world all of your own.",
+    "achievement_id": 251
+  },
+  {
+    "slug": "all-packs-HyperPotions",
+    "name": "HyperPotions",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-HyperPotions.png",
+    "medal_name": "Hyper Potions",
+    "description": "Gain 200 HP.",
+    "achievement_id": 252
+  },
+  {
+    "slug": "all-packs-KolaKid",
+    "name": "KolaKid",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-KolaKid.png",
+    "medal_name": "Kola Kid",
+    "description": "Remember, the Earth is counting on you.",
+    "achievement_id": 253
+  },
+  {
+    "slug": "all-packs-leaf",
+    "name": "Leaf",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-leaf.png",
+    "medal_name": "LeaF",
+    "description": "Calamity was not in your fortune.",
+    "achievement_id": 254
+  },
+  {
+    "slug": "all-packs-PandaEyes",
+    "name": "PandaEyes",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-PandaEyes.png",
+    "medal_name": "Panda Eyes",
+    "description": "Embrace the immortal flame.",
+    "achievement_id": 255
+  },
+  {
+    "slug": "all-packs-PUP",
+    "name": "PUP",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-PUP.png",
+    "medal_name": "PUP",
+    "description": "Finally, some closure.",
+    "achievement_id": 256
+  },
+  {
+    "slug": "all-packs-RickyMontgomery",
+    "name": "RickyMontgomery",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-RickyMontgomery.png",
+    "medal_name": "Ricky Montgomery",
+    "description": "All hook and sinker.",
+    "achievement_id": 257
+  },
+  {
+    "slug": "all-packs-Rin",
+    "name": "Rin",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-Rin.png",
+    "medal_name": "Rin",
+    "description": "Two minds, and a house full of ghosts.",
+    "achievement_id": 258
+  },
+  {
+    "slug": "all-packs-S3RL",
+    "name": "S3RL",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-S3RL.png",
+    "medal_name": "S3RL",
+    "description": "You'll never get any of these out of your head.",
+    "achievement_id": 259
+  },
+  {
+    "slug": "all-packs-SoundSouler",
+    "name": "SoundSouler",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-SoundSouler.png",
+    "medal_name": "Sound Souler",
+    "description": "Return color to your life.",
+    "achievement_id": 260
+  },
+  {
+    "slug": "all-packs-Teminite",
+    "name": "Teminite",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-Teminite.png",
+    "medal_name": "Teminite",
+    "description": "It's all about the state of mind.",
+    "achievement_id": 261
+  },
+  {
+    "slug": "all-packs-VINXIS",
+    "name": "VINXIS",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-VINXIS.png",
+    "medal_name": "VINXIS",
+    "description": "Staying on track.",
+    "achievement_id": 262
+  },
+  {
+    "slug": "all-packs-mappersguild-05",
+    "name": "Mappersguild 05",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-05.png",
+    "medal_name": "Mappers' Guild Pack V",
+    "description": "Invisible birdwatching.",
+    "achievement_id": 263
+  },
+  {
+    "slug": "all-packs-mappersguild-06",
+    "name": "Mappersguild 06",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-06.png",
+    "medal_name": "Mappers' Guild Pack VI",
+    "description": "Turn your superpower to hyperdrive!",
+    "achievement_id": 264
+  },
+  {
+    "slug": "all-packs-touhou",
+    "name": "Touhou",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-touhou.png",
+    "medal_name": "Touhou Pack",
+    "description": "The bamboo isn't the only thing dancing!",
+    "achievement_id": 282
+  },
+  {
+    "slug": "all-packs-ginkiha",
+    "name": "Ginkiha",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-ginkiha.png",
+    "medal_name": "ginkiha Pack",
+    "description": "The night stars shine the brightest of all.",
+    "achievement_id": 283
+  },
+  {
+    "slug": "all-packs-vocaloid",
+    "name": "Vocaloid",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-vocaloid.png",
+    "medal_name": "Vocaloid Pack",
+    "description": "What's life without a song?",
+    "achievement_id": 288
+  },
+  {
+    "slug": "all-packs-maduk",
+    "name": "Maduk",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-maduk.png",
+    "medal_name": "Maduk Pack",
+    "description": "You took control.",
+    "achievement_id": 289
+  },
+  {
+    "slug": "all-packs-aitsuki",
+    "name": "Aitsuki",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-aitsuki.png",
+    "medal_name": "Aitsuki Nakuru Pack",
+    "description": "Took part in the Joker's Parade.",
+    "achievement_id": 290
+  },
+  {
+    "slug": "all-packs-omoi",
+    "name": "Omoi",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-omoi.png",
+    "medal_name": "Omoi Pack",
+    "description": "A whole new meaning to chill.",
+    "achievement_id": 295
+  },
+  {
+    "slug": "all-packs-chill",
+    "name": "Chill",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-chill.png",
+    "medal_name": "Chill Pack",
+    "description": "Just vibin'.",
+    "achievement_id": 296
+  },
+  {
+    "slug": "all-packs-rohi",
+    "name": "Rohi",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-rohi.png",
+    "medal_name": "Rohi Pack",
+    "description": "An artifact of true skill.",
+    "achievement_id": 309
+  },
+  {
+    "slug": "all-packs-drum_and_bass",
+    "name": "Drum And Bass",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "all-packs-drum_and_bass.png",
+    "medal_name": "Drum & Bass Pack",
+    "description": "727? More like 174, baby!",
+    "achievement_id": 310
+  },
+  {
+    "slug": "loved-seasonal-2021-winter",
+    "name": "2021 Winter",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2021-winter.png",
+    "medal_name": "Project Loved: Winter 2021",
+    "description": "You're very welcome for the music.",
+    "achievement_id": 311
+  },
+  {
+    "slug": "loved-seasonal-2022-spring",
+    "name": "2022 Spring",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2022-spring.png",
+    "medal_name": "Project Loved: Spring 2022",
+    "description": "You promised that foolish heroes would be good for me...",
+    "achievement_id": 312
+  },
+  {
+    "slug": "loved-seasonal-2022-summer",
+    "name": "2022 Summer",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2022-summer.png",
+    "medal_name": "Project Loved: Summer 2022",
+    "description": "Alright, fine. You don't sound like dragonforce.",
+    "achievement_id": 313
+  },
+  {
+    "slug": "loved-seasonal-2022-autumn",
+    "name": "2022 Autumn",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2022-autumn.png",
+    "medal_name": "Project Loved: Autumn 2022",
+    "description": "There's a god-ish bee in my damned salad.",
+    "achievement_id": 314
+  },
+  {
+    "slug": "loved-seasonal-2022-winter",
+    "name": "2022 Winter",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2022-winter.png",
+    "medal_name": "Project Loved: Winter 2022",
+    "description": "Chasing nightmares in square, alien and propane forms.",
+    "achievement_id": 315
+  },
+  {
+    "slug": "loved-seasonal-2023-spring",
+    "name": "2023 Spring",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2023-spring.png",
+    "medal_name": "Project Loved: Spring 2023",
+    "description": "Phase one: turn all humans and their fickle souls into orange cordial.",
+    "achievement_id": 316
+  },
+  {
+    "slug": "loved-seasonal-2023-summer",
+    "name": "2023 Summer",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2023-summer.png",
+    "medal_name": "Project Loved: Summer 2023",
+    "description": "Keep those psychopathic bugs away from my flowers!",
+    "achievement_id": 325
+  },
+  {
+    "slug": "catch-packs-ghostlove",
+    "name": "Ghostlove",
+    "grouping": "Beatmap Packs",
+    "mode": "fruits",
+    "file": "catch-packs-ghostlove.png",
+    "medal_name": "in love with a ghost",
+    "description": "A quasi-Valentine's story about coffee, cuteness, lonely mornings and laughs.",
+    "achievement_id": 335
+  },
+  {
+    "slug": "loved-seasonal-2024",
+    "name": "2024",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2024.png",
+    "medal_name": "Project Loved: Best of 2024",
+    "description": "In the freezing midwinter, I can still barely hear your voice...",
+    "achievement_id": 350
+  },
+  {
+    "slug": "loved-seasonal-2025",
+    "name": "2025",
+    "grouping": "Beatmap Packs",
+    "mode": null,
+    "file": "loved-seasonal-2025.png",
+    "medal_name": "Project Loved: Best of 2025",
+    "description": "Isn't it about time for a good morning?",
+    "achievement_id": 359
+  },
+  {
+    "slug": "taiko-packs-chroma",
+    "name": "Chroma",
+    "grouping": "Beatmap Packs",
+    "mode": "taiko",
+    "file": "taiko-packs-chroma.png",
+    "medal_name": "Chroma Pack",
+    "description": "@_@",
+    "achievement_id": 360
+  },
+  {
+    "slug": "catch-packs-mili",
+    "name": "Mili",
+    "grouping": "Beatmap Packs",
+    "mode": "fruits",
+    "file": "catch-packs-mili.png",
+    "medal_name": "Mili Pack",
+    "description": "With so much sacrifice, I don't even bother to survive.",
+    "achievement_id": 361
+  },
+  {
+    "slug": "mania-packs-4k-globe",
+    "name": "4k Globe",
+    "grouping": "Beatmap Packs",
+    "mode": "mania",
+    "file": "mania-packs-4k-globe.png",
+    "medal_name": "4K Globetrotter",
+    "description": "Around the world, a-round the world.",
+    "achievement_id": 362
+  },
+  {
+    "slug": "mania-packs-7k-world-cup",
+    "name": "7k World Cup",
+    "grouping": "Beatmap Packs",
+    "mode": "mania",
+    "file": "mania-packs-7k-world-cup.png",
+    "medal_name": "7K World Cup Anthology",
+    "description": "A spread worthy of a world stage.",
+    "achievement_id": 363
+  }
+]

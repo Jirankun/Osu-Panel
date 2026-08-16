@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Osu! Panel — Profile Large Widget Layout (gaya osu-stats-signature)
+
+  Satu ImageView berisi bitmap signature 550x320 yang dirender oleh
+  SignatureRenderer (template stat-sign "full"): cover, avatar, username,
+  level bar, grade counts, dan semua statistik dalam satu kartu.
+  Bitmap diskalakan proporsional (fitCenter) mengikuti ukuran widget.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/profile_large_widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/large_signature_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/widget_signature_desc" />
+</FrameLayout>

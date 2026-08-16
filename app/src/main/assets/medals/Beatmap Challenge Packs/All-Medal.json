@@ -1,0 +1,72 @@
+[
+  {
+    "slug": "all-packs-camellia-2",
+    "name": "Camellia 2",
+    "grouping": "Beatmap Challenge Packs",
+    "mode": null,
+    "file": "all-packs-camellia-2.png",
+    "medal_name": "Camellia II",
+    "description": "Exit the atmosphere.",
+    "achievement_id": 247
+  },
+  {
+    "slug": "all-packs-mappersguild-07",
+    "name": "Mappersguild 07",
+    "grouping": "Beatmap Challenge Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-07.png",
+    "medal_name": "Mappers' Guild Pack VII",
+    "description": "A new set of vibrant challenges to overcome.",
+    "achievement_id": 265
+  },
+  {
+    "slug": "all-packs-mappersguild-08",
+    "name": "Mappersguild 08",
+    "grouping": "Beatmap Challenge Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-08.png",
+    "medal_name": "Mappers' Guild Pack VIII",
+    "description": "Succeed with a chorus of voices.",
+    "achievement_id": 266
+  },
+  {
+    "slug": "all-packs-mappersguild-09",
+    "name": "Mappersguild 09",
+    "grouping": "Beatmap Challenge Packs",
+    "mode": null,
+    "file": "all-packs-mappersguild-09.png",
+    "medal_name": "Mappers' Guild Pack IX",
+    "description": "This is no subtle change.",
+    "achievement_id": 267
+  },
+  {
+    "slug": "all-packs-muzz",
+    "name": "Muzz",
+    "grouping": "Beatmap Challenge Packs",
+    "mode": null,
+    "file": "all-packs-muzz.png",
+    "medal_name": "MUZZ Pack",
+    "description": "Break away from the endgame.",
+    "achievement_id": 284
+  },
+  {
+    "slug": "all-packs-ariableyes",
+    "name": "Ariableyes",
+    "grouping": "Beatmap Challenge Packs",
+    "mode": null,
+    "file": "all-packs-ariableyes.png",
+    "medal_name": "Ariabl'eyeS Pack",
+    "description": "Command the mercurial skies.",
+    "achievement_id": 294
+  },
+  {
+    "slug": "all-packs-usao",
+    "name": "Usao",
+    "grouping": "Beatmap Challenge Packs",
+    "mode": null,
+    "file": "all-packs-usao.png",
+    "medal_name": "USAO Pack",
+    "description": "Now THAT is a showdown.",
+    "achievement_id": 308
+  }
+]

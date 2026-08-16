@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Warna brand osu! -->
+    <color name="osu_pink">#E86E9E</color>
+
+    <!-- ── Warna fungsional (rank, status, grade, aksen stat) ──
+         Satu sumber kebenaran — dibaca via core/theme/OsuColors.kt -->
+    <color name="accent_blue">#2196F3</color>
+    <color name="accent_green">#4CAF50</color>
+    <color name="accent_purple">#9C27B0</color>
+    <color name="accent_amber">#FFC107</color>
+    <color name="accent_amber_600">#FFB300</color>
+    <color name="accent_orange">#FF9800</color>
+    <color name="accent_teal">#009688</color>
+    <color name="accent_pink">#E91E63</color>
+    <color name="accent_cyan">#00BCD4</color>
+    <color name="accent_gray">#9E9E9E</color>
+    <color name="accent_yellow_light">#FFD54F</color>
+    <color name="accent_orange_light">#FFB74D</color>
+    <color name="accent_pink_300">#F06292</color>
+    <color name="accent_blue_400">#42A5F5</color>
+    <color name="accent_blue_800">#1565C0</color>
+    <color name="accent_green_400">#66BB6A</color>
+    <color name="accent_green_800">#2E7D32</color>
+
+    <!-- Loading spinner — lazer box (Color4.Black, alpha 0.7 di kode) -->
+    <color name="osu_loading_box">#000000</color>
+
+    <!-- ── Tema terang (Material 3 light) ── -->
+    <color name="light_primary">#90495F</color>
+    <color name="light_on_primary">#FFFFFF</color>
+    <color name="light_primary_container">#FFD9E2</color>
+    <color name="light_on_primary_container">#3B001B</color>
+    <color name="light_secondary">#74565F</color>
+    <color name="light_on_secondary">#FFFFFF</color>
+    <color name="light_secondary_container">#FFD9E2</color>
+    <color name="light_on_secondary_container">#2B151B</color>
+    <color name="light_tertiary">#7C5636</color>
+    <color name="light_on_tertiary">#FFFFFF</color>
+    <color name="light_tertiary_container">#FFDCC0</color>
+    <color name="light_on_tertiary_container">#2E1500</color>
+    <color name="light_error">#BA1A1A</color>
+    <color name="light_on_error">#FFFFFF</color>
+    <color name="light_error_container">#FFDAD6</color>
+    <color name="light_on_error_container">#410002</color>
+    <color name="light_background">#FFF8F9</color>
+    <color name="light_on_background">#22191C</color>
+    <color name="light_surface">#FFF8F9</color>
+    <color name="light_on_surface">#22191C</color>
+    <color name="light_surface_variant">#F2DDE2</color>
+    <color name="light_on_surface_variant">#514347</color>
+    <color name="light_outline">#837377</color>
+
+    <!-- ── Tema gelap (Material 3 dark) ── -->
+    <color name="dark_primary">#FFB1C8</color>
+    <color name="dark_on_primary">#5E1132</color>
+    <color name="dark_primary_container">#7B2946</color>
+    <color name="dark_on_primary_container">#FFD9E2</color>
+    <color name="dark_secondary">#E1BDC7</color>
+    <color name="dark_on_secondary">#432933</color>
+    <color name="dark_secondary_container">#5C3F48</color>
+    <color name="dark_on_secondary_container">#FFD9E2</color>
+    <color name="dark_tertiary">#F0BD93</color>
+    <color name="dark_on_tertiary">#4A2808</color>
+    <color name="dark_tertiary_container">#643E1F</color>
+    <color name="dark_on_tertiary_container">#FFDCC0</color>
+    <color name="dark_error">#FFB4AB</color>
+    <color name="dark_on_error">#690005</color>
+    <color name="dark_error_container">#93000A</color>
+    <color name="dark_on_error_container">#FFDAD6</color>
+    <color name="dark_background">#22191C</color>
+    <color name="dark_on_background">#EDE0E3</color>
+    <color name="dark_surface">#22191C</color>
+    <color name="dark_on_surface">#EDE0E3</color>
+    <color name="dark_surface_variant">#514347</color>
+    <color name="dark_on_surface_variant">#D5C2C7</color>
+    <color name="dark_outline">#9E8C91</color>
+</resources>

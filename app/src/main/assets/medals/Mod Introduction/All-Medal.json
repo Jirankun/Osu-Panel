@@ -1,0 +1,132 @@
+[
+  {
+    "slug": "all-intro-suddendeath",
+    "name": "Suddendeath",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-suddendeath.png",
+    "medal_name": "Finality",
+    "description": "High stakes, no regrets.",
+    "achievement_id": 119
+  },
+  {
+    "slug": "all-intro-perfect",
+    "name": "Perfect",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-perfect.png",
+    "medal_name": "Perfectionist",
+    "description": "Accept nothing but the best.",
+    "achievement_id": 120
+  },
+  {
+    "slug": "all-intro-hardrock",
+    "name": "Hardrock",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-hardrock.png",
+    "medal_name": "Rock Around The Clock",
+    "description": "You can't stop the rock.",
+    "achievement_id": 121
+  },
+  {
+    "slug": "all-intro-doubletime",
+    "name": "Doubletime",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-doubletime.png",
+    "medal_name": "Time And A Half",
+    "description": "Having a right ol' time. One and a half of them, almost.",
+    "achievement_id": 122
+  },
+  {
+    "slug": "all-intro-nightcore",
+    "name": "Nightcore",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-nightcore.png",
+    "medal_name": "Sweet Rave Party",
+    "description": "Founded in the fine tradition of changing things that were just fine as they were.",
+    "achievement_id": 123
+  },
+  {
+    "slug": "all-intro-hidden",
+    "name": "Hidden",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-hidden.png",
+    "medal_name": "Blindsight",
+    "description": "I can see just perfectly.",
+    "achievement_id": 124
+  },
+  {
+    "slug": "all-intro-flashlight",
+    "name": "Flashlight",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-flashlight.png",
+    "medal_name": "Are You Afraid Of The Dark?",
+    "description": "Harder than it looks, probably because it's hard to look.",
+    "achievement_id": 125
+  },
+  {
+    "slug": "all-intro-easy",
+    "name": "Easy",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-easy.png",
+    "medal_name": "Dial It Right Back",
+    "description": "Sometimes you just want to take it easy.",
+    "achievement_id": 126
+  },
+  {
+    "slug": "all-intro-nofail",
+    "name": "Nofail",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-nofail.png",
+    "medal_name": "Risk Averse",
+    "description": "Safety nets are fun!",
+    "achievement_id": 127
+  },
+  {
+    "slug": "all-intro-halftime",
+    "name": "Halftime",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-halftime.png",
+    "medal_name": "Slowboat",
+    "description": "You got there. Eventually.",
+    "achievement_id": 128
+  },
+  {
+    "slug": "all-intro-spunout",
+    "name": "Spunout",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-spunout.png",
+    "medal_name": "Burned Out",
+    "description": "One cannot always spin to win.",
+    "achievement_id": 131
+  },
+  {
+    "slug": "all-intro-conversion",
+    "name": "Conversion",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-conversion.png",
+    "medal_name": "Gear Shift",
+    "description": "Tailor your experience to your perfect fit.",
+    "achievement_id": 339
+  },
+  {
+    "slug": "all-intro-fun",
+    "name": "Fun",
+    "grouping": "Mod Introduction",
+    "mode": null,
+    "file": "all-intro-fun.png",
+    "medal_name": "Game Night",
+    "description": "Mum said it's my turn with the beatmap!",
+    "achievement_id": 340
+  }
+]
