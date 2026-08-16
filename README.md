@@ -1,7 +1,7 @@
 # Osu! Panel — Native Android
 
 A native Android rewrite of the Osu! Panel app, built
-with Jetpack Compose + Material 3 and the same flow as the Flutter version.
+with Jetpack Compose + Material 3.
 It includes **OAuth login + the full osu! API v2 layer**, **3 home screen
 widgets**, a **card generator**, and most main screens (Dashboard, Maps,
 Rankings, Profile, Beatmap Detail, Settings, License, Contributor).
@@ -212,6 +212,10 @@ Without these secrets every workflow still succeeds — the release APK is just
 unsigned (debug is never signed either way).
 
 ### Contribution guidelines
+
+> **Project Owner:** Jirang
+>
+> Please respect the project's direction and follow the guidelines below before submitting a pull request.
 
 1. **New feature** → create `feature/<name>/` with `XxxViewModel.kt` +
    `ui/XxxScreen.kt`, then register the route in `core/navigation/`.
@@ -439,6 +443,10 @@ tanda tangan (debug tetap tidak pernah di-sign).
 
 ### Panduan kontribusi
 
+> **Pemilik Proyek:** Jirang
+>
+> Mohon hormati arah proyek ini dan ikuti panduan di bawah ini sebelum mengirimkan pull request.
+
 1. **Fitur baru** → buat `feature/<nama>/` dengan `XxxViewModel.kt` +
    `ui/XxxScreen.kt`, lalu daftarkan route di `core/navigation/`.
 2. **Endpoint API baru** → tambah method di `data/remote/OsuApi.kt` (API osu!)
@@ -463,3 +471,4 @@ tanda tangan (debug tetap tidak pernah di-sign).
 MIT — lihat [LICENSE](LICENSE). Lisensi pihak ketiga ada di
 [THIRD_PARTY_LICENSES.txt](THIRD_PARTY_LICENSES.txt) dan di dalam aplikasi
 (Settings → License).
+```
