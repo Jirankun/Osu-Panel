@@ -231,29 +231,10 @@ keytool -genkey -v -keystore ~/.keystores/osu-panel-release.jks \
   -alias osu-panel -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-**GitHub Actions** — add these **repository secrets** (Settings → Secrets and
-variables → Actions):
-
-| Secret | Value |
-| --- | --- |
-| `SIGN_KEYSTORE_B64` | The keystore **encoded in base64** (workflows decode it at build time) |
-| `SIGN_ALIAS` | Alias of the signing key |
-| `SIGN_KEY_PASS` | Key password |
-| `SIGN_STORE_PASS` | Store password |
-
-```bash
-# one-time: print the base64 to paste into the SIGN_KEYSTORE_B64 secret
-base64 -w 0 ~/.keystores/osu-panel-release.jks
-```
-
-Without these secrets every workflow still succeeds — the release APK is just
-unsigned (debug is never signed either way).
-
 ### Contribution guidelines
 
-> **Project Owner:** Jirang
+> **Project Owner:** in osu > Zhykun , in Github : Zhyllan Fyllah _ Jirankun
 >
-> Please respect the project's direction and follow the guidelines below before submitting a pull request.
 
 1. **New feature** → create `feature/<name>/` with `XxxViewModel.kt` +
    `ui/XxxScreen.kt`, then register the route in `core/navigation/`.
@@ -461,29 +442,10 @@ keytool -genkey -v -keystore ~/.keystores/osu-panel-release.jks \
   -alias osu-panel -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-**GitHub Actions** — tambahkan **repository secrets** ini (Settings → Secrets
-and variables → Actions):
-
-| Secret | Nilai |
-| --- | --- |
-| `SIGN_KEYSTORE_B64` | Keystore yang **di-encode base64** (workflow mendekode-nya saat build) |
-| `SIGN_ALIAS` | Alias kunci signing |
-| `SIGN_KEY_PASS` | Password kunci |
-| `SIGN_STORE_PASS` | Password store |
-
-```bash
-# sekali saja: cetak base64 untuk ditempel ke secret SIGN_KEYSTORE_B64
-base64 -w 0 ~/.keystores/osu-panel-release.jks
-```
-
-Tanpa secret ini semua workflow tetap sukses — APK release hanya tanpa
-tanda tangan (debug tetap tidak pernah di-sign).
-
 ### Panduan kontribusi
 
-> **Pemilik Proyek:** Jirang
+> **Pemilik Proyek:** di osu > Zhykun , di Github : Zhyllan Fyllah _ Jirankun
 >
-> Mohon hormati arah proyek ini dan ikuti panduan di bawah ini sebelum mengirimkan pull request.
 
 1. **Fitur baru** → buat `feature/<nama>/` dengan `XxxViewModel.kt` +
    `ui/XxxScreen.kt`, lalu daftarkan route di `core/navigation/`.
