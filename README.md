@@ -26,13 +26,23 @@
 ·
 [Issues](https://github.com/Jirankun/Osu-Panel/issues)
 ·
-[License](https://github.com/Jirankun/Osu-Panel/blob/main/LICENSE)
+[Screenshoots](https://github.com/Jirankun/Osu-Panel/blob/main/repo/SCREENSHOOT.md)
 
 A native Android rewrite of the Osu! Panel app, built
 with Jetpack Compose + Material 3.
 It includes **OAuth login + the full osu! API v2 layer**, **3 home screen
 widgets**, a **card generator**, and most main screens (Dashboard, Maps,
 Rankings, Profile, Beatmap Detail, Settings, License, Contributor).
+
+## Screenshots
+
+All previews are collected in [SCREENSHOOT.md](repo/SCREENSHOOT.md) — here
+are all of them at a glance:
+
+| | | | |
+| --- | --- | --- | --- |
+| [<img src="repo/screen/thumb/Rrankings.jpg" width="160" alt="Rankings">](repo/screen/Rrankings.jpg) | [<img src="repo/screen/thumb/dashboard.jpg" width="160" alt="Dashboard">](repo/screen/dashboard.jpg) | [<img src="repo/screen/thumb/map_detail.jpg" width="160" alt="Map Detail">](repo/screen/map_detail.jpg) | [<img src="repo/screen/thumb/maps.jpg" width="160" alt="Maps">](repo/screen/maps.jpg) |
+| [<img src="repo/screen/thumb/login.jpg" width="160" alt="Login">](repo/screen/login.jpg) | [<img src="repo/screen/thumb/profile_detail.jpg" width="160" alt="Profile Detail">](repo/screen/profile_detail.jpg) | [<img src="repo/screen/thumb/launcher_widget.jpg" width="160" alt="Launcher Widget">](repo/screen/launcher_widget.jpg) | [<img src="repo/screen/thumb/settings.jpg" width="160" alt="Settings">](repo/screen/settings.jpg) |
 
 > **License**: MIT — see [LICENSE](LICENSE).
 >
