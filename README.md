@@ -1,7 +1,35 @@
+<p align="center">
+  <img src="repo/Osu!_Panel.png" width="100">
+</p>
+
 # Osu! Panel — Native Android
 
-A native Android rewrite of the Osu! Panel app (previously Flutter), built
-with Jetpack Compose + Material 3 and the same flow as the Flutter version.
+[![GitHub release](https://img.shields.io/github/v/release/Jirankun/Osu-Panel?label=release)](https://github.com/Jirankun/Osu-Panel/releases)
+[![License](https://img.shields.io/github/license/Jirankun/Osu-Panel)](https://github.com/Jirankun/Osu-Panel/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Jirankun/Osu-Panel?style=social)](https://github.com/Jirankun/Osu-Panel/stargazers)
+
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0%2B-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![Android](https://img.shields.io/badge/Android-API%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com/)
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285F4?logo=jetpackcompose&logoColor=white)](https://developer.android.com/compose)
+[![Material 3](https://img.shields.io/badge/Material%203-UI-6750A4?logo=materialdesign&logoColor=white)](https://m3.material.io/)
+[![osu! API v2](https://img.shields.io/badge/osu!-API%20v2-FF66AA?logo=osu&logoColor=white)](https://osu.ppy.sh/docs/index.html)
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Jirankun/Osu-Panel)
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-35-orange.svg?style=flat-square)](CONTRIBUTORS.md)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+[Repository](https://github.com/Jirankun/Osu-Panel)
+·
+[Releases](https://github.com/Jirankun/Osu-Panel/releases)
+·
+[Issues](https://github.com/Jirankun/Osu-Panel/issues)
+·
+[License](https://github.com/Jirankun/Osu-Panel/blob/main/LICENSE)
+
+A native Android rewrite of the Osu! Panel app, built
+with Jetpack Compose + Material 3.
 It includes **OAuth login + the full osu! API v2 layer**, **3 home screen
 widgets**, a **card generator**, and most main screens (Dashboard, Maps,
 Rankings, Profile, Beatmap Detail, Settings, License, Contributor).
@@ -212,6 +240,10 @@ Without these secrets every workflow still succeeds — the release APK is just
 unsigned (debug is never signed either way).
 
 ### Contribution guidelines
+
+> **Project Owner:** Jirang
+>
+> Please respect the project's direction and follow the guidelines below before submitting a pull request.
 
 1. **New feature** → create `feature/<name>/` with `XxxViewModel.kt` +
    `ui/XxxScreen.kt`, then register the route in `core/navigation/`.
@@ -438,6 +470,10 @@ Tanpa secret ini semua workflow tetap sukses — APK release hanya tanpa
 tanda tangan (debug tetap tidak pernah di-sign).
 
 ### Panduan kontribusi
+
+> **Pemilik Proyek:** Jirang
+>
+> Mohon hormati arah proyek ini dan ikuti panduan di bawah ini sebelum mengirimkan pull request.
 
 1. **Fitur baru** → buat `feature/<nama>/` dengan `XxxViewModel.kt` +
    `ui/XxxScreen.kt`, lalu daftarkan route di `core/navigation/`.
