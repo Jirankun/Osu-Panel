@@ -1,6 +1,6 @@
 # Osu! Panel — Native Android
 
-A native Android rewrite of the Osu! Panel app (previously Flutter), built
+A native Android rewrite of the Osu! Panel app, built
 with Jetpack Compose + Material 3 and the same flow as the Flutter version.
 It includes **OAuth login + the full osu! API v2 layer**, **3 home screen
 widgets**, a **card generator**, and most main screens (Dashboard, Maps,
