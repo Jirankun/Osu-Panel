@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="repo/Osu!_Panel.png" width="100">
+</p>
+
 # Osu! Panel — Native Android
 
 [![GitHub release](https://img.shields.io/github/v/release/Jirankun/Osu-Panel?label=release)](https://github.com/Jirankun/Osu-Panel/releases)
@@ -495,4 +499,3 @@ tanda tangan (debug tetap tidak pernah di-sign).
 MIT — lihat [LICENSE](LICENSE). Lisensi pihak ketiga ada di
 [THIRD_PARTY_LICENSES.txt](THIRD_PARTY_LICENSES.txt) dan di dalam aplikasi
 (Settings → License).
-```
