@@ -30,6 +30,7 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material.icons.rounded.Widgets
@@ -87,6 +88,7 @@ fun SettingsScreen(
     onOpenLicenses: () -> Unit,
     onOpenContributors: () -> Unit,
     onOpenChatSettings: () -> Unit,
+    onOpenLanguagePicker: () -> Unit = {},
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val context = LocalContext.current
@@ -115,6 +117,20 @@ fun SettingsScreen(
                 .padding(start = 20.dp, end = 20.dp, bottom = 120.dp),
         ) {
             Spacer(Modifier.height(8.dp))
+
+            // ── Section: System ──
+            SectionLabel(stringResource(R.string.settings_system_section))
+            Spacer(Modifier.height(8.dp))
+
+            AboutItem(
+                icon = Icons.Rounded.Language,
+                title = stringResource(R.string.settings_language),
+                subtitle = stringResource(R.string.settings_language_desc),
+                onClick = onOpenLanguagePicker,
+                showTriangles = false,
+            )
+
+            Spacer(Modifier.height(24.dp))
 
             // ── Section: Widget ──
             SectionLabel(stringResource(R.string.settings_widget_section))
@@ -512,7 +528,18 @@ private fun VersionInfoDialog(
                     "Osu! Panel - $version",
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    "Aokaze Studio ~ Jirankun",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colorScheme.onSurfaceVariant,
+                    fontSize = 11.sp,
+                )
+                Spacer(Modifier.height(14.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                 Text(
                     stringResource(R.string.settings_privacy_policy),
                     style = MaterialTheme.typography.bodyMedium,
@@ -521,15 +548,19 @@ private fun VersionInfoDialog(
                     modifier = Modifier.clickable {
                         runCatching {
                             context.startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/privacy_policy/"),
-                                ),
+                                    Intent(Intent.ACTION_VIEW, Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/privacy_policy/"))
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                             )
                         }
                     },
                 )
-                Spacer(Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .width(1.dp)
+                            .height(16.dp)
+                            .background(colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                    )
                 Text(
                     stringResource(R.string.settings_terms_of_service),
                     style = MaterialTheme.typography.bodyMedium,
@@ -538,14 +569,13 @@ private fun VersionInfoDialog(
                     modifier = Modifier.clickable {
                         runCatching {
                             context.startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/terms_%20service/"),
-                                ),
+                                    Intent(Intent.ACTION_VIEW, Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/terms_%20service/"))
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                             )
                         }
                     },
                 )
+                }
             }
         },
         confirmButton = {},
