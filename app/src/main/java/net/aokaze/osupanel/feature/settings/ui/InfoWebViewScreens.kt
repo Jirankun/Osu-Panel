@@ -167,7 +167,10 @@ private object InfoWebViewSessions {
 private fun openExternallyIfGithub(context: Context, url: String): Boolean {
     if (url.contains("github.com")) {
         runCatching {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            )
         }
         return true
     }

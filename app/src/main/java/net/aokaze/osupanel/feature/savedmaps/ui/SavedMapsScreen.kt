@@ -1,10 +1,10 @@
-/* MIT License — Copyright (c) 2026 Zhyllan Fyllah (Jirankun) - Aokaze Studio */
+/*
+ * MIT License
+ * Copyright (c) 2026 Zhyllan Fyllah (Jirankun) - Aokaze Studio
+ */
 
-package net.aokaze.osupanel.feature.home.ui
+package net.aokaze.osupanel.feature.savedmaps.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,9 +53,14 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.aokaze.osupanel.R
-import net.aokaze.osupanel.core.theme.OsuColors
 import net.aokaze.osupanel.data.local.BookmarkStore
 
+/**
+ * Saved Maps screen — displays all bookmarked beatmaps.
+ *
+ * Flow: Maps tab header → tap bookmark icon → navigate here.
+ * Each card opens the Beatmap Detail screen on tap.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedMapsScreen(

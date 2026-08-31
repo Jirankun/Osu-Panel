@@ -24,6 +24,9 @@ object Routes {
     /** Chat settings (Chatango login / activation / notifications). */
     const val CHAT_SETTINGS = "settings/chat"
 
+    /** Language picker screen. */
+    const val LANGUAGE_PICKER = "settings/language"
+
     /** Saved maps / bookmarks screen. */
     const val SAVED_MAPS = "saved-maps"
 

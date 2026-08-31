@@ -205,6 +205,7 @@ class RankingsViewModel(application: Application) : BaseViewModel(application) {
             val wrapped = mutableListOf<RankingRow>()
             val id = query.toIntOrNull()
             if (id != null) {
+                // Numeric ID → direct lookup via GET /users/{id}
                 try {
                     val user = repository.getUser(id)
                     wrapped += RankingRow(
@@ -218,15 +219,26 @@ class RankingsViewModel(application: Application) : BaseViewModel(application) {
                     )
                 }
             } else {
-                // Partial/similar name → the osu! search endpoint (1 request,
-                // ALL matches — not just exact). Search results have no
-                // statistics → rank/pp show as N/A.
-                wrapped += repository.searchUsers(query).map {
-                    RankingRow(
-                        user = it,
-                        globalRank = it.statistics?.globalRank,
-                        pp = it.statistics?.pp ?: 0.0,
+                // Try exact username first via GET /users/@{username}
+                // (returns full user with stats, 1 request).
+                try {
+                    val user = repository.getUserByUsername(query)
+                    wrapped += RankingRow(
+                        user = user,
+                        globalRank = user.statistics?.globalRank,
+                        pp = user.statistics?.pp ?: 0.0,
                     )
+                } catch (_: Throwable) {
+                    // Not an exact match → fall back to the search endpoint
+                    // (Elasticsearch partial/fuzzy match, multiple results).
+                    val results = repository.searchUsers(query)
+                    wrapped += results.map {
+                        RankingRow(
+                            user = it,
+                            globalRank = it.statistics?.globalRank,
+                            pp = it.statistics?.pp ?: 0.0,
+                        )
+                    }
                 }
             }
             _state.value = _state.value.copy(

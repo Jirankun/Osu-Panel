@@ -41,9 +41,10 @@ import net.aokaze.osupanel.feature.chat.ui.ChatSettingsScreen
 import net.aokaze.osupanel.feature.chat.ui.GroupChatScreen
 import net.aokaze.osupanel.feature.chat.ui.PmChatScreen
 import net.aokaze.osupanel.feature.home.ui.MainShell
-import net.aokaze.osupanel.feature.home.ui.SavedMapsScreen
+import net.aokaze.osupanel.feature.savedmaps.ui.SavedMapsScreen
 import net.aokaze.osupanel.feature.profile.ui.ProfileScreen
 import net.aokaze.osupanel.feature.settings.ui.ContributorsScreen
+import net.aokaze.osupanel.feature.settings.ui.LanguagePickerScreen
 import net.aokaze.osupanel.feature.settings.ui.LicensesScreen
 import net.aokaze.osupanel.feature.update.UpdateCheckViewModel
 import net.aokaze.osupanel.ui.components.BannerType
@@ -99,22 +100,13 @@ fun OsuPanelNavHost(
     NavHost(
         navController = navController,
         startDestination = Routes.SPLASH,
-        // Standard forward/back screen motion (300ms, app-wide): pushing a
-        // screen slides it in from the right; popping slides it back out to
-        // the right, with a light cross-fade on both. Tuned so the pinned
-        // detail headers stay visually calm while switching screens.
-        enterTransition = {
-            slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) + fadeIn(tween(300))
-        },
-        exitTransition = {
-            slideOutHorizontally(targetOffsetX = { -it / 3 }, animationSpec = tween(300)) + fadeOut(tween(300))
-        },
-        popEnterTransition = {
-            slideInHorizontally(initialOffsetX = { -it / 3 }, animationSpec = tween(300)) + fadeIn(tween(300))
-        },
-        popExitTransition = {
-            slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) + fadeOut(tween(300))
-        },
+        // Default Material-like slide transitions:
+        //   Push: slide in from right, slide out to left.
+        //   Pop:  slide in from left, slide out to right.
+        enterTransition = { slideInHorizontally(initialOffsetX = { it }) + fadeIn(tween(200)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -it / 3 }) + fadeOut(tween(200)) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -it / 3 }) + fadeIn(tween(200)) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) + fadeOut(tween(200)) },
     ) {
         composable(Routes.SPLASH) { SplashScreen(viewModel) }
         composable(Routes.LOGIN) { LoginScreen(viewModel) }
@@ -145,6 +137,9 @@ fun OsuPanelNavHost(
                 onOpenSavedMaps = {
                     if (guard()) navController.navigate(Routes.SAVED_MAPS)
                 },
+                onOpenLanguagePicker = {
+                    if (guard()) navController.navigate(Routes.LANGUAGE_PICKER)
+                },
             )
         }
         composable(Routes.CHAT_SETTINGS) {
@@ -171,6 +166,11 @@ fun OsuPanelNavHost(
         ) { entry ->
             val group = entry.arguments?.getString("group") ?: return@composable
             GroupChatScreen(group = group, onBack = { navController.popBackStack() })
+        }
+        composable(Routes.LANGUAGE_PICKER) {
+            LanguagePickerScreen(
+                onBack = { navController.popBackStack() },
+            )
         }
         composable(Routes.SAVED_MAPS) {
             SavedMapsScreen(

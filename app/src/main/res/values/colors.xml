@@ -30,6 +30,9 @@
     <!-- Rich text link color (Chatango) -->
     <color name="richtext_link">#FF66AB</color>
 
+    <!-- Daily Challenge banner background -->
+    <color name="daily_challenge_bg">#1565C0</color>
+
     <!-- Loading spinner — lazer box (Color4.Black, alpha 0.7 di kode) -->
     <color name="osu_loading_box">#000000</color>
 

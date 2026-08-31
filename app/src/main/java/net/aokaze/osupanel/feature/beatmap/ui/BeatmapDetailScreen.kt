@@ -32,8 +32,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Leaderboard
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Share
@@ -56,6 +57,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,13 +77,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
+import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.exoplayer.ExoPlayer
 import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.aokaze.osupanel.R
 import net.aokaze.osupanel.core.theme.OsuColors
 import net.aokaze.osupanel.core.util.formatDuration
 import net.aokaze.osupanel.core.util.formatNumber
+import net.aokaze.osupanel.data.local.BookmarkStore
 import net.aokaze.osupanel.data.model.BeatmapsetDto
 import net.aokaze.osupanel.feature.beatmap.BeatmapDetailViewModel
 import net.aokaze.osupanel.ui.components.MapCoverImage
@@ -89,12 +98,27 @@ import net.aokaze.osupanel.ui.components.OsuSpinner
 import net.aokaze.osupanel.ui.components.RetryButton
 import net.aokaze.osupanel.ui.components.trianglesLine
 import android.util.Base64
+import java.io.File
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 /** QR viewer hosted at osu-panel.zhyllanfyllah.my.id */
 private const val QR_VIEWER_URL = "https://osu-panel.zhyllanfyllah.my.id/qr"
+
+/** Shared audio cache — one SimpleCache per app (required by Media3). */
+private var sharedAudioCache: SimpleCache? = null
+private fun getAudioCache(context: Context): SimpleCache {
+    return sharedAudioCache ?: synchronized(Unit) {
+        sharedAudioCache ?: run {
+            val dir = File(context.cacheDir, "audio_preview")
+            dir.mkdirs()
+            val evictor = LeastRecentlyUsedCacheEvictor(10L * 1024 * 1024)
+            SimpleCache(dir, evictor, StandaloneDatabaseProvider(context.applicationContext))
+                .also { sharedAudioCache = it }
+        }
+    }
+}
 
 /** Build base64-encoded QR payload for a beatmap. */
 internal fun buildQrBase64(
@@ -173,8 +197,23 @@ fun BeatmapDetailScreen(
     val bms = state.beatmapset!!
     val previewUrl = bms.previewUrl
 
-    // ── Audio preview (Media3 ExoPlayer) — loaded once, cached ──
-    val player = remember { ExoPlayer.Builder(context).build() }
+    // ── Audio preview (Media3 ExoPlayer) — shared cache, single instance ──
+    val scope = rememberCoroutineScope()
+    val player = remember {
+        val cache = getAudioCache(context)
+        val httpFactory = DefaultHttpDataSource.Factory()
+            .setConnectTimeoutMs(10_000)
+            .setReadTimeoutMs(10_000)
+        val cacheFactory = CacheDataSource.Factory()
+            .setCache(cache)
+            .setUpstreamDataSourceFactory(httpFactory)
+            .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+        ExoPlayer.Builder(context)
+            .setMediaSourceFactory(
+                androidx.media3.exoplayer.source.DefaultMediaSourceFactory(cacheFactory)
+            )
+            .build()
+    }
     DisposableEffect(Unit) {
         onDispose { player.release() }
     }
@@ -183,6 +222,28 @@ fun BeatmapDetailScreen(
     var positionMs by remember { mutableStateOf(0L) }
     var durationMs by remember { mutableStateOf(0L) }
     var audioPrepared by remember { mutableStateOf(false) }
+
+    // ── Pause + fade-out when the app goes to background ──
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    DisposableEffect(player) {
+        val observer = object : androidx.lifecycle.DefaultLifecycleObserver {
+            override fun onPause(owner: androidx.lifecycle.LifecycleOwner) {
+                if (player.isPlaying) {
+                    scope.launch {
+                        val steps = 10
+                        for (i in steps downTo 1) {
+                            player.volume = i.toFloat() / steps
+                            delay(30L)
+                        }
+                        player.pause()
+                        player.volume = 1f
+                    }
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     LaunchedEffect(player) {
         player.addListener(object : Player.Listener {
@@ -257,7 +318,7 @@ fun BeatmapDetailScreen(
     Box {
         Scaffold(
             floatingActionButton = {
-                // Bottom pill: Favourite + Play/Pause
+                // Bottom pill: Bookmark + Play/Pause
                 Row(
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
@@ -266,14 +327,32 @@ fun BeatmapDetailScreen(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    // Favourite button
+                    // Bookmark button
+                    val isBookmarked = remember(state.beatmapset) {
+                        state.beatmapset?.let { BookmarkStore.isBookmarked(beatmapsetId) } ?: false
+                    }
+                    var bookmarked by remember { mutableStateOf(isBookmarked) }
+                    LaunchedEffect(beatmapsetId) {
+                        bookmarked = BookmarkStore.isBookmarked(beatmapsetId)
+                    }
                     IconButton(
-                        onClick = { viewModel.toggleFavourite(beatmapsetId, currentUserId) },
+                        onClick = {
+                            val bms = state.beatmapset ?: return@IconButton
+                            scope.launch {
+                                bookmarked = BookmarkStore.toggle(
+                                    beatmapsetId = beatmapsetId,
+                                    title = bms.title ?: "",
+                                    artist = bms.artist ?: "",
+                                    creator = bms.creator ?: "",
+                                    coverUrl = bms.covers?.cover2x ?: bms.covers?.cover ?: "",
+                                )
+                            }
+                        },
                         modifier = Modifier.size(40.dp),
                     ) {
                         Icon(
-                            if (state.isFavourited) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                            contentDescription = stringResource(R.string.beatmap_fav),
+                            if (bookmarked) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                            contentDescription = stringResource(R.string.bookmark_add),
                             tint = Color.White,
                         )
                     }

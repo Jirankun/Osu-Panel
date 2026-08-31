@@ -63,6 +63,7 @@ fun MainShell(
     onOpenPmChat: (String) -> Unit,
     onOpenGroupChat: (String) -> Unit,
     onOpenSavedMaps: () -> Unit,
+    onOpenLanguagePicker: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -154,6 +155,7 @@ fun MainShell(
                     onOpenLicenses = onOpenLicenses,
                     onOpenContributors = onOpenContributors,
                     onOpenChatSettings = onOpenChatSettings,
+                    onOpenLanguagePicker = onOpenLanguagePicker,
                 )
             }
         }
@@ -185,10 +187,6 @@ fun MainShell(
             onTap = { index ->
                 if (!guard()) return@AnimatedBottomNav
                 scope.launch {
-                    // Smooth LEFT/RIGHT slide between pages (same direction as
-                    // a finger swipe). A short tween keeps it snappy: adjacent
-                    // tabs (the common case) compose only the target page,
-                    // exactly like swiping.
                     pagerState.animateScrollToPage(
                         page = index,
                         animationSpec = tween(

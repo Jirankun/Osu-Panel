@@ -1378,7 +1378,7 @@ private fun DailyChallengeBanner(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF1565C0))
+                .background(OsuColors.dailyChallengeBg)
         ) {
             // Triangles background
             Box(

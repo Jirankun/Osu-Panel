@@ -540,20 +540,20 @@ private fun VersionInfoDialog(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                Text(
-                    stringResource(R.string.settings_privacy_policy),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = osuPink(context),
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.clickable {
-                        runCatching {
-                            context.startActivity(
+                    Text(
+                        stringResource(R.string.settings_privacy_policy),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = osuPink(context),
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.clickable {
+                            runCatching {
+                                context.startActivity(
                                     Intent(Intent.ACTION_VIEW, Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/privacy_policy/"))
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                            )
-                        }
-                    },
-                )
+                                )
+                            }
+                        },
+                    )
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
@@ -561,20 +561,20 @@ private fun VersionInfoDialog(
                             .height(16.dp)
                             .background(colorScheme.outlineVariant.copy(alpha = 0.5f)),
                     )
-                Text(
-                    stringResource(R.string.settings_terms_of_service),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = osuPink(context),
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.clickable {
-                        runCatching {
-                            context.startActivity(
+                    Text(
+                        stringResource(R.string.settings_terms_of_service),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = osuPink(context),
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.clickable {
+                            runCatching {
+                                context.startActivity(
                                     Intent(Intent.ACTION_VIEW, Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/terms_%20service/"))
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-                            )
-                        }
-                    },
-                )
+                                )
+                            }
+                        },
+                    )
                 }
             }
         },

@@ -123,8 +123,8 @@ interface OsuApi {
         @Path("userId") userId: Int,
     ): UserBeatmapScoreResponse?
 
-    /** GET /rankings/daily_challenge — current daily challenge beatmap. */
-    @GET("rankings/daily_challenge")
+    /** GET /rankings/daily-challenge — current daily challenge beatmap. */
+    @GET("rankings/daily-challenge")
     suspend fun getDailyChallenge(): DailyChallengeResponse
 
     /**

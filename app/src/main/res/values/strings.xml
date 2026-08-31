@@ -344,4 +344,15 @@
     <string name="saved_maps_empty_hint">Tap the bookmark icon on any beatmap to save it here</string>
     <string name="bookmark_add">Save</string>
     <string name="bookmark_remove">Unsave</string>
+    <!-- ── System ── -->
+    <string name="settings_system_section">System</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_desc">Choose app language</string>
+    <string name="settings_language_current">Current: %1$s</string>
+    <string name="settings_language_dialog_title">Select Language</string>
+    <string name="settings_language_system">System default</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_japanese">日本語 (Japanese)</string>
+    <string name="settings_language_indonesian">Bahasa Indonesia</string>
+    <string name="settings_language_restart">App will restart to apply changes</string>
 </resources>

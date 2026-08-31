@@ -46,6 +46,8 @@ object OsuColors {
     val blue800: Color by lazy { color(R.color.accent_blue_800) }
     val green400: Color by lazy { color(R.color.accent_green_400) }
     val green800: Color by lazy { color(R.color.accent_green_800) }
+    val richtextLink: Color by lazy { color(R.color.richtext_link) }
+    val dailyChallengeBg: Color by lazy { color(R.color.daily_challenge_bg) }
 
     // ── Score rank colors (score badge) ──
     fun rankColor(rank: String, scheme: ColorScheme): Color = when (rank.uppercase()) {
