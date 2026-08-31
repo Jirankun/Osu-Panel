@@ -18,6 +18,10 @@
 [Releases](https://github.com/Jirankun/Osu-Panel/releases)
 ·
 [Issues](https://github.com/Jirankun/Osu-Panel/issues)
+·
+[Screenshoots](https://github.com/Jirankun/Osu-Panel/blob/main/repo/SCREENSHOOT.md)
+.
+[Contributor](https://github.com/Jirankun/Osu-Panel/blob/main/CONTRIBUTORS.md)
 
 A native Android app for osu!, built with Jetpack Compose + Material 3.
 It includes **OAuth login + the full osu! API v2 layer**, **3 home screen
@@ -193,27 +197,310 @@ No camera permission needed — QR scanning runs in the browser via JavaScript B
 ## Build
 
 ```bash
-./gradlew :app:assembleDebug      # Debug APK (installable, no signing)
-./gradlew :app:assembleRelease    # Release APK (R8 + signing from SIGN_* env)
+# ~/.environment_variable.sh (git-ignored)
+export SIGN_KEY="$HOME/.keystores/osu-panel-release.jks"
+export SIGN_ALIAS="osu-panel"
+export SIGN_KEY_PASS="..."
+export SIGN_STORE_PASS="..."
 ```
 
-Requirements: JDK 17, Android SDK (`local.properties` → `sdk.dir`).
+Create a keystore once with:
+
+```bash
+keytool -genkey -v -keystore ~/.keystores/osu-panel-release.jks \
+  -alias osu-panel -keyalg RSA -keysize 2048 -validity 10000
+```
+
+### Contribution guidelines
+
+> **Project Owner:** in osu > Zhykun , in Github : Zhyllan Fyllah _ Jirankun
+>
+
+1. **New feature** → create `feature/<name>/` with `XxxViewModel.kt` +
+   `ui/XxxScreen.kt`, then register the route in `core/navigation/`.
+2. **New API endpoint** → add a method in `data/remote/OsuApi.kt` (osu! API)
+   or `WorkerApi.kt` (worker). DTOs go in `data/model/`.
+3. **Shared UI component** → put it in `ui/components/`, one file per
+   component. Laser-triangle backgrounds → `Modifier.trianglesLine()` (outline)
+   or `Modifier.trianglesFill()` (filled + shadow).
+4. **Text** → `res/values/strings.xml`. **Colors** → `res/values/colors.xml`.
+5. **Dependencies** → register the instance in `di/AppContainer.kt`
+   (manual DI — access via `(application as OsuPanelApp).container`).
+6. **New widget** → provider in `widget/`, layout in `res/layout/`, metadata
+   in `res/xml/`, receiver in `AndroidManifest.xml`, and add the class to the
+   `widgetProviders` list in `WidgetDataStore.kt`.
+
+### Security notes
+
+- `key.txt` (local OAuth keys) is **git-ignored** — never commit it.
+- `worker.js` intentionally contains **no** `CLIENT_SECRET` fallback — set it
+  as a Cloudflare environment variable (`CLIENT_ID`, `CLIENT_SECRET`).
+- The Appteka proxy worker (`Aokaze-Studio-Page-main/worker.js`) has **no**
+  generic `?endpoint=` passthrough — the app calls `/app-info?package=...`
+  and only `appteka.store/api/1/*` URLs are forwarded, so it cannot be
+  abused as an open proxy.
+
+### License
+
+MIT — see [LICENSE](LICENSE). Third-party licenses are listed in
+[THIRD_PARTY_LICENSES.txt](THIRD_PARTY_LICENSES.txt) and inside the app
+(Settings → License).
 
 ---
 
-## Security
+<a id="bahasa-indonesia"></a>
 
-- `worker.js` has **no** `CLIENT_SECRET` fallback — it must be set as a Cloudflare env variable.
-- **Global rate limiting** (200 req/60s) protects the shared osu! Client ID quota.
-- **Per-IP rate limiting** (30 req/60s) prevents abuse.
-- Beatmap data cached in worker (10 min) to minimize osu! API hits.
-- Audio preview cached on disk (10 MB) — no repeated downloads for loops.
-- `key.txt` (local OAuth keys) is **git-ignored**.
+## 🇮🇩 Bahasa Indonesia
 
----
+### Fitur
 
-## License
+- **Login OAuth dengan osu!** (Authorization Code Grant + PKCE) lewat
+  Cloudflare Worker yang menyimpan Client Secret — aplikasi tidak pernah
+  menyentuhnya.
+- **Quick login** via identifier (ID/username) memakai Client Credentials,
+  plus **guest mode** (masuk aplikasi tanpa akun untuk menjelajah).
+- **Dashboard** — header profil, grid statistik, progress, statistik detail,
+  seluruh 352 medal (yang diraih terang / belum abu-abu), badge.
+- **Maps** — Last Play / Best Scores / Most Played / Loved dengan paginasi.
+- **Rankings** — ranking performa global + **pencarian user sebagian/mirip**
+  (endpoint search osu!), filter negara, aksen UI segitiga lazer.
+- **Profile detail** — profil lengkap, grafik rank history, grade counts,
+  badge, grup, medal (bisa diperluas, popup per medal), kudosu, best scores,
+  most played, plus **FAB generator kartu** (template Full stats / Skills /
+  Mini → bagikan PNG lewat share sheet Android).
+- **Beatmap detail** — cover, statistik singkat, difficulties, info, creator,
+  leaderboard (dengan baris **YOU** dan **#1** di atas saat relevan),
+  preview audio via Media3, **Bagikan** (share sheet Android dengan URL QR
+  viewer + detail beatmap), dan **QR Beatmap Share** (layar penuh QR → PC
+  scan via kamera → card beatmap dengan audio player langsung muncul).
+- **Widget home screen** — Profile Large (kartu signature stat-sign dengan
+  layout `with stats` / `with skills`), Rank & Level, dan PP.
+- **Popup update** — cek toko via proxy worker saat app dibuka.
+  Popup muncul **setiap kali app dibuka** jika ada update di-cache
+  (user selalu diingatkan update), sementara cek server maksimal **sekali sehari**.
+  Login error menampilkan **countdown 10 detik** pada tombol sebelum bisa retry.
+- **Layar License & Contributor** — halaman WebView dengan canvas segitiga
+  lazer, font Torus di-inject dari `res/font`, link GitHub dibuka di browser
+  eksternal.
+- **Segitiga lazer di mana-mana** — dua varian latar `TrianglesV2` milik
+  osu!lazer: `Modifier.trianglesLine()` (outline/garis, gaya asli) dan
+  `Modifier.trianglesFill()` (filled solid + efek bayangan 3D, lebih rapat).
+  Dipakai tombol, kartu, layar, dan tombol login.
+- **QR Beatmap Share** — layar QR penuh dengan tombol bagikan. Android generate
+  QR compact berisi URL dengan JSON base64 (title, artist, mapper, BPM, length,
+  cover, URL, tags, audio preview). Tombol bagikan buka share sheet Android
+  dengan pesan terformat + URL QR viewer. PC buka viewer → kamera scan →
+  card beatmap dengan audio player muncul. OG dynamic tags via Cloudflare Worker
+  untuk preview kartu di media sosial.
 
-MIT — see [LICENSE](LICENSE).
+### Arsitektur
 
-Third-party licenses are listed in the app (Settings → License).
+```
+┌──────────────┐   OAuth (Custom Tab)  ┌──────────────┐    ┌──────────┐
+│  App native  │──────────────────────▶│   osu! web   │    │  osu!    │
+│  (Compose)   │◀──────────────────────│   authorize  │    │  API v2  │
+└──────────────┘     osupanel://       └──────────────┘    └──────────┘
+       │  ▲
+       │  │ POST /auth/code, /auth/refresh, /auth/token
+       ▼  │
+┌──────────────────┐   GET /me, /users, /rankings, ...
+│ Cloudflare Worker │───────▶ osu! API v2 (Bearer token)
+│ (menyimpan Client│
+│  Secret)          │
+└──────────────────┘
+```
+
+- Aplikasi **tidak pernah menyimpan Client Secret** — autentikasi diproxy
+  lewat Cloudflare Worker (`https://api-osupanel.zhyllanfyllah.my.id`).
+  Kode worker ada di `worker.js` (root proyek). `CLIENT_ID` / `CLIENT_SECRET`
+  dikonfigurasi sebagai environment variable Cloudflare.
+
+- **QR Beatmap Share** memakai Cloudflare Worker (`Web for feature map/worker.js`)
+  yang menyajikan halaman viewer dengan **dynamic OG meta tags** untuk preview
+  kartu di media sosial. Fallback statis (`Web for feature map/index.html`) di-deploy
+  ke Cloudflare Pages. Format URL: `?d=<base64>` untuk share link (OG tags),
+  `#<base64>` untuk scan QR (backward compatible).
+- Token disimpan terenkripsi di Android Keystore
+  (`EncryptedSharedPreferences`).
+- `AuthInterceptor` (OkHttp) menyuntik `Authorization: Bearer`, menangani
+  401 → refresh via worker (dibagi antar request konkuren) → retry sekali.
+  Kegagalan refresh **definitif** = logout; kegagalan **jaringan** = token
+  dipertahankan dan muncul error yang ramah.
+- Widget home screen membaca snapshot user dari `WidgetDataStore`
+  (SharedPreferences khusus), ditulis ulang setiap login / buka app / refresh.
+
+### Alur login
+
+1. "Login with osu!" → AppAuth membuka halaman authorize osu! di Custom Tab
+   (`client_id` dari `Env.kt`, scope `identify public friends.read`, redirect
+   `osupanel://callback`).
+2. User login & menyetujui → redirect balik ke app
+   (`RedirectUriReceiverActivity`, scheme `osupanel`).
+3. Kode ditukar via worker `POST /auth/code {code, redirect_uri,
+   code_verifier}` → access + refresh token disimpan (PKCE wajib di osu!).
+4. User diambil via `GET /me`.
+5. API 401 apa pun → refresh otomatis via `POST /auth/refresh`.
+
+Selain login OAuth, ada **quick login** via identifier (ID/username) memakai
+Client Credentials (`POST /auth/token` lewat worker).
+
+### Struktur proyek
+
+```
+app/src/main/java/net/aokaze/osupanel/
+├── OsuPanelApp.kt             # Application — titik masuk (membangun AppContainer)
+├── MainActivity.kt            # Activity — titik masuk (OAuth via Custom Tab)
+├── di/AppContainer.kt         # DI manual: Retrofit, OkHttp, TokenStore, repo, flow
+├── core/
+│   ├── config/Env.kt          # URL worker, client id, redirect, scope, timeout
+│   ├── util/Formatters.kt     # Format angka/durasi/akurasi/tanggal
+│   ├── theme/                 # Material 3 + font Torus (warna dari colors.xml)
+│   └── navigation/            # Routes.kt + OsuPanelNavHost.kt (NavHost berbasis auth)
+├── data/                      # LAPISAN DATA — bebas UI, dipakai semua fitur
+│   ├── model/                 # DTO (kotlinx.serialization)
+│   ├── local/                 # TokenStore (enkripsi), DataCache, WidgetDataStore
+│   ├── medal/                 # MedalService + MedalAssets (352 medal)
+│   ├── skills/                # SkillsFetcher (data radar osu!skills)
+│   ├── remote/                # WorkerApi, OsuApi, AuthInterceptor, ApiError
+│   └── repository/            # AuthRepository, ContentRepository
+├── feature/                   # LAYAR PER-FITUR
+│   ├── auth/                  # AuthModels, AuthViewModel + ui/ (Splash, Login)
+│   ├── home/ui/               # MainShell (bottom nav + pager), DashboardScreen
+│   ├── maps/                  # MapsViewModel (4 tab berpaginasi) + ui/MapsScreen
+│   ├── rankings/              # RankingsViewModel + ui/RankingsScreen
+│   ├── profile/               # ProfileViewModel + ui/ProfileScreen (+ FAB cardgen)
+│   ├── cardgen/               # Generator kartu (ViewModel + UI + share)
+│   ├── beatmap/               # BeatmapDetailViewModel + ui/BeatmapDetailScreen + QrCodeScreen
+│   ├── settings/ui/           # SettingsScreen, InfoWebViewScreens
+│   └── update/                # UpdateChecker + UpdateCheckViewModel
+├── widget/                    # WIDGET HOME SCREEN (3) + SignatureRenderer
+└── ui/components/             # Komponen global (OsuSpinner, TrianglesLine, TrianglesFill, ...)
+```
+
+### QR Beatmap Share (Halaman Web Viewer)
+
+Viewer PC dilayani oleh **Cloudflare Worker** (`Web for feature map/worker.js`)
+ yang menyuntikkan **dynamic OG meta tags** untuk preview kartu di media sosial,
+plus fallback statis di **Cloudflare Pages** (`Web for feature map/index.html`).
+
+**Format URL:**
+- `?d=<base64>` — link share (Worker decode, inject OG tags, sajikan HTML)
+- `#<base64>` — scan QR (client-side decode, backward compatible)
+
+**Data QR (JSON compact → base64):**
+```json
+{"title","artist","mapper","bpm","length","cover","url","tags","preview"}
+```
+
+**Format pesan share:**
+```
+🎵 Title — Artist
+👤 Creator | ★2.15 Hard
+🎵 BPM: 190 | ⏱ 3:45
+🏷️ tag1, tag2, tag3
+
+https://qr-osupanel.zhyllanfyllah.my.id/?d=<base64>
+```
+
+### Build
+
+```bash
+./gradlew :app:assembleDebug      # APK debug (bisa install, tanpa signing)
+./gradlew :app:assembleRelease    # APK release (R8 + signing dari env SIGN_*)
+```
+
+Syarat: JDK 17, Android SDK (`local.properties` → `sdk.dir`). Signing release
+membaca `SIGN_KEY/SIGN_ALIAS/SIGN_KEY_PASS/SIGN_STORE_PASS` dari environment;
+tanpa itu APK release tetap ter-build tapi unsigned.
+
+### Rilis (GitHub Actions)
+
+Setiap build menghasilkan **dua APK** dari satu kali `gradlew`:
+
+- `app-debug.apk` — **tidak pernah di-sign**, bisa di-install di perangkat apa pun.
+- `app-release.apk` — **di-sign** (jika secret `SIGN_*` dikonfigurasi),
+  kalau tidak, tanpa tanda tangan. Signing hanya berlaku untuk build
+  **nightly** dan **release** — debug sengaja tidak pernah di-sign.
+
+**Release** — dibuat **hanya dari komentar pada pull request**, tidak pernah
+otomatis:
+
+| Perintah | Efek |
+| --- | --- |
+| `/release` | Build dari head PR, pertahankan versi di `gradle.properties`, buat release GitHub **draft** dengan kedua APK. |
+| `/release 1.2.3` | Sama, tapi bump `APP_VERSION_NAME`/`APP_VERSION_CODE` ke `1.2.3` dulu. |
+
+Hanya **owner / member / collaborator** repo yang bisa memicunya. Rilis dibuat
+sebagai **draft** — tinjau catatan lalu publish manual.
+
+**Nightly** — `nightly.yml` berjalan setiap hari pukul 00:00 UTC (dan manual
+via Actions → Nightly → Run workflow). Ia membangun kedua APK dan
+**menerbitkan** release `nightly` secara otomatis (dibuat ulang tiap run).
+
+**CI** — `build.yml` berjalan setiap push ke `main` dan setiap pull request
+serta mengunggah kedua APK sebagai artifact.
+
+### Signing (keystore + env)
+
+Keystore **tidak pernah di-commit**. APK release hanya di-sign saat keempat
+nilai `SIGN_*` tersedia — lokal dari env shell, di CI dari secret repo:
+
+| Variabel | Arti |
+| --- | --- |
+| `SIGN_KEY` | Path file keystore `.jks` |
+| `SIGN_ALIAS` | Alias kunci signing di dalam keystore |
+| `SIGN_KEY_PASS` | Password kunci tersebut |
+| `SIGN_STORE_PASS` | Password keystore itu sendiri |
+
+**Lokal** — simpan keystore **di luar repo** (atau di `keystore/`, yang
+sudah di-ignore git) dan export variabelnya di `~/.environment_variable.sh`:
+
+```bash
+# ~/.environment_variable.sh (di-ignore git)
+export SIGN_KEY="$HOME/.keystores/osu-panel-release.jks"
+export SIGN_ALIAS="osu-panel"
+export SIGN_KEY_PASS="..."
+export SIGN_STORE_PASS="..."
+```
+
+Buat keystore sekali dengan:
+
+```bash
+keytool -genkey -v -keystore ~/.keystores/osu-panel-release.jks \
+  -alias osu-panel -keyalg RSA -keysize 2048 -validity 10000
+```
+
+### Panduan kontribusi
+
+> **Pemilik Proyek:** di osu > Zhykun , di Github : Zhyllan Fyllah _ Jirankun
+>
+
+1. **Fitur baru** → buat `feature/<nama>/` dengan `XxxViewModel.kt` +
+   `ui/XxxScreen.kt`, lalu daftarkan route di `core/navigation/`.
+2. **Endpoint API baru** → tambah method di `data/remote/OsuApi.kt` (API osu!)
+   atau `WorkerApi.kt` (worker). DTO di `data/model/`.
+3. **Komponen UI bersama** → taruh di `ui/components/`, satu file per
+   komponen. Latar segitiga lazer → `Modifier.trianglesLine()` (outline)
+   atau `Modifier.trianglesFill()` (filled + bayangan).
+4. **Teks** → `res/values/strings.xml`. **Warna** → `res/values/colors.xml`.
+5. **Dependensi** → daftarkan instance di `di/AppContainer.kt`
+   (DI manual — akses via `(application as OsuPanelApp).container`).
+6. **Widget baru** → provider di `widget/`, layout di `res/layout/`, metadata
+   di `res/xml/`, receiver di `AndroidManifest.xml`, dan tambah kelasnya ke
+   daftar `widgetProviders` di `WidgetDataStore.kt`.
+
+### Catatan keamanan
+
+- `key.txt` (kunci OAuth lokal) **di-ignore git** — jangan pernah commit.
+- `worker.js` sengaja **tidak** berisi fallback `CLIENT_SECRET` — set sebagai
+  environment variable Cloudflare (`CLIENT_ID`, `CLIENT_SECRET`).
+- Worker proxy Appteka (`Aokaze-Studio-Page-main/worker.js`) **tidak** punya
+  passthrough `?endpoint=` generik — app memanggil `/app-info?package=...`
+  dan hanya URL `appteka.store/api/1/*` yang diteruskan, jadi tidak bisa
+  disalahgunakan sebagai open proxy.
+
+### Lisensi
+
+MIT — lihat [LICENSE](LICENSE). Lisensi pihak ketiga ada di
+[THIRD_PARTY_LICENSES.txt](THIRD_PARTY_LICENSES.txt) dan di dalam aplikasi
+(Settings → License).
