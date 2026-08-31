@@ -23,6 +23,13 @@
     <color name="accent_green_400">#66BB6A</color>
     <color name="accent_green_800">#2E7D32</color>
 
+    <!-- ── Card Generator backgrounds ── -->
+    <color name="cardgen_dark">#14161C</color>
+    <color name="cardgen_dark_alt">#101218</color>
+
+    <!-- Rich text link color (Chatango) -->
+    <color name="richtext_link">#FF66AB</color>
+
     <!-- Loading spinner — lazer box (Color4.Black, alpha 0.7 di kode) -->
     <color name="osu_loading_box">#000000</color>
 

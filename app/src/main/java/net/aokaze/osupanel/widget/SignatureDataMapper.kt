@@ -6,9 +6,9 @@
 package net.aokaze.osupanel.widget
 
 import net.aokaze.osupanel.core.util.accuracyPercent
-import net.aokaze.osupanel.core.util.formatNumber
+import net.aokaze.osupanel.core.util.formatNumberGrouped
+import net.aokaze.osupanel.core.util.formatPlaytimeSig
 import net.aokaze.osupanel.data.model.UserDto
-import java.text.NumberFormat
 import java.util.Locale
 
 /**
@@ -22,17 +22,6 @@ import java.util.Locale
  * uses the stat-sign "134d 10h 38m" style.
  */
 object SignatureDataMapper {
-
-    /** osu! web style number format: "12,345" (comma grouping, no decimals). */
-    fun formatNumber(value: Long): String = NumberFormat.getIntegerInstance(Locale.US).format(value)
-
-    /** stat-sign playtime format: "134d 10h 38m" (or "10h 38m"). */
-    fun formatPlaytimeSig(seconds: Int): String {
-        val days = seconds / 86400
-        val hours = (seconds % 86400) / 3600
-        val minutes = (seconds % 3600) / 60
-        return if (days > 0) "${days}d ${hours}h ${minutes}m" else "${hours}h ${minutes}m"
-    }
 
     /**
      * All dynamic data shown on the signature, straight from a [UserDto].
@@ -56,18 +45,18 @@ object SignatureDataMapper {
             countryName = user.country?.name.orEmpty(),
             level = stats?.levelCurrent ?: 0,
             levelProgressPercent = ((stats?.levelProgress ?: 0.0) * 100).toInt().coerceIn(0, 100),
-            pp = formatNumber((stats?.pp ?: 0.0).toLong()),
-            medals = formatNumber(user.achievements.size.toLong()),
+            pp = formatNumberGrouped((stats?.pp ?: 0.0).toLong()),
+            medals = formatNumberGrouped(user.achievements.size.toLong()),
             playtime = formatPlaytimeSig(stats?.playTime ?: 0),
-            globalRank = stats?.globalRank?.let { "#${formatNumber(it.toLong())}" }.orEmpty(),
-            countryRank = stats?.countryRank?.let { "#${formatNumber(it.toLong())}" }.orEmpty(),
-            rankedScore = formatNumber(stats?.rankedScore ?: 0L),
-            playCount = formatNumber((stats?.playCount ?: 0).toLong()),
-            totalScore = formatNumber(stats?.totalScore ?: 0L),
-            totalHits = formatNumber(stats?.totalHits ?: 0L),
-            replays = formatNumber((stats?.replaysWatchedByOthers ?: 0).toLong()),
+            globalRank = stats?.globalRank?.let { "#${formatNumberGrouped(it.toLong())}" }.orEmpty(),
+            countryRank = stats?.countryRank?.let { "#${formatNumberGrouped(it.toLong())}" }.orEmpty(),
+            rankedScore = formatNumberGrouped(stats?.rankedScore ?: 0L),
+            playCount = formatNumberGrouped((stats?.playCount ?: 0).toLong()),
+            totalScore = formatNumberGrouped(stats?.totalScore ?: 0L),
+            totalHits = formatNumberGrouped(stats?.totalHits ?: 0L),
+            replays = formatNumberGrouped((stats?.replaysWatchedByOthers ?: 0).toLong()),
             acc = String.format(Locale.US, "%.2f%%", accuracyPercent(stats?.accuracy ?: 0.0)),
-            maxCombo = "${formatNumber(stats?.maximumCombo ?: 0L)}x",
+            maxCombo = "${formatNumberGrouped(stats?.maximumCombo ?: 0L)}x",
             bp = "-",
             firstPlace = "-",
             gradeSsh = grades?.ssh ?: 0,

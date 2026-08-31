@@ -6,7 +6,7 @@
 package net.aokaze.osupanel.feature.rankings
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import net.aokaze.osupanel.feature.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,12 +53,12 @@ data class RankingsUiState(
 }
 
 /**
- * Rankings ViewModel — counterpart of the Flutter `_RankingsPageState`:
- * ranking global performance + filter negara + search user global.
+ * Rankings ViewModel:
+ * global performance ranking + country filter + global user search.
  * Search ONLY runs on submit (keyboard search button) —
  * typing does not trigger an API request.
  */
-class RankingsViewModel(application: Application) : AndroidViewModel(application) {
+class RankingsViewModel(application: Application) : BaseViewModel(application) {
 
     private val container = (application as OsuPanelApp).container
     private val repository = container.contentRepository
@@ -259,8 +259,6 @@ class RankingsViewModel(application: Application) : AndroidViewModel(application
         )
     }
 
-    private fun classify(e: Throwable): String =
-        net.aokaze.osupanel.data.remote.classifyError(getApplication(), e).message
 
     companion object {
         val countryCodes = listOf(

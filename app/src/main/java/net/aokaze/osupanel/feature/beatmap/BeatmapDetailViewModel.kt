@@ -6,7 +6,8 @@
 package net.aokaze.osupanel.feature.beatmap
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.util.Log
+import net.aokaze.osupanel.feature.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,17 +25,17 @@ data class BeatmapDetailUiState(
     val scores: List<ScoreDto> = emptyList(),
     val myScore: ScoreDto? = null,
     val creatorAvatarUrl: String? = null,
+    val isFavourited: Boolean = false,
     val isLoading: Boolean = true,
     val scoresLoading: Boolean = false,
     val error: String? = null,
 )
 
 /**
- * Beatmap Detail ViewModel — counterpart of `_BeatmapDetailPageState`
- * Flutter: beatmapset + selected difficulty (from best/recent scores,
- * fallback difficulty first) + leaderboard + the user's score.
+ * Beatmap Detail ViewModel — beatmapset + selected difficulty (from best/recent
+ * scores, fallback difficulty first) + leaderboard + the user's score.
  */
-class BeatmapDetailViewModel(application: Application) : AndroidViewModel(application) {
+class BeatmapDetailViewModel(application: Application) : BaseViewModel(application) {
 
     private val container = (application as OsuPanelApp).container
     private val repository = container.contentRepository
@@ -43,6 +44,13 @@ class BeatmapDetailViewModel(application: Application) : AndroidViewModel(applic
     val state: StateFlow<BeatmapDetailUiState> = _state.asStateFlow()
 
     private var loadedBeatmapsetId: Int? = null
+
+    /**
+     * Per-difficulty score cache (in-memory, per session).
+     * Key = beatmapId, Value = Pair(scores, myScore).
+     * Avoids re-fetching leaderboard when the user simply switches difficulty.
+     */
+    private val scoreCache = mutableMapOf<Int, Pair<List<ScoreDto>, ScoreDto?>>()
 
     fun load(beatmapsetId: Int, currentUserId: Int?) {
         if (loadedBeatmapsetId == beatmapsetId && _state.value.beatmapset != null) return
@@ -118,6 +126,19 @@ class BeatmapDetailViewModel(application: Application) : AndroidViewModel(applic
                     if (currentUserId != null) {
                         myScore = repository.getUserBeatmapScore(targetId, currentUserId)
                     }
+                    // Cache initial difficulty so switchDifficulty is instant.
+                    scoreCache[targetId] = scores to myScore
+                }
+
+                // Check if this mapset is in user's favourites.
+                var favourited = false
+                if (currentUserId != null) {
+                    runCatching {
+                        val favs = repository.getMyFavourites(
+                            cacheKey = DataCache.favourites(currentUserId),
+                        )
+                        favourited = favs.any { it.id == beatmapsetId }
+                    }
                 }
 
                 _state.value = BeatmapDetailUiState(
@@ -127,6 +148,7 @@ class BeatmapDetailViewModel(application: Application) : AndroidViewModel(applic
                     scores = scores,
                     myScore = myScore,
                     creatorAvatarUrl = creatorAvatar,
+                    isFavourited = favourited,
                     isLoading = false,
                     error = null,
                 )
@@ -148,11 +170,24 @@ class BeatmapDetailViewModel(application: Application) : AndroidViewModel(applic
             DataCache.invalidate(DataCache.bestScores(it))
             DataCache.invalidate(DataCache.recentScores(it))
         }
+        scoreCache.clear()
         loadedBeatmapsetId = null
         load(beatmapsetId, currentUserId)
     }
 
     fun switchDifficulty(beatmapId: Int, currentUserId: Int?) {
+        // Check in-memory cache first — instant switch, no API call.
+        val cached = scoreCache[beatmapId]
+        if (cached != null) {
+            _state.value = _state.value.copy(
+                selectedBeatmapId = beatmapId,
+                scores = cached.first,
+                myScore = cached.second,
+                scoresLoading = false,
+            )
+            return
+        }
+        // Not cached — fetch from API, then cache.
         viewModelScope.launch {
             _state.value = _state.value.copy(
                 selectedBeatmapId = beatmapId,
@@ -165,6 +200,7 @@ class BeatmapDetailViewModel(application: Application) : AndroidViewModel(applic
             val my = if (currentUserId != null) {
                 repository.getUserBeatmapScore(beatmapId, currentUserId)
             } else null
+            scoreCache[beatmapId] = scores to my
             _state.value = _state.value.copy(
                 scores = scores,
                 myScore = my,
@@ -173,6 +209,24 @@ class BeatmapDetailViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    private fun classify(e: Throwable): String =
-        net.aokaze.osupanel.data.remote.classifyError(getApplication(), e).message
+    fun toggleFavourite(beatmapsetId: Int, currentUserId: Int?) {
+        val currentlyFav = _state.value.isFavourited
+        _state.value = _state.value.copy(isFavourited = !currentlyFav)
+        viewModelScope.launch {
+            runCatching {
+                if (currentlyFav) {
+                    repository.removeFavourite(beatmapsetId)
+                } else {
+                    repository.addFavourite(beatmapsetId)
+                }
+                // Invalidate favourites cache.
+                currentUserId?.let { DataCache.invalidate(DataCache.favourites(it)) }
+            }.onFailure { e ->
+                Log.e("BeatmapDetail", "toggleFavourite failed for $beatmapsetId", e)
+                // Revert on error.
+                _state.value = _state.value.copy(isFavourited = currentlyFav)
+            }
+        }
+    }
+
 }

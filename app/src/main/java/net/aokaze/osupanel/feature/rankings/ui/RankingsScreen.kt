@@ -89,14 +89,14 @@ import net.aokaze.osupanel.ui.components.CountryFlagImage
 import net.aokaze.osupanel.ui.components.OsuSpinner
 import net.aokaze.osupanel.ui.components.RetryButton
 import net.aokaze.osupanel.ui.components.rememberAvatarPlaceholderPainter
-import net.aokaze.osupanel.ui.components.trianglesBackground
+import net.aokaze.osupanel.ui.components.trianglesLine
 
 private val EaseOutCubic = CubicBezierEasing(0.215f, 0.61f, 0.355f, 1.0f)
 
 /**
- * Rankings — counterpart of the Flutter `RankingsPage`: global performance ranking,
- * filter negara (chips scrollable + bendera PNG), search global
- * (debounce 150ms, ikon animasi rotate), pagination.
+ * Rankings — global performance ranking,
+ * country filter (scrollable chips + flag PNG), global search
+ * (150ms debounce, rotating icon animation), pagination.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,7 +150,7 @@ fun RankingsScreen(
                 .onGloballyPositioned { columnOrigin = it.positionInRoot() }
                 // Tap outside the text box → focus lost (keyboard closes).
                 // Detected in PointerEventPass.Initial so it stays visible
-                // walau tap dikonsumsi scrollable/anak (LazyRow/LazyColumn).
+                // even when the tap is consumed by a scrollable child (LazyRow/LazyColumn).
                 .pointerInput(searchBarBounds) {
                     awaitPointerEventScope {
                         var down: Offset? = null
@@ -226,7 +226,7 @@ fun RankingsScreen(
                         ) {
                             LazyColumn(
                                 state = listState,
-                                contentPadding = PaddingValues(12.dp),
+                                contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 120.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxSize(),
                             ) {
@@ -270,7 +270,7 @@ fun RankingsScreen(
     }
 }
 
-/** Search icon — rotates 0→180° while fading out, replaced by an up arrow (Flutter counterpart). */
+/** Search icon — rotates 0→180° while fading out, replaced by an up arrow. */
 @Composable
 private fun SearchToggleButton(isOpen: Boolean, onToggle: () -> Unit) {
     val anim = remember { Animatable(if (isOpen) 1f else 0f) }
@@ -388,7 +388,7 @@ private fun CountryFilter(
                         modifier = Modifier
                             .matchParentSize()
                             .clip(RoundedCornerShape(12.dp))
-                            .trianglesBackground(
+                            .trianglesLine(
                                 scaleAdjust = 0.3f,
                                 velocity = 0.6f,
                                 spawnRatio = 2f,
@@ -486,7 +486,7 @@ private fun CountryChip(
                 .matchParentSize()
                 .clip(RoundedCornerShape(20.dp))
                 .alpha(triAnim.value)
-                .trianglesBackground(
+                .trianglesLine(
                     scaleAdjust = 0.35f,
                     velocity = 0.6f,
                     spawnRatio = 3.5f,

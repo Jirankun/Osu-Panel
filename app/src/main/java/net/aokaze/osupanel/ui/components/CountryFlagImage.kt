@@ -32,7 +32,7 @@ import kotlinx.coroutines.withContext
 
 /**
  * Country flag from native drawable resources (`flag_{code}.png` in
- * res/drawable), 1.5:1 ratio — counterpart of the Flutter `CountryFlagWidget`.
+ * res/drawable), 1.5:1 ratio.
  * Fallback: a flag emoji (when the resource is missing).
  */
 @Composable

@@ -47,7 +47,7 @@ object OsuColors {
     val green400: Color by lazy { color(R.color.accent_green_400) }
     val green800: Color by lazy { color(R.color.accent_green_800) }
 
-    // ── Score rank colors (score badge) — exactly `_rankColor` Flutter ──
+    // ── Score rank colors (score badge) ──
     fun rankColor(rank: String, scheme: ColorScheme): Color = when (rank.uppercase()) {
         "SSH", "SS" -> amber
         "SH", "S" -> orange

@@ -103,6 +103,10 @@ dependencies {
     // OAuth (Authorization Code Grant) — same library as flutter_appauth
     implementation("net.openid:appauth:0.11.1")
 
+    // Custom Tabs — open web pages as an in-app overlay (like the login
+    // flow), NOT the full standalone browser.
+    implementation("androidx.browser:browser:1.8.0")
+
     // Token stored encrypted (Android Keystore)
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
@@ -115,6 +119,15 @@ dependencies {
 
     // Beatmap audio preview (counterpart of Flutter's just_audio)
     implementation("androidx.media3:media3-exoplayer:1.4.1")
+
+    // QR code scanner (CameraX + ML Kit barcode)
+    implementation("androidx.camera:camera-camera2:1.3.4")
+    implementation("androidx.camera:camera-lifecycle:1.3.4")
+    implementation("androidx.camera:camera-view:1.3.4")
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
+
+    // QR code generation (ZXing — encode beatmap data into QR bitmap)
+    implementation("com.google.zxing:core:3.5.3")
 
     testImplementation("junit:junit:4.13.2")
 }

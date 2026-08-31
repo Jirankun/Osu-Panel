@@ -5,6 +5,7 @@
 
 package net.aokaze.osupanel.feature.settings.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -23,6 +24,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -60,8 +63,16 @@ fun ContributorsScreen(onBack: () -> Unit) {
     )
 }
 
-/** Generic WebView for info pages in assets (JS + internet enabled). */
+/**
+ * Generic WebView for info pages in assets (JS + internet enabled).
+ *
+ * Same session pattern as the group chat: ONE WebView per page is kept alive
+ * for the whole app session (InfoWebViewSessions) and only paused while the
+ * screen is closed — closing & reopening never stacks a second WebView and
+ * never loads the same page twice (no duplicate JS/canvas work in the back).
+ */
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 private fun InfoWebViewScreen(
     title: String,
@@ -69,6 +80,20 @@ private fun InfoWebViewScreen(
     assetPath: String,
 ) {
     val context = LocalContext.current
+
+    // Reuse the session WebView for this page — the page is preloaded once at
+    // creation, so opening again never triggers a second load.
+    val webView = remember { InfoWebViewSessions.get(context, assetPath) }
+
+    DisposableEffect(Unit) {
+        webView.onResume()
+        onDispose {
+            // Pause (stop JS/canvas work) instead of destroying — the page
+            // survives so the next open is instant and nothing stacks up.
+            webView.onPause()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -87,34 +112,52 @@ private fun InfoWebViewScreen(
         },
     ) { innerPadding ->
         AndroidView(
-            factory = { ctx ->
-                WebView(ctx).apply {
-                    settings.javaScriptEnabled = true
-                    settings.domStorageEnabled = true
-                    settings.allowFileAccess = true
-                    settings.loadWithOverviewMode = true
-                    settings.useWideViewPort = true
-                    webViewClient = object : WebViewClient() {
-                        override fun shouldOverrideUrlLoading(
-                            view: WebView,
-                            request: WebResourceRequest,
-                        ): Boolean = openExternallyIfGithub(ctx, request.url.toString())
-                    }
-                    val raw = ctx.assets.open(assetPath).bufferedReader().use { it.readText() }
-                    loadDataWithBaseURL(
-                        "file:///android_asset/",
-                        injectTorusFonts(ctx, raw),
-                        "text/html",
-                        "UTF-8",
-                        null,
-                    )
-                }
-            },
+            factory = { webView },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
         )
     }
+}
+
+/**
+ * One WebView per info page for the whole session. The pages are static
+ * assets — the WebView keeps its loaded page (scroll position, JS state)
+ * between opens, so no double load and no instance stacking.
+ */
+private object InfoWebViewSessions {
+
+    private val views = HashMap<String, WebView>()
+
+    fun get(context: Context, assetPath: String): WebView =
+        views.getOrPut(assetPath) { createWebView(context.applicationContext, assetPath) }
+
+    private fun createWebView(context: Context, assetPath: String): WebView =
+        WebView(context).apply {
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+            settings.allowFileAccess = true
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView,
+                    request: WebResourceRequest,
+                ): Boolean = openExternallyIfGithub(context, request.url.toString())
+            }
+            // The page is loaded exactly once (at creation) with the Torus
+            // font CSS injected — base URL points at the assets dir so
+            // relative asset references (images/CSS) keep working.
+            val raw = context.assets.open(assetPath).bufferedReader().use { it.readText() }
+            val html = injectTorusFonts(context, raw)
+            loadDataWithBaseURL(
+                "file:///android_asset/",
+                html,
+                "text/html",
+                "UTF-8",
+                null,
+            )
+        }
 }
 
 /**

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * Non-lazy grid — counterpart of the Flutter `GridView.builder(shrinkWrap: true)`.
+ * Non-lazy grid.
  *
  * Safe to use INSIDE a scroll container (LazyColumn / verticalScroll):
  * LazyVerticalGrid needs a bounded height and CRASHES when measured

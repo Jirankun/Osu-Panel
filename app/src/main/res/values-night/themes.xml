@@ -3,6 +3,6 @@
     <style name="Theme.OsuPanel" parent="android:Theme.Material.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">#141318</item>
+        <item name="android:windowBackground">@color/dark_background</item>
     </style>
 </resources>

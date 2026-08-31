@@ -14,7 +14,7 @@ import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 
 /**
- * osu! user DTO — counterpart of the Flutter `UserModel`.
+ * osu! user DTO.
  * All fields optional + defaults to stay safe with compact responses
  * (e.g. /friends, /search which omit statistics).
  */
@@ -40,6 +40,24 @@ data class UserDto(
     @SerialName("user_achievements") val userAchievements: List<UserMedalDto> = emptyList(),
     @SerialName("rank_history") val rankHistory: RankHistoryDto? = null,
     val kudosu: KudosuDto? = null,
+
+    // ── Social / counts (not always present, e.g. /friends, /search) ──
+    @SerialName("favourite_count") val favouriteCount: Int? = null,
+    @SerialName("follower_count") val followerCount: Int? = null,
+    @SerialName("comments_count") val commentsCount: Int? = null,
+    @SerialName("scores_first_count") val scoresFirstCount: Int? = null,
+    @SerialName("scores_best_count") val scoresBestCount: Int? = null,
+    @SerialName("scores_recent_count") val scoresRecentCount: Int? = null,
+
+    // ── Mapper stats ──
+    @SerialName("ranked_beatmapset_count") val rankedBeatmapsetCount: Int? = null,
+    @SerialName("loved_beatmapset_count") val lovedBeatmapsetCount: Int? = null,
+    @SerialName("graveyard_beatmapset_count") val graveyardBeatmapsetCount: Int? = null,
+    @SerialName("pending_beatmapset_count") val pendingBeatmapsetCount: Int? = null,
+    @SerialName("nominations_count") val nominationsCount: Int? = null,
+
+    /** Playcount for the last 12 months (osu! web signature chart). */
+    @SerialName("monthly_playcounts") val monthlyPlaycounts: List<MonthlyPlaycountDto> = emptyList(),
 ) {
     /** Cover URL (falls back to null when absent). */
     val coverUrl: String? get() = cover?.url
@@ -52,6 +70,13 @@ data class UserDto(
     val achievements: List<UserMedalDto>
         get() = if (userAchievements.isNotEmpty()) userAchievements else medals
 }
+
+/** One month of playcount (osu! web "plays per month" chart). */
+@Serializable
+data class MonthlyPlaycountDto(
+    @SerialName("start_date") val startDate: String? = null,
+    val count: Int = 0,
+)
 
 @Serializable
 data class CoverDto(

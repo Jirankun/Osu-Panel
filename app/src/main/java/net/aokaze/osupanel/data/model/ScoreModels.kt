@@ -10,12 +10,33 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 
-/** Token response from the Cloudflare Worker (Flutter counterpart). */
+/** Token response from the Cloudflare Worker. */
 @Serializable
 data class TokenResponse(
     @SerialName("access_token") val accessToken: String,
     @SerialName("refresh_token") val refreshToken: String? = null,
     @SerialName("expires_in") val expiresIn: Long,
+)
+
+/** Hit breakdown of a play (per-score `statistics`). */
+@Serializable
+data class ScoreStatisticsDto(
+    @SerialName("count_300") val count300: Int = 0,
+    @SerialName("count_100") val count100: Int = 0,
+    @SerialName("count_50") val count50: Int = 0,
+    @SerialName("count_miss") val countMiss: Int = 0,
+) {
+    /** Total judged hits — denominator for ratios. */
+    val total: Int get() = count300 + count100 + count50 + countMiss
+}
+
+/** PP weight of a score — the API sends it as `{percentage, pp}`. */
+@Serializable
+data class ScoreWeightDto(
+    /** How much of the score's raw pp counts (0..100 %). */
+    val percentage: Double = 0.0,
+    /** The weighted pp this play contributes (`percentage × pp / 100`). */
+    val pp: Double = 0.0,
 )
 
 /** Satu score / play. */
@@ -30,6 +51,9 @@ data class ScoreDto(
     @SerialName("mode_int") val modeInt: Int? = null,
     val mods: List<String> = emptyList(),
     val pp: Double? = null,
+    /** PP weight of this score — osu! API sends it as an OBJECT
+     *  `{percentage, pp}`, not a plain number. */
+    val weight: ScoreWeightDto? = null,
     val rank: String? = null,
     val score: Long = 0,
     @SerialName("total_score") val totalScore: Long = 0,
@@ -38,7 +62,13 @@ data class ScoreDto(
     val user: UserDto? = null,
     val beatmap: BeatmapDto? = null,
     val beatmapset: BeatmapsetDto? = null,
-)
+    val statistics: ScoreStatisticsDto? = null,
+) {
+    /** Weighted contribution of this score (`weight.pp` — the number the
+     *  API reports as the weighted pp of this play). */
+    val weightedPp: Double?
+        get() = weight?.pp
+}
 
 @Serializable
 data class BeatmapDto(
@@ -59,6 +89,9 @@ data class BeatmapDto(
     @SerialName("max_combo") val maxCombo: Int? = null,
     val rank: String? = null,
     val accuracy: Double? = null,
+    @SerialName("count_circles") val countCircles: Int? = null,
+    @SerialName("count_sliders") val countSliders: Int? = null,
+    @SerialName("count_spinners") val countSpinners: Int? = null,
     val beatmaps: List<BeatmapDto> = emptyList(),
     val beatmapset: BeatmapsetDto? = null,
 )
@@ -181,4 +214,13 @@ data class MostPlayedBeatmapDto(
     val count: Int = 0,
     val beatmap: BeatmapDto? = null,
     val beatmapset: BeatmapsetDto? = null,
+)
+
+/**
+ * POST /beatmapsets/{id}/favourites body.
+ * osu! API expects: { "beatmapset_id": <int> }
+ */
+@Serializable
+data class FavouriteBody(
+    @SerialName("beatmapset_id") val beatmapsetId: Int,
 )

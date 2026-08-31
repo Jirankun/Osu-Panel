@@ -12,12 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,12 +20,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import net.aokaze.osupanel.core.util.formatAchievedDate
 import net.aokaze.osupanel.data.model.BadgeDto
 
 /**
- * osu! badge image (from a network URL via Coil). Tap → the shared
- * ItemDetailDialog — the same popup as medals, just different content:
- * badge image + description + awarded date.
+ * osu! badge image (from a network URL via Coil) — PURE display, no click
+ * handling: the parent tile decides the tap target, so the WHOLE card opens
+ * the detail popup (not just the photo). Callers render [BadgeDetailDialog]
+ * themselves when the card is tapped.
+ *
+ * The [modifier] controls the container (grid cards pass `fillMaxSize` so the
+ * box covers the full tile); the badge itself is always [size] and centered.
  */
 @Composable
 fun BadgeImage(
@@ -38,42 +38,32 @@ fun BadgeImage(
     size: Dp = 48.dp,
     modifier: Modifier = Modifier,
 ) {
-    var showDetail by remember { mutableStateOf(false) }
-
-    Surface(
-        onClick = { showDetail = true },
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        modifier = modifier.size(size),
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
     ) {
-        Box(contentAlignment = Alignment.Center) {
-            SubcomposeAsyncImage(
-                model = badge.imageUrl,
-                contentDescription = badge.description,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .size(size)
-                    .clip(RoundedCornerShape(12.dp)),
-                error = {
-                    Icon(
-                        Icons.Rounded.EmojiEvents,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                        modifier = Modifier.size(size * 0.6f),
-                    )
-                },
-            )
-        }
-    }
-
-    if (showDetail) {
-        BadgeDetailDialog(badge = badge, onDismiss = { showDetail = false })
+        SubcomposeAsyncImage(
+            model = badge.imageUrl,
+            contentDescription = badge.description,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .size(size)
+                .clip(RoundedCornerShape(12.dp)),
+            error = {
+                Icon(
+                    Icons.Rounded.EmojiEvents,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                    modifier = Modifier.size(size * 0.6f),
+                )
+            },
+        )
     }
 }
 
 /** Badge detail dialog — image + description + awarded date. */
 @Composable
-private fun BadgeDetailDialog(
+fun BadgeDetailDialog(
     badge: BadgeDto,
     onDismiss: () -> Unit,
 ) {
@@ -83,7 +73,7 @@ private fun BadgeDetailDialog(
         dateText = badge.awardedAt
             ?.takeIf { it.isNotEmpty() }
             ?.let { formatAchievedDate(it) },
-        showLock = false,
+        achieved = true,
         onDismiss = onDismiss,
         imageContent = {
             SubcomposeAsyncImage(

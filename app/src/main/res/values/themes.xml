@@ -4,6 +4,6 @@
     <style name="Theme.OsuPanel" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">#FFF8F9</item>
+        <item name="android:windowBackground">@color/light_background</item>
     </style>
 </resources>

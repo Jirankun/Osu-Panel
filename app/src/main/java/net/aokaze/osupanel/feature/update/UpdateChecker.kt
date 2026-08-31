@@ -22,11 +22,13 @@ data class UpdateInfo(
 )
 
 /**
- * App update check via the proxy worker → Appteka.
+ * App update check via the Appteka proxy worker.
  *
- * Flow (as requested): when the app opens, fetch
- * `GET {proxy}?endpoint={appteka.info(app_id)}`, match `package` against
- * this app (`net.aokaze.osupanel`), then compare `ver_code` with the installed
+ * Flow: when the app opens, fetch `GET {worker}/app-info?package=...` — the
+ * worker fetches Appteka server-side (the app never sends an arbitrary
+ * endpoint URL, so the worker is NOT an open proxy). Lookup is by package
+ * name only (no app id), then guard `package` against this app
+ * (`net.aokaze.osupanel`), then compare `ver_code` with the installed
  * version. If newer → save to the prefs cache → the popup shows.
  *
  * If the user picks "Not Now", the popup just closes — the cache stays,
@@ -39,7 +41,10 @@ object UpdateChecker {
     const val PREFS_NAME = "osu_panel_update"
     const val KEY_CACHED_CODE = "cached_ver_code"
     const val KEY_CACHED_NAME = "cached_ver_name"
-    const val KEY_LAST_SHOWN_DATE = "last_shown_date"
+    const val KEY_LAST_CHECKED_MS = "last_checked_ms"
+
+    /** Re-check the proxy at most once per day when nothing is cached. */
+    private const val CHECK_INTERVAL_MS = 24L * 60 * 60 * 1000
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
@@ -53,6 +58,20 @@ object UpdateChecker {
         }.getOrDefault(0)
 
     /**
+     * Read cached update info synchronously (SharedPreferences read is fast).
+     * Returns non-null only when the cached version is newer than installed.
+     */
+    fun loadCachedInfo(context: Context): UpdateInfo? {
+        val installed = installedVerCode(context)
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val code = prefs.getInt(KEY_CACHED_CODE, 0)
+        val name = prefs.getString(KEY_CACHED_NAME, null)
+        return if (code > installed && !name.isNullOrEmpty()) {
+            UpdateInfo(code, name)
+        } else null
+    }
+
+    /**
      * Checks for updates. `null` = no update (or a network failure / package
      * mismatch — do not bother the user).
      */
@@ -61,30 +80,38 @@ object UpdateChecker {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         // 1) Valid cache (remote version still newer than the installed one)
-        //    → show without the network. This is the "Not Now → reopen" path.
-        //    Show limit: ONCE PER DAY — users who keep pressing "Not
-        //    Now" are not bothered repeatedly in a day; it shows again
-        //    tomorrow (the cache stays).
+        //    → show without the network. Popup appears EVERY time the app
+        //    opens so the user is nudged to update, but can still dismiss.
         val cachedCode = prefs.getInt(KEY_CACHED_CODE, 0)
         val cachedName = prefs.getString(KEY_CACHED_NAME, null)
         if (cachedCode > installed && !cachedName.isNullOrEmpty()) {
-            return@withContext if (isShownToday(context)) null else UpdateInfo(cachedCode, cachedName)
+            return@withContext UpdateInfo(cachedCode, cachedName)
         }
 
         // 2) Stale cache (the user updated) → clear it.
         prefs.edit().clear().apply()
 
-        // 3) Re-check Appteka via the proxy worker.
-        val appInfoUrl = "https://appteka.store/api/1/app/info?app_id=" +
-            URLEncoder.encode(Env.UPDATE_APP_ID, "UTF-8") + "&locale=id"
-        val proxyUrl = Env.UPDATE_PROXY_BASE_URL + "?endpoint=" +
-            URLEncoder.encode(appInfoUrl, "UTF-8")
+        // 2b) Throttle: don't hit the proxy worker on EVERY app open — at
+        // most once per day when no update is cached. (A cached update still
+        // shows from step 1 without the network.)
+        if (System.currentTimeMillis() - prefs.getLong(KEY_LAST_CHECKED_MS, 0L) < CHECK_INTERVAL_MS) {
+            return@withContext null
+        }
+
+        // 3) Re-check Appteka via the worker — the worker fetches Appteka
+        // server-side; the app only sends the package name (no endpoint
+        // passthrough → the worker is NOT an open proxy).
+        val checkUrl = Env.UPDATE_CHECK_BASE_URL + "/app-info?package=" +
+            URLEncoder.encode(Env.UPDATE_PACKAGE_NAME, "UTF-8")
 
         runCatching {
-            val req = Request.Builder().url(proxyUrl).get().build()
+            val req = Request.Builder().url(checkUrl).get().build()
             val resp = client.newCall(req).execute()
             try {
                 if (!resp.isSuccessful) return@runCatching null
+                // Successful check (update found or not) → remember when so the
+                // proxy worker is not hit again for another day.
+                prefs.edit().putLong(KEY_LAST_CHECKED_MS, System.currentTimeMillis()).apply()
                 val body = resp.body?.string() ?: return@runCatching null
                 val info = JSONObject(body)
                     .optJSONObject("result")
@@ -95,8 +122,19 @@ object UpdateChecker {
                     return@runCatching null
                 }
                 val verCode = info.optInt("ver_code", 0)
-                if (verCode <= installed) return@runCatching null
                 val verName = info.optString("ver_name", "").ifEmpty { return@runCatching null }
+                // Compare version code first; if equal, compare version name
+                // (handles cases where the store reuses version codes across
+                // minor releases — e.g. Appteka ver_code stays at 2 for both
+                // 1.0.0 and 1.0.1).
+                val installedName = context.packageManager
+                    .getPackageInfo(context.packageName, 0).versionName.orEmpty()
+                // Compare version code first; if equal, compare version name
+                // (handles cases where the store reuses version codes across
+                // minor releases — e.g. Appteka ver_code stays at 2 for both
+                // 1.0.0 and 1.0.1).
+                val hasUpdate = verCode > installed || (verCode == installed && verName > installedName)
+                if (!hasUpdate) return@runCatching null
 
                 // Save the cache → shows again on the next open.
                 prefs.edit()
@@ -104,29 +142,10 @@ object UpdateChecker {
                     .putString(KEY_CACHED_NAME, verName)
                     .apply()
 
-                // Show limit of once/day (see the comment above).
-                if (isShownToday(context)) return@runCatching null
                 UpdateInfo(verCode, verName)
             } finally {
                 resp.close()
             }
         }.getOrNull()
-    }
-
-    private fun today(): String =
-        java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
-
-    /** True if the popup has already been shown today (once/day limit). */
-    private fun isShownToday(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getString(KEY_LAST_SHOWN_DATE, null) == today()
-    }
-
-    /** Records that the popup was shown today — called on dismiss / opening the page. */
-    fun recordShownToday(context: Context) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(KEY_LAST_SHOWN_DATE, today())
-            .apply()
     }
 }

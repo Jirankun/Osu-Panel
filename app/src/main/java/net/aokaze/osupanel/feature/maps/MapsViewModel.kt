@@ -6,7 +6,7 @@
 package net.aokaze.osupanel.feature.maps
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import net.aokaze.osupanel.feature.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,11 +31,11 @@ data class MapsTabState<T>(
 )
 
 /**
- * Maps ViewModel — counterpart of the Flutter per-tab state
+ * Maps ViewModel — per-tab state
  * (Last Play / Best Scores / Most Played / Loved) with pagination
  * 100 per page + per-session cache.
  */
-class MapsViewModel(application: Application) : AndroidViewModel(application) {
+class MapsViewModel(application: Application) : BaseViewModel(application) {
 
     private val container = (application as OsuPanelApp).container
     private val repository = container.contentRepository
@@ -49,14 +49,14 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
     private val _mostPlayed = MutableStateFlow(MapsTabState<MostPlayedBeatmapDto>())
     val mostPlayed: StateFlow<MapsTabState<MostPlayedBeatmapDto>> = _mostPlayed.asStateFlow()
 
-    private val _loved = MutableStateFlow(MapsTabState<BeatmapsetDto>())
-    val loved: StateFlow<MapsTabState<BeatmapsetDto>> = _loved.asStateFlow()
+    private val _favourite = MutableStateFlow(MapsTabState<BeatmapsetDto>())
+    val favourite: StateFlow<MapsTabState<BeatmapsetDto>> = _favourite.asStateFlow()
 
     fun load(userId: Int) {
         loadRecent(userId)
         loadBest(userId)
         loadMostPlayed(userId)
-        loadLoved(userId)
+        loadFavourite(userId)
     }
 
     fun refresh(userId: Int) {
@@ -67,7 +67,7 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
         loadRecent(userId, force = true)
         loadBest(userId, force = true)
         loadMostPlayed(userId, force = true)
-        loadLoved(userId, force = true)
+        loadFavourite(userId, force = true)
     }
 
     fun loadMoreRecent(userId: Int) = loadMore(
@@ -94,10 +94,10 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
         key = DataCache.mostPlayed(userId),
     ) { offset -> repository.getMostPlayed(userId, limit = PAGE_SIZE, offset = offset) }
 
-    fun loadMoreLoved(userId: Int) = loadMore(
+    fun loadMoreFavourite(userId: Int) = loadMore(
         userId,
-        _loved,
-        type = "loved",
+        _favourite,
+        type = "favourite",
         pageSize = PAGE_SIZE,
         key = DataCache.favourites(userId),
     ) { offset -> repository.getFavourites(userId, limit = PAGE_SIZE, offset = offset) }
@@ -120,8 +120,8 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
         force = force,
     ) { repository.getMostPlayed(userId, limit = PAGE_SIZE, offset = 0) }
 
-    private fun loadLoved(userId: Int, force: Boolean = false) = loadFirst(
-        _loved,
+    private fun loadFavourite(userId: Int, force: Boolean = false) = loadFirst(
+        _favourite,
         key = DataCache.favourites(userId),
         force = force,
     ) { repository.getFavourites(userId, limit = PAGE_SIZE, offset = 0) }
@@ -198,8 +198,7 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun classify(e: Throwable): String =
-        net.aokaze.osupanel.data.remote.classifyError(getApplication(), e).message
+
 
     companion object {
         private const val PAGE_SIZE = 100

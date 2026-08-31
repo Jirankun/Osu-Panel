@@ -18,8 +18,8 @@ import net.aokaze.osupanel.R
 
 /**
  * "no background map" placeholder painter from res/drawable
- * (`no_background_maps.png`) — used as the `error` slot in AsyncImage     * (Flutter `AssetPaths.noBackgroundMap` counterpart). The PNG moved from
-     * assets to drawable to keep the assets folder slim.
+ * (`no_background_maps.png`) — used as the `error` slot in AsyncImage.
+ * The PNG lives in drawable to keep the assets folder slim.
  */
 @Composable
 fun rememberMapPlaceholderPainter(size: Dp = 56.dp): Painter =

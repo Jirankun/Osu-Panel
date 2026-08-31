@@ -6,6 +6,7 @@
     <!-- ── Login ── -->
     <string name="login_subtitle">Login with osu...</string>
     <string name="login_button">Login</string>
+    <string name="login_cooldown">Wait %1$ds</string>
     <string name="login_loading">Logging in…</string>
     <string name="error_login_generic">Login failed. Try again.</string>
 
@@ -18,6 +19,7 @@
     <string name="error_request_timeout">Request timed out. Try again.</string>
     <string name="error_worker">There is a problem with the app server. Try again in a moment.</string>
     <string name="error_osu_server">The osu! server is having issues. Try again in a moment.</string>
+    <string name="error_osu_rate_limit">Rate limit by osu! server. Please try again later.</string>
     <string name="error_login_too_many">Too many login attempts. Please wait a moment.</string>
     <string name="error_app">An error occurred in the app. Try again.</string>
     <string name="error_generic">Something went wrong. Try again.</string>
@@ -29,7 +31,23 @@
     <string name="nav_settings">Settings</string>
 
     <!-- ── Dashboard ── -->
+    <string name="dashboard_edit_profile">Edit Profile</string>
+    <string name="dashboard_edit_profile_title">Edit Profile?</string>
+    <string name="dashboard_edit_profile_confirm">Are you sure you want to edit your profile?</string>
+    <string name="dashboard_edit_profile_yes">Yes</string>
+    <string name="dashboard_edit_profile_no">No</string>
     <string name="dashboard_refresh">Refresh</string>
+
+    <!-- Skills radar (osu!skills — osuskills.com, the osu-stats-signature source) -->
+    <string name="daily_challenge_title">Daily Challenge</string>
+    <string name="dashboard_skills_radar">Skills Radar</string>
+    <string name="dashboard_skills_radar_sub">osu!skills — same as your widget</string>
+    <string name="dashboard_first_place">#1 Scores</string>
+    <string name="dashboard_favourites">Favourites</string>
+    <string name="dashboard_followers">Followers</string>
+    <string name="dashboard_weighted_pp">Weighted PP</string>
+    <string name="dashboard_plays_per_month">Plays per Month</string>
+    <string name="dashboard_plays_total">%1$s total plays</string>
     <string name="dashboard_supporter">Supporter</string>
     <string name="dashboard_performance">Performance</string>
     <string name="dashboard_global_rank">Global Rank</string>
@@ -47,17 +65,29 @@
     <string name="dashboard_badges">Badges</string>
     <string name="dashboard_no_medals">No medals yet</string>
     <string name="dashboard_no_badges">No badges yet</string>
+    <string name="dashboard_rank_history">Rank History</string>
+    <string name="dashboard_most_played">Most Played</string>
+    <string name="dashboard_total_score">Total Score</string>
+    <string name="dashboard_replays_watched">Replays Watched</string>
+    <string name="dashboard_kudosu">Kudosu</string>
+    <string name="dashboard_joined">Joined</string>
+    <string name="dashboard_grade_title">Grade</string>
+    <string name="dashboard_grade_counters">Counters</string>
+    <string name="dashboard_plays_count">%1$d plays</string>
+    <string name="profile_skills_radar">Skills Radar</string>
+    <string name="profile_no_skills">No skills data</string>
 
     <!-- ── Medal ── -->
     <string name="medal_no_description">No description available.</string>
     <string name="medal_not_achieved">Not achieved yet</string>
+    <string name="medal_achieved">Achieved</string>
     <string name="medal_okey">OK</string>
 
     <!-- ── Maps ── -->
     <string name="maps_last_play">Last Play</string>
     <string name="maps_best_scores">Best Scores</string>
     <string name="maps_most_played">Most Played</string>
-    <string name="maps_loved">Loved</string>
+    <string name="maps_loved">Favourite</string>
     <string name="maps_login_needed">Log in to view this data.</string>
     <string name="maps_no_recent">No recent plays</string>
     <string name="maps_no_best">No best scores yet</string>
@@ -80,7 +110,6 @@
     <string name="settings_widget_mode_desc">Game mode shown in the home screen widget — the icon, rank, PP, accuracy and other stats follow it.</string>
     <string name="settings_license">License</string>
     <string name="settings_contributor">Contributor</string>
-    <string name="settings_logout">Logout</string>
     <string name="settings_goodbye">Goodbye, %1$s!</string>
     <string name="settings_version">Version : %1$s</string>
     <string name="settings_about_section">About</string>
@@ -91,14 +120,16 @@
     <string name="settings_logout_title">Log out?</string>
     <string name="settings_logout_confirm">Are you sure you want to log out of your osu! account?</string>
     <string name="settings_logout_button">Log out</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+    <string name="settings_terms_of_service">Terms of Service</string>
     <string name="settings_confirm">Log Out</string>
     <string name="settings_cancel">Cancel</string>
 
     <!-- ── Profile ── -->
-    <string name="profile_title">Profile</string>
     <string name="profile_back">Back</string>
     <string name="profile_online">Online</string>
     <string name="profile_offline">Offline</string>
+    <string name="profile_playstyle">Playstyle</string>
     <string name="profile_joined">Joined %1$s</string>
     <string name="profile_global">Global</string>
     <string name="profile_pp">PP</string>
@@ -117,7 +148,6 @@
     <string name="profile_country_rank">Country Rank</string>
     <string name="profile_global_rank">Global Rank</string>
     <string name="profile_kudosu">Kudosu</string>
-    <string name="profile_grade_counts">Grade Counts</string>
     <string name="profile_badges">Badges</string>
     <string name="profile_no_badges">No badges yet</string>
     <string name="profile_groups">Groups / Clubs</string>
@@ -129,14 +159,14 @@
     <string name="profile_most_played">Most Played</string>
 
     <!-- ── Beatmap Detail ── -->
-    <string name="beatmap_title">Beatmap</string>
     <string name="beatmap_status_unknown">UNKNOWN</string>
     <string name="rankings_all">All</string>
     <string name="beatmap_back">Back</string>
     <string name="beatmap_refresh">Refresh Data</string>
-    <string name="beatmap_copy_link">Copy Link</string>
-    <string name="beatmap_link_copied">Link copied: %1$s</string>
     <string name="beatmap_mapped_by">mapped by %1$s</string>
+    <string name="beatmap_artist_by">by %1$s</string>
+    <string name="beatmap_source">Source: %1$s</string>
+    <string name="beatmap_tags">Tags: %1$s</string>
     <string name="beatmap_bpm">BPM</string>
     <string name="beatmap_length">Length</string>
     <string name="beatmap_plays">Plays</string>
@@ -148,6 +178,13 @@
     <string name="beatmap_info">Info</string>
     <string name="beatmap_play_preview">Play preview</string>
     <string name="beatmap_failed_preview">Failed to play preview</string>
+
+    <!-- ── QR Code Share ── -->
+    <string name="beatmap_share_qr">Share QR</string>
+    <string name="qr_scan_hint_title">Scan this QR on your PC</string>
+    <string name="qr_scan_hint_url">osu-panel.zhyllanfyllah.my.id/qr</string>
+    <string name="qr_pc_instruction">Open the URL on PC → allow camera → point at this QR</string>
+    <string name="qr_guide_hint">Open on PC:\nosu-panel.zhyllanfyllah.my.id/qr\nallow camera → scan this QR</string>
     <string name="beatmap_not_available">Data not available</string>
 
     <!-- Full-screen error retry (shared by Beatmap detail, Profile, …) -->
@@ -197,4 +234,108 @@
     <string name="cardgen_template_mini">Mini</string>
     <string name="cardgen_complete">Complete</string>
     <string name="cardgen_share_title">Share card</string>
+
+    <!-- ── Chat (Chatango) ── -->
+    <string name="settings_chat_section">Chat</string>
+    <string name="settings_chat_title">Chat</string>
+    <string name="settings_chat_not_activated">Not activated</string>
+    <string name="settings_chat_connected_as">Connected as %1$s</string>
+
+    <string name="chat_settings_title">Chat Settings</string>
+    <string name="chat_account_section">Account</string>
+    <string name="chat_login_username">Chatango username</string>
+    <string name="chat_login_password">Chatango password</string>
+    <string name="chat_login_button">Login / Save</string>
+    <string name="chat_login_loading">Logging in…</string>
+    <string name="chat_login_error">Login failed. Try again.</string>
+    <string name="chat_login_error_pwd">Wrong password.</string>
+    <string name="chat_login_error_sid">Username not found.</string>
+    <string name="chat_login_error_version">App version not supported.</string>
+    <string name="chat_logout_title">Log out of Chatango?</string>
+    <string name="chat_logout_confirm">This disconnects private &amp; group chat.</string>
+    <string name="chat_logout_button">Log out</string>
+    <string name="chat_cancel">Cancel</string>
+
+    <string name="chat_edit_section">Edit Profile</string>
+    <string name="chat_edit_preview">Preview</string>
+    <string name="chat_edit_not_logged">Log in first to edit your Chatango account.</string>
+    <string name="chat_edit_bio">About me</string>
+    <string name="chat_edit_age">Age</string>
+    <string name="chat_edit_gender">Gender</string>
+    <string name="chat_edit_gender_male">Male</string>
+    <string name="chat_edit_gender_female">Female</string>
+    <string name="chat_edit_gender_other">Other</string>
+    <string name="chat_edit_directory">Show in members list</string>
+    <string name="chat_edit_directory_desc">Show your profile in the Chatango members directory and search</string>
+    <string name="chat_edit_save">Save</string>
+    <string name="chat_edit_saving">Saving…</string>
+    <string name="chat_edit_saved">Profile updated</string>
+    <string name="chat_edit_failed">Failed to update profile</string>
+    <string name="chat_edit_change_photo">Change photo</string>
+    <string name="chat_edit_uploading">Uploading…</string>
+    <string name="chat_edit_photo_saved">Photo updated</string>
+    <string name="chat_edit_photo_failed">Failed to upload photo</string>
+
+    <string name="chat_activate_section">Activation</string>
+    <string name="chat_activate_pm">Enable private chat (PM)</string>
+    <string name="chat_activate_pm_desc">Connect to Chatango private messages</string>
+    <string name="chat_activate_group">Enable group chat</string>
+    <string name="chat_activate_group_desc">Show group chat in the Chat screen</string>
+
+    <string name="chat_notif_section">Notifications</string>
+    <string name="chat_notif_pm_section">Private messages</string>
+    <string name="chat_notif_group_section">Group messages</string>
+    <string name="chat_notif_at_section">Group @-replies</string>
+    <string name="chat_notif_sound_visible">Sound when visible</string>
+    <string name="chat_notif_sound_visible_desc">Play a sound when a new message arrives while the chat is open</string>
+    <string name="chat_notif_alert_closed">Alert when closed</string>
+    <string name="chat_notif_alert_closed_desc">Notify when a message arrives while the chat is closed</string>
+    <string name="chat_notif_sound">Sound</string>
+    <string name="chat_notif_vibrate">Vibrate</string>
+
+    <!-- ── Chat screen (bottom nav) ── -->
+    <string name="nav_chat">Chat</string>
+    <string name="chat_pm_tab">Private</string>
+    <string name="chat_group_tab">Groups</string>
+    <string name="chat_global_tab">Global</string>
+    <string name="chat_search_hint">Search Chatango users…</string>
+    <string name="chat_search_empty">No users found</string>
+    <string name="chat_search_error">Search failed — try again</string>
+    <string name="chat_search_overloaded">Chatango is busy — try again in a moment</string>
+    <string name="chat_search_login">Log in to search users</string>
+    <string name="chat_filter_all">All</string>
+    <string name="chat_filter_recent">Recent</string>
+    <string name="chat_filter_friend">Friend</string>
+    <string name="chat_not_activated">Chat is not activated yet</string>
+    <string name="chat_open_settings">Open Chat Settings</string>
+    <string name="chat_login_needed">Log in to Chatango first</string>
+    <string name="chat_empty_conversations">No conversations yet</string>
+    <string name="chat_empty_groups">No groups yet — add group names in Chat Settings</string>
+    <string name="chat_groups_error">Couldn\'t load your groups — try again</string>
+    <string name="chat_retry">Retry</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_input_hint">Type a message…</string>
+    <string name="chat_send_photo">Send photo</string>
+    <string name="chat_photo_draft">Photo draft</string>
+    <string name="chat_photo_draft_hint">Photo ready — tap send to deliver</string>
+    <string name="chat_discard_draft">Discard draft</string>
+    <string name="chat_more">More options</string>
+    <string name="chat_blocked_list">Blocked users</string>
+    <string name="chat_blocked_empty">You have not blocked anyone</string>
+    <string name="chat_blocked_label">Blocked</string>
+    <string name="chat_block">Block</string>
+    <string name="chat_unblock">Unblock</string>
+    <string name="chat_confirm_block_title">Block user</string>
+    <string name="chat_confirm_block_body">Block %s?</string>
+    <string name="chat_connecting">Connecting…</string>
+    <string name="chat_offline">Offline</string>
+    <string name="chat_online">Online</string>
+    <string name="chat_profile_load_failed">Couldn\'t load this profile</string>
+    <string name="chat_profile_chat">Chat</string>
+    <string name="chat_group_load_failed">Couldn\'t load this group</string>
+    <string name="chat_add_friend">Add friend</string>
+    <string name="chat_remove_friend">Remove friend</string>
+    <string name="chat_bio_see_more">see more &gt;</string>
+    <string name="chat_bio_title">About %1$s</string>
+    <string name="chat_close">Close</string>
 </resources>

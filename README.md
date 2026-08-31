@@ -26,13 +26,23 @@
 ·
 [Issues](https://github.com/Jirankun/Osu-Panel/issues)
 ·
-[License](https://github.com/Jirankun/Osu-Panel/blob/main/LICENSE)
+[Screenshoots](https://github.com/Jirankun/Osu-Panel/blob/main/repo/SCREENSHOOT.md)
 
 A native Android rewrite of the Osu! Panel app, built
 with Jetpack Compose + Material 3.
 It includes **OAuth login + the full osu! API v2 layer**, **3 home screen
 widgets**, a **card generator**, and most main screens (Dashboard, Maps,
 Rankings, Profile, Beatmap Detail, Settings, License, Contributor).
+
+## Screenshots
+
+All previews are collected in [SCREENSHOOT.md](repo/SCREENSHOOT.md) — here
+are all of them at a glance:
+
+| | | | |
+| --- | --- | --- | --- |
+| [<img src="repo/screen/thumb/Rrankings.jpg" width="160" alt="Rankings">](repo/screen/Rrankings.jpg) | [<img src="repo/screen/thumb/dashboard.jpg" width="160" alt="Dashboard">](repo/screen/dashboard.jpg) | [<img src="repo/screen/thumb/map_detail.jpg" width="160" alt="Map Detail">](repo/screen/map_detail.jpg) | [<img src="repo/screen/thumb/maps.jpg" width="160" alt="Maps">](repo/screen/maps.jpg) |
+| [<img src="repo/screen/thumb/login.jpg" width="160" alt="Login">](repo/screen/login.jpg) | [<img src="repo/screen/thumb/profile_detail.jpg" width="160" alt="Profile Detail">](repo/screen/profile_detail.jpg) | [<img src="repo/screen/thumb/launcher_widget.jpg" width="160" alt="Launcher Widget">](repo/screen/launcher_widget.jpg) | [<img src="repo/screen/thumb/settings.jpg" width="160" alt="Settings">](repo/screen/settings.jpg) |
 
 > **License**: MIT — see [LICENSE](LICENSE).
 >
@@ -61,16 +71,28 @@ Rankings, Profile, Beatmap Detail, Settings, License, Contributor).
   Mini templates → share the PNG via the Android share sheet).
 - **Beatmap detail** — cover, quick stats, difficulties, info, creator,
   leaderboard (with a **YOU** row + **#1** row at the top when applicable),
-  and audio preview via Media3.
+  audio preview via Media3, **Share** (Android share sheet with QR viewer URL
+  + beatmap details), and **QR Beatmap Share** (full-screen QR display → PC
+  scans via camera → beatmap card with audio preview plays instantly).
 - **Home screen widgets** — Profile Large (stat-sign signature card with
   `with stats` / `with skills` layouts), Rank & Level, and PP.
-- **Update check popup** — checks the Appteka store via the proxy worker on
-  app open, shows "Update available!" at most **once per day**.
+- **Update check popup** — checks the store via the proxy worker on app open.
+  Popup appears **every app open** when an update is cached (user is always
+  nudged to update), while the network check runs at most **once per day**.
+  Login error shows a **10-second countdown** on the button before retry.
 - **License & Contributor screens** — WebView pages with the laser-triangle
   canvas, Torus font injected from `res/font`, and GitHub links opened in an
   external browser.
-- **Laser triangles everywhere** — the osu!lazer `TrianglesV2` background
-  (`Modifier.trianglesBackground()`), used by buttons, cards, and screens.
+- **Laser triangles everywhere** — two variants of the osu!lazer `TrianglesV2`
+  background: `Modifier.trianglesLine()` (outline/stroke, original style) and
+  `Modifier.trianglesFill()` (filled solid + 3D shadow effect, denser layout).
+  Used by buttons, cards, screens, and the login button.
+- **QR Beatmap Share** — full-screen QR page with share button. Android generates
+  a compact QR containing the beatmap URL with base64-encoded JSON (title,
+  artist, mapper, BPM, length, cover, URL, tags, audio preview). Share button
+  opens Android share sheet with formatted message + QR viewer URL.
+  PC opens the viewer → camera scans → beatmap card with audio player appears.
+  OG dynamic tags via Cloudflare Worker for social media card previews.
 
 ### Architecture
 
@@ -87,12 +109,31 @@ Rankings, Profile, Beatmap Detail, Settings, License, Contributor).
 │ (holds Client    │
 │  Secret)          │
 └──────────────────┘
+
+┌──────────────┐   QR code (embedded)  ┌──────────────────┐
+│  Android App │──────────────────────▶│  PC Browser      │
+│  (beatmap)   │  base64 JSON in QR    │  (camera scan →  │
+│  Share button│  ?d=<base64> URL      │   beatmap card   │
+└──────────────┘                       │   + audio play)  │
+     │                                 └──────────────────┘
+     │ share sheet                           ▲
+     ▼                                       │ OG tags
+┌──────────────────┐  Cloudflare Worker  ┌───┴──────────┐
+│ Social Media     │────────────────────▶│  QR Viewer   │
+│ (Twitter/Discord)│  dynamic OG tags    │  (Worker)    │
+└──────────────────┘                     └──────────────┘
 ```
 
 - The app **never stores the Client Secret** — auth is proxied through the
   Cloudflare Worker (`https://api-osupanel.zhyllanfyllah.my.id`). The worker
   source lives in `worker.js` at the project root. `CLIENT_ID` /
   `CLIENT_SECRET` are configured as Cloudflare environment variables.
+
+- **QR Beatmap Share** uses a Cloudflare Worker (`Web for feature map/worker.js`)
+  that serves the viewer page with **dynamic OG meta tags** for social media
+  previews. The static fallback (`Web for feature map/index.html`) is deployed
+  to Cloudflare Pages. URL format: `?d=<base64>` for share links (OG tags),
+  `#<base64>` for QR scan (backward compatible).
 - Tokens are stored encrypted in the Android Keystore
   (`EncryptedSharedPreferences`).
 - `AuthInterceptor` (OkHttp) injects `Authorization: Bearer`, handles
@@ -145,11 +186,36 @@ app/src/main/java/net/aokaze/osupanel/
 │   ├── rankings/              # RankingsViewModel + ui/RankingsScreen
 │   ├── profile/               # ProfileViewModel + ui/ProfileScreen (+ cardgen FAB)
 │   ├── cardgen/               # Card generator (ViewModel + UI + share)
-│   ├── beatmap/               # BeatmapDetailViewModel + ui/BeatmapDetailScreen
+│   ├── beatmap/               # BeatmapDetailViewModel + ui/BeatmapDetailScreen + QrCodeScreen
 │   ├── settings/ui/           # SettingsScreen, InfoWebViewScreens
 │   └── update/                # UpdateChecker + UpdateCheckViewModel
 ├── widget/                    # HOME SCREEN WIDGETS (3) + SignatureRenderer
-└── ui/components/             # Global components (OsuSpinner, TrianglesBackground, ...)
+└── ui/components/             # Global components (OsuSpinner, TrianglesLine, TrianglesFill, ...)
+```
+
+### QR Beatmap Share (Web Viewer)
+
+The PC viewer is served by a **Cloudflare Worker** (`Web for feature map/worker.js`)
+that injects **dynamic OG meta tags** for social media card previews, plus a
+static fallback on **Cloudflare Pages** (`Web for feature map/index.html`).
+
+**URL formats:**
+- `?d=<base64>` — share link (Worker decodes, injects OG tags, serves HTML)
+- `#<base64>` — QR scan (client-side decode, backward compatible)
+
+**QR data (compact JSON → base64):**
+```json
+{"title","artist","mapper","bpm","length","cover","url","tags","preview"}
+```
+
+**Share message format:**
+```
+🎵 Title — Artist
+👤 Creator | ★2.15 Hard
+🎵 BPM: 190 | ⏱ 3:45
+🏷️ tag1, tag2, tag3
+
+https://qr-osupanel.zhyllanfyllah.my.id/?d=<base64>
 ```
 
 ### Build
@@ -250,7 +316,8 @@ unsigned (debug is never signed either way).
 2. **New API endpoint** → add a method in `data/remote/OsuApi.kt` (osu! API)
    or `WorkerApi.kt` (worker). DTOs go in `data/model/`.
 3. **Shared UI component** → put it in `ui/components/`, one file per
-   component. Laser-triangle backgrounds → `Modifier.trianglesBackground()`.
+   component. Laser-triangle backgrounds → `Modifier.trianglesLine()` (outline)
+   or `Modifier.trianglesFill()` (filled + shadow).
 4. **Text** → `res/values/strings.xml`. **Colors** → `res/values/colors.xml`.
 5. **Dependencies** → register the instance in `di/AppContainer.kt`
    (manual DI — access via `(application as OsuPanelApp).container`).
@@ -263,6 +330,10 @@ unsigned (debug is never signed either way).
 - `key.txt` (local OAuth keys) is **git-ignored** — never commit it.
 - `worker.js` intentionally contains **no** `CLIENT_SECRET` fallback — set it
   as a Cloudflare environment variable (`CLIENT_ID`, `CLIENT_SECRET`).
+- The Appteka proxy worker (`Aokaze-Studio-Page-main/worker.js`) has **no**
+  generic `?endpoint=` passthrough — the app calls `/app-info?package=...`
+  and only `appteka.store/api/1/*` URLs are forwarded, so it cannot be
+  abused as an open proxy.
 
 ### License
 
@@ -293,17 +364,29 @@ MIT — see [LICENSE](LICENSE). Third-party licenses are listed in
   most played, plus **FAB generator kartu** (template Full stats / Skills /
   Mini → bagikan PNG lewat share sheet Android).
 - **Beatmap detail** — cover, statistik singkat, difficulties, info, creator,
-  leaderboard (dengan baris **YOU** dan **#1** di atas saat relevan), dan
-  preview audio via Media3.
+  leaderboard (dengan baris **YOU** dan **#1** di atas saat relevan),
+  preview audio via Media3, **Bagikan** (share sheet Android dengan URL QR
+  viewer + detail beatmap), dan **QR Beatmap Share** (layar penuh QR → PC
+  scan via kamera → card beatmap dengan audio player langsung muncul).
 - **Widget home screen** — Profile Large (kartu signature stat-sign dengan
   layout `with stats` / `with skills`), Rank & Level, dan PP.
-- **Popup update** — cek toko Appteka via proxy worker saat app dibuka,
-  menampilkan "Update available!" maksimal **sekali per hari**.
+- **Popup update** — cek toko via proxy worker saat app dibuka.
+  Popup muncul **setiap kali app dibuka** jika ada update di-cache
+  (user selalu diingatkan update), sementara cek server maksimal **sekali sehari**.
+  Login error menampilkan **countdown 10 detik** pada tombol sebelum bisa retry.
 - **Layar License & Contributor** — halaman WebView dengan canvas segitiga
   lazer, font Torus di-inject dari `res/font`, link GitHub dibuka di browser
   eksternal.
-- **Segitiga lazer di mana-mana** — latar `TrianglesV2` milik osu!lazer
-  (`Modifier.trianglesBackground()`), dipakai tombol, kartu, dan layar.
+- **Segitiga lazer di mana-mana** — dua varian latar `TrianglesV2` milik
+  osu!lazer: `Modifier.trianglesLine()` (outline/garis, gaya asli) dan
+  `Modifier.trianglesFill()` (filled solid + efek bayangan 3D, lebih rapat).
+  Dipakai tombol, kartu, layar, dan tombol login.
+- **QR Beatmap Share** — layar QR penuh dengan tombol bagikan. Android generate
+  QR compact berisi URL dengan JSON base64 (title, artist, mapper, BPM, length,
+  cover, URL, tags, audio preview). Tombol bagikan buka share sheet Android
+  dengan pesan terformat + URL QR viewer. PC buka viewer → kamera scan →
+  card beatmap dengan audio player muncul. OG dynamic tags via Cloudflare Worker
+  untuk preview kartu di media sosial.
 
 ### Arsitektur
 
@@ -326,6 +409,12 @@ MIT — see [LICENSE](LICENSE). Third-party licenses are listed in
   lewat Cloudflare Worker (`https://api-osupanel.zhyllanfyllah.my.id`).
   Kode worker ada di `worker.js` (root proyek). `CLIENT_ID` / `CLIENT_SECRET`
   dikonfigurasi sebagai environment variable Cloudflare.
+
+- **QR Beatmap Share** memakai Cloudflare Worker (`Web for feature map/worker.js`)
+  yang menyajikan halaman viewer dengan **dynamic OG meta tags** untuk preview
+  kartu di media sosial. Fallback statis (`Web for feature map/index.html`) di-deploy
+  ke Cloudflare Pages. Format URL: `?d=<base64>` untuk share link (OG tags),
+  `#<base64>` untuk scan QR (backward compatible).
 - Token disimpan terenkripsi di Android Keystore
   (`EncryptedSharedPreferences`).
 - `AuthInterceptor` (OkHttp) menyuntik `Authorization: Bearer`, menangani
@@ -376,11 +465,36 @@ app/src/main/java/net/aokaze/osupanel/
 │   ├── rankings/              # RankingsViewModel + ui/RankingsScreen
 │   ├── profile/               # ProfileViewModel + ui/ProfileScreen (+ FAB cardgen)
 │   ├── cardgen/               # Generator kartu (ViewModel + UI + share)
-│   ├── beatmap/               # BeatmapDetailViewModel + ui/BeatmapDetailScreen
+│   ├── beatmap/               # BeatmapDetailViewModel + ui/BeatmapDetailScreen + QrCodeScreen
 │   ├── settings/ui/           # SettingsScreen, InfoWebViewScreens
 │   └── update/                # UpdateChecker + UpdateCheckViewModel
 ├── widget/                    # WIDGET HOME SCREEN (3) + SignatureRenderer
-└── ui/components/             # Komponen global (OsuSpinner, TrianglesBackground, ...)
+└── ui/components/             # Komponen global (OsuSpinner, TrianglesLine, TrianglesFill, ...)
+```
+
+### QR Beatmap Share (Halaman Web Viewer)
+
+Viewer PC dilayani oleh **Cloudflare Worker** (`Web for feature map/worker.js`)
+ yang menyuntikkan **dynamic OG meta tags** untuk preview kartu di media sosial,
+plus fallback statis di **Cloudflare Pages** (`Web for feature map/index.html`).
+
+**Format URL:**
+- `?d=<base64>` — link share (Worker decode, inject OG tags, sajikan HTML)
+- `#<base64>` — scan QR (client-side decode, backward compatible)
+
+**Data QR (JSON compact → base64):**
+```json
+{"title","artist","mapper","bpm","length","cover","url","tags","preview"}
+```
+
+**Format pesan share:**
+```
+🎵 Title — Artist
+👤 Creator | ★2.15 Hard
+🎵 BPM: 190 | ⏱ 3:45
+🏷️ tag1, tag2, tag3
+
+https://qr-osupanel.zhyllanfyllah.my.id/?d=<base64>
 ```
 
 ### Build
@@ -480,7 +594,8 @@ tanda tangan (debug tetap tidak pernah di-sign).
 2. **Endpoint API baru** → tambah method di `data/remote/OsuApi.kt` (API osu!)
    atau `WorkerApi.kt` (worker). DTO di `data/model/`.
 3. **Komponen UI bersama** → taruh di `ui/components/`, satu file per
-   komponen. Latar segitiga lazer → `Modifier.trianglesBackground()`.
+   komponen. Latar segitiga lazer → `Modifier.trianglesLine()` (outline)
+   atau `Modifier.trianglesFill()` (filled + bayangan).
 4. **Teks** → `res/values/strings.xml`. **Warna** → `res/values/colors.xml`.
 5. **Dependensi** → daftarkan instance di `di/AppContainer.kt`
    (DI manual — akses via `(application as OsuPanelApp).container`).
@@ -493,6 +608,10 @@ tanda tangan (debug tetap tidak pernah di-sign).
 - `key.txt` (kunci OAuth lokal) **di-ignore git** — jangan pernah commit.
 - `worker.js` sengaja **tidak** berisi fallback `CLIENT_SECRET` — set sebagai
   environment variable Cloudflare (`CLIENT_ID`, `CLIENT_SECRET`).
+- Worker proxy Appteka (`Aokaze-Studio-Page-main/worker.js`) **tidak** punya
+  passthrough `?endpoint=` generik — app memanggil `/app-info?package=...`
+  dan hanya URL `appteka.store/api/1/*` yang diteruskan, jadi tidak bisa
+  disalahgunakan sebagai open proxy.
 
 ### Lisensi
 

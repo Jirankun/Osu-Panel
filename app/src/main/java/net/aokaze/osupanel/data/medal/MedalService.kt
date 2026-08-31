@@ -14,8 +14,8 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
 
 /**
- * Data for one medal from `All-Medal.json` (Flutter `MedalData` counterpart).
- * JSON di-bundle ke native assets (`assets/medals/<grouping>/All-Medal.json`).
+ * Data for one medal from `All-Medal.json`.
+ * JSON is bundled into native assets (`assets/medals/<grouping>/All-Medal.json`).
  */
 @Serializable
 data class MedalData(
@@ -54,9 +54,8 @@ data class MedalDisplay(
 )
 
 /**
- * Medal service — counterpart of the Flutter `MedalService`. Loads ALL
- * `All-Medal.json` files from native assets and provides fast access
- * berdasarkan slug / achievement_id / grouping.
+ * Medal service. Loads ALL `All-Medal.json` files from native assets and
+ * provides fast access by slug / achievement_id / grouping.
  *
  * Used by the dashboard & profile to show ALL medals
  * (achieved ones bright, unachieved ones grey).
@@ -69,7 +68,7 @@ object MedalService {
     private val medalsByGrouping = LinkedHashMap<String, List<MedalData>>()
     private var initialized = false
 
-    /** All registered medal folders (same as the Flutter pubspec). */
+    /** All registered medal folders. */
     private val medalFolders = listOf(
         "Beatmap Packs",
         "Beatmap Challenge Packs",
@@ -133,8 +132,7 @@ object MedalService {
     val count: Int get() = medalsBySlug.size
 
     /**
-     * Builds a list of ALL medals with achieved status — exactly
-     * `buildAllMedalDisplay` Flutter.
+     * Builds a list of ALL medals with achieved status.
      */
     fun buildAllMedalDisplay(
         achievedIds: Set<Int>,

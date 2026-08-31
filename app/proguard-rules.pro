@@ -8,15 +8,23 @@
 -keepclasseswithmembers class net.aokaze.osupanel.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
+# Keep @SerialName annotations — R8 must not strip them (JSON field mapping)
+-keepattributes RuntimeVisibleAnnotations
+-keep class kotlinx.serialization.json.** { *; }
+-keepclassmembers class * {
+    @kotlinx.serialization.SerialName <fields>;
+}
 
-# ── Retrofit / OkHttp ──
+# ── OkHttp ──
 -keepattributes Signature, RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations, InnerClasses, EnclosingMethod
 -keepclassmembers,allowshrinking,allowobfuscation interface * {
     @retrofit2.http.* <methods>;
 }
+-keep class okhttp3.Response { *; }
 -dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn javax.annotation.**
+-keep class okio.** { *; }
 
 # ── AppAuth ──
 -keep class net.openid.appauth.** { *; }

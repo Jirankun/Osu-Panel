@@ -26,20 +26,24 @@ class UpdateCheckViewModel(application: Application) : AndroidViewModel(applicat
     private val _updateInfo = MutableStateFlow<UpdateInfo?>(null)
     val updateInfo: StateFlow<UpdateInfo?> = _updateInfo.asStateFlow()
 
-    /** Check for updates (once per session — no refetch once found). */
+    init {
+        // Instantly show cached popup (SharedPreferences read is fast on main).
+        _updateInfo.value = UpdateChecker.loadCachedInfo(getApplication())
+    }
+
+    /** Full check — runs network in background; updates popup if newer found. */
     fun checkForUpdate() {
-        if (_updateInfo.value != null) return
         viewModelScope.launch {
-            _updateInfo.value = UpdateChecker.check(getApplication())
+            val result = UpdateChecker.check(getApplication())
+            if (result != null) _updateInfo.value = result
         }
     }
 
     /**
-     * "Not Now" / dismiss — just closes; the cache stays (shows again later).
-     * The popup is recorded as shown today → it won't show again until tomorrow.
+     * "Not Now" / dismiss — just closes; the cache stays so the popup
+     * reappears on the next app open (user is always nudged to update).
      */
     fun dismiss() {
-        UpdateChecker.recordShownToday(getApplication())
         _updateInfo.value = null
     }
 
@@ -48,7 +52,6 @@ class UpdateCheckViewModel(application: Application) : AndroidViewModel(applicat
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Env.UPDATE_STORE_PAGE_URL))
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         runCatching { getApplication<Application>().startActivity(intent) }
-        UpdateChecker.recordShownToday(getApplication())
         _updateInfo.value = null
     }
 }

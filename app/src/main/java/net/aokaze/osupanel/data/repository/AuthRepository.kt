@@ -15,7 +15,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 /**
- * Auth repository — counterpart of the Flutter `AuthRepositoryImpl`.
+ * Auth repository.
  * Tokens are stored in [TokenStore] (encrypted); OAuth code exchanges
  * and refresh go through the Cloudflare Worker.
  */
@@ -40,7 +40,7 @@ class AuthRepository(
     companion object {
         private const val TAG = "AuthRepository"
 
-        /** User identifier key (used for score polling in the Flutter version). */
+        /** User identifier key (used for score polling). */
         const val KEY_USER_IDENTIFIER = "osu_user_identifier"
     }
 
@@ -180,6 +180,20 @@ class AuthRepository(
      */
     suspend fun getUserByMode(userId: Int, mode: String): UserDto {
         return osuApi.getUserByMode(userId, mode)
+    }
+
+    /**
+     * Fetch public config from the worker (client_id for OAuth).
+     * Returns null on failure — caller should fallback to cached value.
+     */
+    suspend fun fetchConfig(): String? {
+        return try {
+            val config = workerApi.getConfig()
+            config.client_id.takeIf { it.isNotEmpty() }
+        } catch (e: Exception) {
+            Log.d(TAG, "fetchConfig failed: $e")
+            null
+        }
     }
 
     suspend fun logout() {

@@ -45,14 +45,21 @@ private fun isWorkerRequest(e: HttpException): Boolean =
     } ?: false
 
 /**
- * Classifies any error into an [AppException] — counterpart of the
- * Flutter `classifyError`. Friendly messages are read from
- * res/values/strings.xml lewat [context].
+ * Classifies any error into an [AppException]. Friendly messages are read
+ * from res/values/strings.xml via [context].
  */
 fun classifyError(context: Context, error: Throwable): AppException {
     if (error is AppException) return error
 
     if (error is HttpException) {
+        // 429 = osu! rate limit → custom message
+        if (error.code() == 429) {
+            return AppException(
+                AppErrorKind.OSU_SERVER,
+                context.getString(R.string.error_osu_rate_limit),
+                error,
+            )
+        }
         if (isWorkerRequest(error)) {
             return AppException(
                 AppErrorKind.WORKER,

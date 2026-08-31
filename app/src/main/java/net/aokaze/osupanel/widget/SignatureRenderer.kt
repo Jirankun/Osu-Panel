@@ -675,7 +675,7 @@ object SignatureRenderer {
 
     /** The i-th hexagon point around the center (angle -120° + i*60°). */
     private fun vertex(cx: Float, cy: Float, radius: Float, i: Int): Pair<Float, Float> {
-        val angle = (-120 + i * 60) / 180f * PI.toFloat()
+        val angle = (-120f + i * 60f) / 180f * PI.toFloat()
         return Pair(cx + cos(angle) * radius, cy + sin(angle) * radius)
     }
 

@@ -27,7 +27,7 @@ fun SplashScreen(viewModel: AuthViewModel) {
     // No visuals of any kind on screen.
     LaunchedEffect(Unit) {
         viewModel.checkAuthStatus()
-        delay(20000)
+        delay(10000)
         viewModel.setTimeoutError()
     }
 

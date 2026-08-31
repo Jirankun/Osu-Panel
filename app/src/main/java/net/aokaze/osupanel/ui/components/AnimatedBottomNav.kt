@@ -19,13 +19,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,48 +37,85 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * Material 3-style bottom navigation (counterpart of the Flutter `AnimatedBottomNav`):
+ * Floating pill-style bottom navigation:
  *
- * - Fixed 78dp height, thin border on top (outlineVariant 30%).
+ * - NO longer full-width: the whole nav is a **capsule (pill)** that floats
+ *   with margins from the left, right and bottom edges. It lives in the
+ *   Scaffold's bottomBar slot, so the Scaffold paints the app background
+ *   across the whole window — nothing dark shows behind the pill.
+ * - Proper capsule size (72dp tall): bold but NOT a banner.
+ * - Bold elevated container: **surfaceVariant** (lighter than the content
+ *   cards behind) + 1.5dp primary border + soft shadow — the pill is
+ *   clearly a floating capsule, never mistaken for a full-width nav panel.
  * - A **pill** indicator (rounded rect behind the icon) appears with
  *   scale ease-out-back.
  * - **Laser triangles** appear behind the ACTIVE item with a **fade-in**
  *   when selected (fade-out when inactive).
  * - The icon **rises 3px** when active (translate, not padding — no
- *   menggeser tataletak).
+ *   layout shift).
  * - The label only shows for the active item — rises from the bottom
- *   (slide 12px → 0, translate) sambil fade in.
+ *   (slide 12px → 0, translate) while fading in.
  */
 @Composable
 fun AnimatedBottomNav(
     currentIndex: Int,
     onTap: (Int) -> Unit,
     items: List<BottomNavItem>,
+    modifier: Modifier = Modifier,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+    val pillShape = RoundedCornerShape(32.dp)
 
-    Surface(color = colorScheme.surface) {
+    // System navigation bar height. Compose WindowInsets report 0 on this
+    // device, so the reliable source is the system `navigation_bar_height`
+    // resource: 0 on gesture-nav devices (no buttons → plain 20.dp bottom
+    // margin), but the real bar height (~48dp) on 3-button-nav devices — the
+    // pill then floats ABOVE the virtual nav buttons instead of overlapping
+    // them.
+    val context = LocalContext.current
+    val density = LocalDensity.current
+    val navBarBottomExtra = remember(context, density) {
+        val res = context.resources
+        val id = res.getIdentifier("navigation_bar_height", "dimen", "android")
+        val px = if (id > 0) res.getDimensionPixelSize(id) else 0
+        with(density) { px.toDp() }
+    }
+
+    Box(
+        // Floating margins — the pill keeps distance from the left, right and
+        // bottom edges. navigationBarsPadding lifts it ABOVE the system
+        // gesture/navigation bar (without it the pill sits on the screen edge).
+        modifier = modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp + navBarBottomExtra),
+        contentAlignment = Alignment.Center,
+    ) {
         Box(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                // Roomy height (78dp) so the label under the pill does not
-                // get squeezed against the bottom screen frame.
-                .height(78.dp)
+                .height(72.dp)
+                .shadow(8.dp, pillShape, clip = false)
+                .clip(pillShape)
+                .background(colorScheme.surfaceVariant)
                 .border(
                     BorderStroke(
-                        width = 1.dp,
-                        color = colorScheme.outlineVariant.copy(alpha = 0.3f),
+                        width = 1.5.dp,
+                        color = colorScheme.primary.copy(alpha = 0.6f),
                     ),
-                )
-                .background(colorScheme.surface),
+                    pillShape,
+                ),
         ) {
             Row(Modifier.fillMaxSize()) {
                 items.forEachIndexed { idx, item ->
@@ -121,7 +159,7 @@ private fun NavItem(
     }
     val t = anim.value
 
-    // Pill scale — ease-out-back (slight overshoot), Flutter counterpart.
+    // Pill scale — ease-out-back (slight overshoot).
     val pillScale = remember { Animatable(if (isSelected) 1f else 0f) }
     LaunchedEffect(isSelected) {
         if (isSelected) {
@@ -135,21 +173,28 @@ private fun NavItem(
     val labelAlpha = if (t <= 0.15f) 0f else (t - 0.15f) / 0.85f
 
     Column(
-        // Inactive items are shifted down slightly (offset 0), then RISE
-        // when active (offset −4dp + icon rises 3dp) — the "slide up"
-        // effect seen when navigating.
+        // The icon+label group is aligned to the BOTTOM of the pill so the
+        // icons sit in the center-bottom area. The "rise when active" effect
+        // is preserved: the whole group rises 4dp when selected (plus the icon
+        // itself rises 3dp) and slides back down when deselected.
         modifier = modifier
-            .clickable(onClick = onClick)
             .fillMaxHeight()
+            .padding(bottom = 2.dp)
             .offset(y = ((1f - t) * 4f - 4f).dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Bottom,
     ) {
-        // ── Ikon area (42dp) — pill + triangles DI DALAM pill + ikon ──
+        // ── Icon area (42dp) — pill + triangles INSIDE the pill + icon ──
+        // CLICKABLE on the pill-shaped box itself (not the whole item column):
+        // the ripple is clipped to the pill's rounded shape, so tapping shows
+        // the press highlight INSIDE the pill — never a square/box across the
+        // nav item.
         Box(
             modifier = Modifier
                 .width(72.dp)
-                .height(42.dp),
+                .height(42.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
             // Pill + triangles (72dp × 40dp). IMPORTANT: triangles do NOT follow
@@ -169,7 +214,7 @@ private fun NavItem(
                         .clip(RoundedCornerShape(20.dp))
                         .background(
                             if (isSelected) {
-                                colorScheme.primaryContainer.copy(alpha = 0.5f)
+                                colorScheme.primaryContainer.copy(alpha = 0.6f)
                             } else {
                                 androidx.compose.ui.graphics.Color.Transparent
                             },
@@ -188,7 +233,7 @@ private fun NavItem(
                         .fillMaxSize()
                         .clip(RoundedCornerShape(20.dp))
                         .alpha(t)
-                        .trianglesBackground(
+                        .trianglesLine(
                             scaleAdjust = 0.35f,
                             velocity = 0.6f,
                             spawnRatio = 3.5f,

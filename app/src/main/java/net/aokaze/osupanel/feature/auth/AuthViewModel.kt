@@ -30,7 +30,7 @@ import java.security.SecureRandom
 import java.util.Base64
 
 /**
- * Auth ViewModel — counterpart of the Flutter `AuthNotifier`.
+ * Auth ViewModel.
  *
  * OAuth login flow (Authorization Code Grant):
  * 1. Open the osu! authorize page in the system browser (Custom Tab via AppAuth).
@@ -44,6 +44,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val container = (application as OsuPanelApp).container
     private val repository = container.authRepository
+    private val contentRepository = container.contentRepository
 
     /** App context — for reading messages from res/values/strings.xml. */
     private val appContext = getApplication<Application>()
@@ -126,31 +127,32 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
         _state.value = _state.value.copy(status = AuthStatus.AUTHENTICATING, errorMessage = null)
 
+        viewModelScope.launch {
+            // Fetch client_id from worker (fallback to hardcoded if network fails)
+            val clientId = repository.fetchConfig() ?: Env.CLIENT_ID
+            startOAuthFlow(clientId)
+        }
+    }
+
+    private fun startOAuthFlow(clientId: String) {
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse(Env.AUTHORIZE_ENDPOINT),
             Uri.parse(Env.TOKEN_ENDPOINT),
         )
 
-        // PKCE (RFC 7636): osu! requires a code_verifier when exchanging codes.
-        // The verifier is stored BEFORE the browser opens (survives process
-        // death), then sent together with the code to the worker.
         val codeVerifier = generateCodeVerifier()
         container.tokenStore.pendingCodeVerifier = codeVerifier
 
         val request = AuthorizationRequest.Builder(
             serviceConfig,
-            Env.CLIENT_ID,
+            clientId,
             ResponseTypeValues.CODE,
             Uri.parse(Env.REDIRECT_URI),
         )
             .setScopes(Env.SCOPES.toSet())
-            // AppAuth computes the S256 code_challenge from the verifier automatically.
             .setCodeVerifier(codeVerifier)
             .build()
 
-        // MainActivity runs the OAuth intent via ActivityResultLauncher
-        // (like flutter_appauth), then the result is sent back
-        // through container.authResults → handleAuthResult().
         container.launchOAuth(request)
     }
 
@@ -333,7 +335,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * Switch the large widget layout (Settings → Widget layout): "stats" / "skills".
      * The layout is saved + widgets re-render; when skills is selected, the
-     * osu!skills data is fetched too (osuskills.com) so the radar appears right away.
+     * Skill Pulse is computed too so the radar appears right away.
      */
     fun setWidgetLayout(layout: String) {
         WidgetDataStore.setWidgetLayout(appContext, layout)
@@ -343,21 +345,23 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Fetches osu!skills (osuskills.com) for the "skills" widget layout. Once
-     * per app session (unless force — called on refresh / when skills is picked).
-     * Fails silently; the widget shows "No skills data".
+     * Fetches osu!skills (osuskills.com — the source used by osu-stats-
+     * signature) for the "skills" widget layout. Once per app session (unless
+     * force — called on refresh / when skills is picked). Fails silently;
+     * the widget shows "No skills data". Same data as the dashboard & profile.
      */
     private var skillsFetchedForSession = false
 
     private fun fetchSkillsForWidget(force: Boolean = false) {
         if (!force && skillsFetchedForSession) return
         skillsFetchedForSession = true
-        val username = _state.value.user?.username?.takeIf { it.isNotBlank() }
-            ?: appContext.getSharedPreferences(WidgetDataStore.PREFS_NAME, android.content.Context.MODE_PRIVATE)
-                .getString(WidgetDataStore.KEY_USERNAME, null)
-                ?.takeIf { it.isNotBlank() }
-            ?: return
         viewModelScope.launch {
+            val username = _state.value.user?.username?.takeIf { it.isNotBlank() }
+                ?: appContext.getSharedPreferences(
+                    WidgetDataStore.PREFS_NAME,
+                    android.content.Context.MODE_PRIVATE,
+                ).getString(WidgetDataStore.KEY_USERNAME, null)?.takeIf { it.isNotBlank() }
+                ?: return@launch
             val data = net.aokaze.osupanel.data.skills.SkillsFetcher.fetch(username)
             if (data != null) {
                 WidgetDataStore.setSkillsData(appContext, data)

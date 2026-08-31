@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.sp
 import net.aokaze.osupanel.R
 
 /**
- * The official osu! font (Torus) — same as the Flutter version.
- * Bobot tersedia: Thin(100), Light(300), Regular(400),
+ * The official osu! font (Torus).
+ * Weights: Thin(100), Light(300), Regular(400),
  * SemiBold(600), Bold(700), Heavy(900).
  */
 val TorusFamily = FontFamily(

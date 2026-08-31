@@ -46,7 +46,8 @@ data class CardGenUiState(
  * - Stats: the profile loads the default game mode; switching the mode
  *   fetches `GET /users/{id}/{mode}` (reusing [net.aokaze.osupanel.data.repository.ContentRepository.getUserByMode]).
  * - Images (cover/avatar) are downloaded ONCE and reused for every re-render.
- * - Skills (osuskills.com) are only fetched when the Skills template is picked.
+ * - Skills (Skill Pulse from the top 10 plays) are only computed when the
+ *   Skills template is picked — same analysis as the dashboard.
  * - Rendering is exactly the widget's [SignatureRenderer] — same bitmap,
  *   same card, now shareable.
  */
@@ -109,7 +110,8 @@ class CardGenViewModel(application: Application) : AndroidViewModel(application)
                 }
                 // 2) Cover & avatar — downloaded ONCE, reused for every re-render.
                 ensureImages(user)
-                // 3) Skills — only for the skills template (osuskills.com).
+                // 3) Skills — only for the skills template (osuskills.com,
+                //    the same osu!skills source the widget radar uses).
                 val skillsData = if (template == TEMPLATE_SKILLS) {
                     skills ?: SkillsFetcher.fetch(user.username.orEmpty()).also { skills = it }
                 } else null

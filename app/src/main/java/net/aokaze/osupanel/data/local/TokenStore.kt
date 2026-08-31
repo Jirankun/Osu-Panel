@@ -11,10 +11,9 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
 /**
- * Token + session data storage, encrypted with the Android Keystore
- * (counterpart of the Flutter `flutter_secure_storage`).
+ * Token + session data storage, encrypted with the Android Keystore.
  *
- * Keys match the Flutter version (ApiConstants):
+ * Keys:
  *   osu_access_token, osu_refresh_token, osu_token_expiry,
  *   osu_user_identifier, osu_user_id
  */
@@ -36,7 +35,7 @@ class TokenStore(context: Context) {
     companion object {
         private const val PREFS_NAME = "osu_panel_secure"
 
-        // Keys — match the Flutter ApiConstants
+        // Keys
         const val KEY_ACCESS_TOKEN = "osu_access_token"
         const val KEY_REFRESH_TOKEN = "osu_refresh_token"
         const val KEY_TOKEN_EXPIRY = "osu_token_expiry"

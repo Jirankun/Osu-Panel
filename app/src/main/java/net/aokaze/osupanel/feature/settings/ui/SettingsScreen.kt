@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ChatBubble
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Code
@@ -32,7 +33,6 @@ import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material.icons.rounded.Widgets
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -44,7 +44,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,13 +62,18 @@ import androidx.compose.ui.unit.sp
 import net.aokaze.osupanel.BuildConfig
 import net.aokaze.osupanel.R
 import net.aokaze.osupanel.core.theme.osuPink
+import net.aokaze.osupanel.data.local.ChatSettingsStore
 import net.aokaze.osupanel.data.local.WidgetDataStore
 import net.aokaze.osupanel.feature.auth.AuthViewModel
-import net.aokaze.osupanel.ui.components.trianglesBackground
+import androidx.compose.material3.AlertDialog
+import androidx.compose.ui.text.style.TextDecoration
+import net.aokaze.osupanel.ui.components.ConfirmDialog
+import net.aokaze.osupanel.ui.components.SectionLabel
+import net.aokaze.osupanel.ui.components.trianglesLine
 import net.aokaze.osupanel.widget.WidgetMode
 
 /**
- * Settings — counterpart of the Flutter `SettingsPage`, redesigned Material:
+ * Settings — redesigned Material:
  * - **Widget** section: game mode + large-widget layout dropdowns.
  * - **About** section: Source Code (GitHub), License, Contributors —
  *   each an item with laser triangles.
@@ -82,6 +86,7 @@ fun SettingsScreen(
     viewModel: AuthViewModel,
     onOpenLicenses: () -> Unit,
     onOpenContributors: () -> Unit,
+    onOpenChatSettings: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val context = LocalContext.current
@@ -107,7 +112,7 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp),
+                .padding(start = 20.dp, end = 20.dp, bottom = 120.dp),
         ) {
             Spacer(Modifier.height(8.dp))
 
@@ -278,6 +283,26 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(24.dp))
 
+            // ── Section: Chat (Chatango) ──
+            SectionLabel(stringResource(R.string.settings_chat_section))
+            Spacer(Modifier.height(8.dp))
+
+            val chatUser = ChatSettingsStore.getUsername(context)
+            val chatActive = ChatSettingsStore.isPmEnabled(context) || ChatSettingsStore.isGroupEnabled(context)
+            AboutItem(
+                icon = Icons.Rounded.ChatBubble,
+                title = stringResource(R.string.settings_chat_title),
+                subtitle = if (chatUser != null && chatActive) {
+                    stringResource(R.string.settings_chat_connected_as, chatUser)
+                } else {
+                    stringResource(R.string.settings_chat_not_activated)
+                },
+                onClick = onOpenChatSettings,
+                showTriangles = false,
+            )
+
+            Spacer(Modifier.height(24.dp))
+
             // ── Section: About ──
             SectionLabel(stringResource(R.string.settings_about_section))
             Spacer(Modifier.height(8.dp))
@@ -294,6 +319,7 @@ fun SettingsScreen(
                         )
                     }
                 },
+                showTriangles = false,
             )
             Spacer(Modifier.height(10.dp))
 
@@ -302,6 +328,7 @@ fun SettingsScreen(
                 title = stringResource(R.string.settings_license),
                 subtitle = stringResource(R.string.settings_license_desc),
                 onClick = onOpenLicenses,
+                showTriangles = false,
             )
             Spacer(Modifier.height(10.dp))
 
@@ -310,17 +337,28 @@ fun SettingsScreen(
                 title = stringResource(R.string.settings_contributor),
                 subtitle = stringResource(R.string.settings_contributor_desc),
                 onClick = onOpenContributors,
+                showTriangles = false,
             )
             Spacer(Modifier.height(10.dp))
 
+            var showVersionDialog by remember { mutableStateOf(false) }
             AboutItem(
                 icon = Icons.Rounded.Info,
                 title = stringResource(R.string.settings_version, "${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"),
                 subtitle = stringResource(R.string.app_name),
-                onClick = null,
+                onClick = { showVersionDialog = true },
+                showTriangles = false,
             )
 
             Spacer(Modifier.height(28.dp))
+
+            // ── Version info dialog ──
+            if (showVersionDialog) {
+                VersionInfoDialog(
+                    version = "${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}",
+                    onDismiss = { showVersionDialog = false },
+                )
+            }
 
             // ── Logout (with confirmation) — lazer pill, red ──
             LogoutButton(onClick = { showLogoutConfirm = true })
@@ -330,58 +368,18 @@ fun SettingsScreen(
 
     // ── Logout confirmation dialog ──
     if (showLogoutConfirm) {
-        AlertDialog(
-            onDismissRequest = { showLogoutConfirm = false },
-            title = {
-                Text(
-                    stringResource(R.string.settings_logout_title),
-                    fontWeight = FontWeight.Bold,
-                )
+        ConfirmDialog(
+            title = stringResource(R.string.settings_logout_title),
+            text = stringResource(R.string.settings_logout_confirm),
+            confirmLabel = stringResource(R.string.settings_confirm),
+            dismissLabel = stringResource(R.string.settings_cancel),
+            onConfirm = {
+                showLogoutConfirm = false
+                viewModel.logout()
             },
-            text = {
-                Text(stringResource(R.string.settings_logout_confirm))
-            },
-            confirmButton = {
-                Surface(
-                    onClick = {
-                        showLogoutConfirm = false
-                        viewModel.logout()
-                    },
-                    shape = RoundedCornerShape(50),
-                    color = colorScheme.error,
-                    contentColor = colorScheme.onError,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(50))
-                            .trianglesBackground(alpha = 0.4f, scaleAdjust = 0.35f, spawnRatio = 2.5f)
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                    ) {
-                        Text(
-                            stringResource(R.string.settings_confirm),
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                    }
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showLogoutConfirm = false }) {
-                    Text(stringResource(R.string.settings_cancel))
-                }
-            },
+            onDismiss = { showLogoutConfirm = false },
         )
     }
-}
-
-/** Section label — uppercase, pink, spaced (Material list section header). */
-@Composable
-private fun SectionLabel(text: String) {
-    Text(
-        text,
-        style = MaterialTheme.typography.titleSmall,
-        fontWeight = FontWeight.Bold,
-        color = osuPink(LocalContext.current),
-    )
 }
 
 /**
@@ -394,6 +392,7 @@ private fun AboutItem(
     title: String,
     subtitle: String,
     onClick: (() -> Unit)?,
+    showTriangles: Boolean = true,
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val context = LocalContext.current
@@ -408,18 +407,20 @@ private fun AboutItem(
                 if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier,
             ),
     ) {
-        // Laser triangles — subtle, fill the item.
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .clip(RoundedCornerShape(16.dp))
-                .trianglesBackground(
-                    scaleAdjust = 0.35f,
-                    velocity = 0.6f,
-                    spawnRatio = 2.5f,
-                    alpha = 0.5f,
-                ),
-        )
+        if (showTriangles) {
+            // Laser triangles — subtle, fill the item.
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(RoundedCornerShape(16.dp))
+                    .trianglesLine(
+                        scaleAdjust = 0.35f,
+                        velocity = 0.6f,
+                        spawnRatio = 2.5f,
+                        alpha = 0.5f,
+                    ),
+            )
+        }
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -465,7 +466,7 @@ private fun LogoutButton(onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .trianglesBackground(
+                .trianglesLine(
                     scaleAdjust = 0.35f,
                     velocity = 0.6f,
                     spawnRatio = 3f,
@@ -484,6 +485,72 @@ private fun LogoutButton(onClick: () -> Unit) {
             }
         }
     }
+}
+
+/** Version info dialog — version string, Privacy Policy, Terms of Service. */
+@Composable
+private fun VersionInfoDialog(
+    version: String,
+    onDismiss: () -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val context = LocalContext.current
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = colorScheme.surface,
+        title = {
+            Text(
+                "Osu! Panel",
+                fontWeight = FontWeight.Bold,
+                color = osuPink(context),
+            )
+        },
+        text = {
+            Column {
+                Text(
+                    "Osu! Panel - $version",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    stringResource(R.string.settings_privacy_policy),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = osuPink(context),
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.clickable {
+                        runCatching {
+                            context.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/privacy_policy/"),
+                                ),
+                            )
+                        }
+                    },
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    stringResource(R.string.settings_terms_of_service),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = osuPink(context),
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.clickable {
+                        runCatching {
+                            context.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://aokazestudio.zhyllanfyllah.my.id/secure/terms_%20service/"),
+                                ),
+                            )
+                        }
+                    },
+                )
+            }
+        },
+        confirmButton = {},
+        dismissButton = {},
+    )
 }
 
 /** Small placeholder dot on unselected dropdown items (for alignment). */

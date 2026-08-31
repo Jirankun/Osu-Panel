@@ -48,12 +48,12 @@ import net.aokaze.osupanel.R
  *   beatLength, InOutQuart)` each beat. While idle (no music)
  *   `BeatSyncedContainer` uses `TimingControlPoint.DEFAULT` (60 BPM)
  *   → kick **+90° per 1000 ms** with InOutQuart.
- * - **TrianglesV2** inside the box (see [TrianglesBackground]) which
+ * - **TrianglesV2** inside the box (see [TrianglesLine]) which
  *   **counter-rotate** (`triangles.Rotation = -MainContents.Rotation`)
  *   so its orientation stays screen-relative.
  * - **Circle-notch**: glyph FontAwesome 5 Solid `circle-notch`, skala 0.6
  *   of the box, `Spin(3150ms, Clockwise)` — constant 360°/3150 ms rotation.
- *   Total rotasi ikon = kick (box) + spin (ikon).
+ *   Total rotation = kick (box) + spin (icon).
  * - The icon color is custom **pink** (osu! Panel brand) — unlike the game's
  *   white (`Color4.White`).
  * - PopIn: fade 0→0.01 (50 ms), then 0.01→1 (500 ms, OutQuint).
@@ -136,7 +136,7 @@ fun OsuSpinner(
                         .fillMaxSize()
                         .graphicsLayer { rotationZ = -kickAngle },
                 ) {
-                    TrianglesBackground(Modifier.fillMaxSize())
+                    TrianglesLine(Modifier.fillMaxSize())
                 }
             }
         }

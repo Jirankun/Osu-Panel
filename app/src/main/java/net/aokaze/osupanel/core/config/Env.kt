@@ -6,14 +6,14 @@
 package net.aokaze.osupanel.core.config
 
 /**
- * Environment configuration — counterpart of the Flutter `lib/env.dart`.
+ * Environment configuration.
  *
  * Client credentials (Client ID + Secret) live in the Cloudflare Worker;
  * the app never sees the Client Secret.
  */
 object Env {
     /** Base URL of the Cloudflare Worker that proxies osu! auth. */
-    const val WORKER_API_BASE_URL = "https://api-osupanel.zhyllanfyllah.my.id"
+    const val WORKER_API_BASE_URL = "https://osu-panel.zhyllanfyllah.my.id"
 
     /** Base URL osu! API v2. */
     const val API_BASE_URL = "https://osu.ppy.sh/api/v2"
@@ -37,13 +37,15 @@ object Env {
     const val READ_TIMEOUT_SECONDS = 20L
     const val WORKER_TIMEOUT_SECONDS = 30L
 
-    // ── Pengecekan update (Appteka via proxy worker) ──
-    // Flow: app opens → GET proxy?endpoint=appteka.info(app_id) → match
-    // `package` against this app → compare `ver_code`. Change UPDATE_APP_ID
-    // when the app id on Appteka changes (the detail page link follows it).
-    const val UPDATE_PROXY_BASE_URL = "https://proxy-app.jirankun.workers.dev"
-    const val UPDATE_APP_ID = "646r307816"
+    // ── Update check (Appteka via proxy worker) ──
+    // Flow: app opens → GET {worker}/app-info?package=... → the worker fetches
+    // Appteka server-side (the app/site never send an arbitrary endpoint URL,
+    // so the worker is NOT an open proxy). Lookup is 100% by package name —
+    // guard `package` matches this app → compare `ver_code`. The store detail
+    // page is opened by package too (`pckg=...`). Nothing Appteka-generated
+    // is ever hardcoded, so an unstable Appteka id can never break the flow.
+    const val UPDATE_CHECK_BASE_URL = "https://proxy-app.jirankun.workers.dev"
     const val UPDATE_PACKAGE_NAME = "net.aokaze.osupanel"
     const val UPDATE_STORE_PAGE_URL =
-        "https://aokazestudio.zhyllanfyllah.my.id/pages/app-detail?app_id=646r307816"
+        "https://aokazestudio.zhyllanfyllah.my.id/pages/app-detail?pckg=net.aokaze.osupanel"
 }

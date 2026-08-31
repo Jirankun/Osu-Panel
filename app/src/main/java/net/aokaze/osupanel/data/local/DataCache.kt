@@ -6,7 +6,7 @@
 package net.aokaze.osupanel.data.local
 
 /**
- * Simple in-memory cache — counterpart of the Flutter `DataCache`.
+ * Simple in-memory cache.
  *
  * Prevents API data from reloading while navigating between screens. It
  * persists for the session (app not restarted), cleared only when [invalidate]
@@ -31,10 +31,11 @@ object DataCache {
 
     fun clear() = data.clear()
 
-    // ── Cache keys (same as Flutter) ──
+    // ── Cache keys ──
 
     fun recentScores(userId: Int) = "recentScores:$userId"
     fun mostPlayed(userId: Int) = "mostPlayed:$userId"
+
     fun favourites(userId: Int) = "favourites:$userId"
     fun rankings(mode: String, type: String, page: Int, country: String?) =
         "rankings:$mode:$type:$page:${country ?: "all"}"
@@ -42,4 +43,5 @@ object DataCache {
     fun bestScores(userId: Int) = "bestScores:$userId"
     fun mostPlayedBeatmaps(userId: Int) = "mostPlayedBeatmaps:$userId"
     fun beatmapset(beatmapsetId: Int) = "beatmapset:$beatmapsetId"
+    fun dailyChallenge() = "dailyChallenge"
 }

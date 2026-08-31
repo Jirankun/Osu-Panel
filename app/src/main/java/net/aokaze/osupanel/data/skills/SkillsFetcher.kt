@@ -33,6 +33,12 @@ object SkillsFetcher {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 
+    // ── In-memory cache (per-session, avoids hitting osuskills.com on every
+    //    dashboard / profile open). TTL = 30 minutes. ──
+    private data class CacheEntry(val data: SignatureRenderer.SkillsData, val expiry: Long)
+    private val cache = HashMap<String, CacheEntry>()
+    private const val CACHE_TTL_MS = 30 * 60 * 1000L // 30 minutes
+
     /** Urutan skill di DOM osuskills (stamina → memory). */
     private val ORDER = listOf("stamina", "tenacity", "agility", "accuracy", "precision", "reaction", "memory")
 
@@ -43,6 +49,10 @@ object SkillsFetcher {
     suspend fun fetch(username: String): SignatureRenderer.SkillsData? = withContext(Dispatchers.IO) {
         val safeName = username.trim().replace(" ", "%20")
         if (safeName.isEmpty()) return@withContext null
+        // Check cache first
+        val now = System.currentTimeMillis()
+        val cached = cache[safeName]
+        if (cached != null && now < cached.expiry) return@withContext cached.data
         val url = "https://osuskills.com/user/$safeName"
         runCatching {
             val req = Request.Builder()
@@ -75,7 +85,7 @@ object SkillsFetcher {
                 )
             }
 
-            SignatureRenderer.SkillsData(
+            val result = SignatureRenderer.SkillsData(
                 stamina = skill(0),
                 tenacity = skill(1),
                 agility = skill(2),
@@ -85,6 +95,9 @@ object SkillsFetcher {
                 memory = skill(6),
                 tags = tags,
             )
+            // Store in cache
+            cache[safeName] = CacheEntry(result, System.currentTimeMillis() + CACHE_TTL_MS)
+            result
         }.getOrNull()
     }
 }

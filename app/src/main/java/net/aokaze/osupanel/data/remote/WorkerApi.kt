@@ -7,12 +7,12 @@ package net.aokaze.osupanel.data.remote
 
 import net.aokaze.osupanel.data.model.TokenResponse
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 /**
  * Cloudflare Worker endpoints — the worker holds the osu! Client ID +
  * Secret, so the app never touches the Client Secret.
- * Counterpart of the Flutter `AuthRemoteDataSource` (worker part).
  */
 interface WorkerApi {
 
@@ -33,4 +33,13 @@ interface WorkerApi {
     suspend fun refreshAccessToken(
         @Body body: Map<String, String>,
     ): TokenResponse
+
+    /** Public config — client_id for OAuth (no auth required). */
+    @GET("auth/config")
+    suspend fun getConfig(): WorkerConfig
 }
+
+/** Worker public config response. */
+data class WorkerConfig(
+    val client_id: String = "",
+)

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -51,6 +52,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -69,7 +72,7 @@ import net.aokaze.osupanel.feature.cardgen.TEMPLATE_MINI
 import net.aokaze.osupanel.feature.cardgen.TEMPLATE_SKILLS
 import net.aokaze.osupanel.feature.cardgen.TEMPLATE_STATS
 import net.aokaze.osupanel.ui.components.OsuSpinner
-import net.aokaze.osupanel.ui.components.trianglesBackground
+import net.aokaze.osupanel.ui.components.trianglesLine
 import net.aokaze.osupanel.widget.WidgetMode
 
 /**
@@ -102,18 +105,43 @@ fun CardGenScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .background(Color(0xF214161C)),
+            .background(colorResource(R.color.cardgen_dark))
+            // Consume ALL pointer events: this layer is a sibling of the
+            // profile Scaffold, so without a pointer input node, drags pass
+            // through and scroll the LazyColumn behind it ("bleed-through").
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        event.changes.forEach { it.consume() }
+                    }
+                }
+            },
     ) {
-        // Subtle laser triangles across the whole layer (app style).
+        // Laser triangles across the whole layer — ABSOLUTE size mode
+        // (fixedSizePx) so full-screen layers get the same small, dense
+        // triangles as the contributor/license WebView pages (100 px wide,
+        // count = W × 0.02 × spawnRatio) instead of one giant triangle.
         Box(
             Modifier
                 .fillMaxSize()
-                .trianglesBackground(alpha = 0.12f, scaleAdjust = 0.8f, velocity = 0.5f, spawnRatio = 1.5f),
+                .trianglesLine(
+                    alpha = 0.45f,
+                    velocity = 1.5f,
+                    spawnRatio = 2.5f,
+                    strokeWidth = 0.4.dp,
+                    fixedSizePx = 100f,
+                ),
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                // This layer is drawn edge-to-edge (outside the Scaffold's
+                // insets), so pad the content below the status bar and above
+                // the nav bar — otherwise the close (X) button hides under
+                // the system header and the top bar "floats" too high.
+                .systemBarsPadding()
                 .padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
             // ── Top bar ──
@@ -140,7 +168,7 @@ fun CardGenScreen(
                     .fillMaxWidth()
                     .aspectRatio(ratio)
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Color(0xFF101218)),
+                    .background(colorResource(R.color.cardgen_dark_alt)),
                 contentAlignment = Alignment.Center,
             ) {
                 AnimatedContent(
@@ -237,7 +265,7 @@ fun CardGenScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .trianglesBackground(),
+                        .trianglesLine(),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxSize(),

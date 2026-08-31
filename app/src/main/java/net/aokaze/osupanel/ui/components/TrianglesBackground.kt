@@ -1,6 +1,6 @@
 /*
  * MIT License
- * Copyright (c) 2026 Zhyllan Fyllah (Jirankun) - Aokaze Studio
+ * Copyright (c) 2026 Zhyllan Fyllah (Jirankun) — Aokaze Studio
  */
 
 package net.aokaze.osupanel.ui.components
@@ -16,11 +16,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.PI
@@ -31,59 +33,26 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
 
+// ═══════════════════════════════════════════════════════════════════════════
+// trianglesLine — outline/stroke triangles (original osu!lazer style)
+// ═══════════════════════════════════════════════════════════════════════════
+
 /**
- * Segitiga lazer — replika `TrianglesV2` osu!lazer
- * (osu.Game/Graphics/Backgrounds/TrianglesV2.cs), MODULAR: it can be
- * attached to any element — buttons, cards, panels, banners, etc.
+ * Segitiga lazer — replika `TrianglesV2` osu!lazer (outline/stroke).
  *
- * Two ways to use it (identical draw logic, one source):
+ * Two ways to use it:
  *
  * 1. **Modifier** — attach directly to any element:
  *    ```kotlin
- *    Box(Modifier.trianglesBackground()) { ... }
+ *    Box(Modifier.trianglesLine()) { ... }
  *    ```
- * 2. **Component** — fill it yourself with [Spacer]/[Box] inside
- *    the container (used by the loading spinner):
+ * 2. **Component** — fill it yourself with [Spacer]/[Box]:
  *    ```kotlin
- *    Box { TrianglesBackground(Modifier.fillMaxSize()) }
+ *    Box { TrianglesLine(Modifier.fillMaxSize()) }
  *    ```
- *
- * Original algorithm (exactly from the ppy/osu repo):
- * - Bordered equilateral triangles, tip pointing up.
- * - Triangle size = `100 × ScaleAdjust` units (0.866 = equilateral ratio);
- *   1 unit = container height / 60 (local space matches the spinner box).
- * - Jumlah partikel `AimCount = DrawWidth(unit) × 0.02 × SpawnRatio`
- *   (linear to width — a 60-unit box → 2, a wide container → more).
- * - Each particle's speed = Box-Muller normal distribution N(0.5, 0.16²),
- *   min 0.1; movement uses `max(0.5, speed)`.
- * - Upward drift: `Velocity × base_velocity(50) / DrawHeight(60)` rel/s.
- * - Particles spawn at the bottom (y=1), disappear after leaving the top
- *   (y < −height/60), then respawn — a continuous cycle.
- * - Smooth edge fading: alpha ramps up over one triangle height
- *   at the bottom edge (spawn) and fades down at the top edge (exit) —
- *   no sudden "boom" respawns or abrupt disappearances at the edges.
- *
- * DEPTH effect (cheating logic — no real 3D):
- * - Each particle gets a random "distance" 0..1; the `d*d` distribution
- *   biases toward far → many small dim triangles, a few big prominent ones
- *   (depth arrangement like the osu! background).
- * - **Size (layout)**: far = 45% size, near = 115% (perspective).
- * - **Brightness**: far = 35% alpha, near = 100%.
- * - **Color**: far ones are faded (RGB × 0.82 toward dark — an atmospheric
- *   trick); near ones keep full color.
- * - Disable with `depth = 0f` → all particles uniform (legacy behavior).
- *
- * Performance 90fps+:
- * - Paths are reused (fixed array, `rewind()` each frame) — ZERO allocation
- *   per frame (no new Path/Stroke per particle).
- * - Per-particle color (already depth-faded) is built ONCE when the particle
- *   is created; per-frame alpha goes through the `drawPath.alpha` parameter
- *   — NO Color allocation per frame.
- * - Time from `rememberInfiniteTransition`, which guarantees frames keep
- *   coming (never stalls while the screen is idle).
  */
 @Composable
-fun Modifier.trianglesBackground(
+fun Modifier.trianglesLine(
     color: Color = Color.White,
     alpha: Float = 0.45f,
     scaleAdjust: Float = 0.4f,
@@ -91,17 +60,16 @@ fun Modifier.trianglesBackground(
     spawnRatio: Float = 2f,
     strokeWidth: Dp = 0.8.dp,
     depth: Float = 1f,
+    fixedSizePx: Float? = null,
 ): Modifier {
-    // Particle attributes + path — built ONCE (stable, no per-frame allocation).
-    // `depth` controls the depth effect strength (0 = flat/uniform).
     val particles = remember(scaleAdjust, color, depth) {
         val rng = Random(SEED)
         Array(MAX_PARTICLES) {
             val d = rng.nextFloat()
-            val far = d * d                       // biased toward "far" (many small, dim ones)
-            val sizeF = lerp(1f, lerp(0.45f, 1.15f, far), depth)   // perspective size
-            val bright = lerp(1f, lerp(0.35f, 1f, far), depth)     // brightness
-            val rgbF = lerp(1f, 0.82f, depth * far)                // color fade (far)
+            val far = d * d
+            val sizeF = lerp(1f, lerp(0.45f, 1.15f, far), depth)
+            val bright = lerp(1f, lerp(0.35f, 1f, far), depth)
+            val rgbF = lerp(1f, 0.82f, depth * far)
             TriangleParticle(
                 x = rng.nextFloat(),
                 speed = normalSpeed(rng),
@@ -118,8 +86,6 @@ fun Modifier.trianglesBackground(
     }
     val paths = remember { Array(MAX_PARTICLES) { Path() } }
 
-    // Time (ms) — the infinite transition GUARANTEES frames keep being produced.
-    // 120-second cycle — long enough that the wrap is invisible.
     val transition = rememberInfiniteTransition(label = "trianglesTime")
     val progress by transition.animateFloat(
         initialValue = 0f,
@@ -133,7 +99,7 @@ fun Modifier.trianglesBackground(
     return drawWithCache {
         val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Butt)
         onDrawBehind {
-            drawTriangles(
+            drawTrianglesLine(
                 timeMs = progress * TIME_CYCLE_MS,
                 particles = particles,
                 paths = paths,
@@ -142,18 +108,15 @@ fun Modifier.trianglesBackground(
                 scaleAdjust = scaleAdjust,
                 velocity = velocity,
                 spawnRatio = spawnRatio,
+                fixedSizePx = fixedSizePx,
             )
         }
     }
 }
 
-/**
- * Standalone component — wraps [Modifier.trianglesBackground] with
- * [Spacer]. Used when triangles are filled from outside the container
- * (e.g. inside the loading spinner box via `Modifier.fillMaxSize()`).
- */
+/** Standalone component — wraps [Modifier.trianglesLine] with [Spacer]. */
 @Composable
-fun TrianglesBackground(
+fun TrianglesLine(
     modifier: Modifier = Modifier,
     color: Color = Color.White,
     alpha: Float = 0.45f,
@@ -162,9 +125,10 @@ fun TrianglesBackground(
     spawnRatio: Float = 2f,
     strokeWidth: Dp = 0.8.dp,
     depth: Float = 1f,
+    fixedSizePx: Float? = null,
 ) {
     Spacer(
-        modifier.trianglesBackground(
+        modifier.trianglesLine(
             color = color,
             alpha = alpha,
             scaleAdjust = scaleAdjust,
@@ -172,12 +136,13 @@ fun TrianglesBackground(
             spawnRatio = spawnRatio,
             strokeWidth = strokeWidth,
             depth = depth,
+            fixedSizePx = fixedSizePx,
         ),
     )
 }
 
-/** The single draw implementation — used by both the modifier & component. */
-private fun DrawScope.drawTriangles(
+/** Draw outline/stroke triangles — the original trianglesLine implementation. */
+private fun DrawScope.drawTrianglesLine(
     timeMs: Float,
     particles: Array<TriangleParticle>,
     paths: Array<Path>,
@@ -186,18 +151,23 @@ private fun DrawScope.drawTriangles(
     scaleAdjust: Float,
     velocity: Float,
     spawnRatio: Float,
+    fixedSizePx: Float? = null,
 ) {
-    val unit = size.height / 60f                       // 1 unit = 1/60 tinggi
-    val baseTriW = 100f * scaleAdjust * unit           // base triangle quad width
-    val baseTriH = 100f * scaleAdjust * 0.866f * unit  // base triangle quad height
-    val relH = baseTriH / size.height                  // tinggi relatif (wrap)
-    val rate = velocity * 50f / 60f                    // rel/detik (DrawHeight=60)
+    val unit = size.height / 60f
+    val baseTriW = fixedSizePx ?: (100f * scaleAdjust * unit)
+    val baseTriH = baseTriW * 0.866f
+    val relH = baseTriH / size.height
+    val rate = if (fixedSizePx != null) velocity * 50f / size.height else velocity * 50f / 60f
     val wrap = 1f + relH
 
-    // AimCount persis TrianglesV2: DrawWidth(unit) × 0.02 × SpawnRatio.
-    val drawWidthUnits = size.width / unit
-    val count = max(1, (drawWidthUnits * 0.02f * spawnRatio).toInt())
-        .coerceAtMost(MAX_PARTICLES)
+    val count = if (fixedSizePx != null) {
+        max(1, (size.width * 0.02f * spawnRatio).toInt())
+            .coerceAtMost(MAX_PARTICLES)
+    } else {
+        val drawWidthUnits = size.width / unit
+        max(1, (drawWidthUnits * 0.02f * spawnRatio).toInt())
+            .coerceAtMost(MAX_PARTICLES)
+    }
 
     for (i in 0 until count) {
         val p = particles[i]
@@ -205,49 +175,219 @@ private fun DrawScope.drawTriangles(
         val y = (1f - (travel % wrap)) * size.height
         val x = p.x * size.width
 
-        // Depth — perspective size per particle (near big, far small).
         val triW = baseTriW * p.sizeF
         val triH = baseTriH * p.sizeF
 
-        // Smooth edge fade — alpha ramps up over one triangle
-        // height at the bottom edge (spawn) and fades down at the top edge
-        // (exit). The fade zone follows the particle size (bigger triangles
-        // fade longer). Eliminates sudden "boom" respawns.
         val fade = min(
-            (size.height - y) / triH,   // fade-in at the bottom (spawn)
-            (y + triH) / triH,          // fade-out at the top (exit)
+            (size.height - y) / triH,
+            (y + triH) / triH,
         ).coerceIn(0f, 1f)
 
-        // Path reuse — no per-frame allocation.
         val path = paths[i]
         path.rewind()
         path.moveTo(x, y)
         path.lineTo(x + triW / 2f, y + triH)
         path.lineTo(x - triW / 2f, y + triH)
         path.close()
-        // Depth: alpha = base × edge fade × particle brightness.
-        // Particle colors are already depth-faded (built once); alpha
-        // goes through the drawPath parameter → no per-frame allocation.
         drawPath(path, p.color, alpha = alpha * fade * p.bright, style = stroke)
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// trianglesFill — filled triangles + shadow 3D floating effect
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Filled triangles with a 3D floating shadow effect.
+ * Same shape as [trianglesLine] but solid-filled, denser, and with a drop
+ * shadow behind each triangle for a "floating" look.
+ *
+ * Usage:
+ * ```kotlin
+ * Box(Modifier.trianglesFill()) { ... }
+ * ```
+ */
+@Composable
+fun Modifier.trianglesFill(
+    color: Color = Color.White,
+    alpha: Float = 0.35f,
+    scaleAdjust: Float = 0.35f,
+    velocity: Float = 0.7f,
+    spawnRatio: Float = 3.5f,
+    depth: Float = 1f,
+    shadowAlpha: Float = 0.25f,
+    shadowOffsetY: Float = 4f,
+    fixedSizePx: Float? = null,
+): Modifier {
+    val particles = remember(scaleAdjust, color, depth) {
+        val rng = Random(SEED + 7)
+        Array(MAX_PARTICLES) {
+            val d = rng.nextFloat()
+            val far = d * d
+            val sizeF = lerp(1f, lerp(0.45f, 1.15f, far), depth)
+            val bright = lerp(1f, lerp(0.35f, 1f, far), depth)
+            val rgbF = lerp(1f, 0.82f, depth * far)
+            TriangleParticle(
+                x = rng.nextFloat(),
+                speed = normalSpeed(rng),
+                phase = rng.nextFloat(),
+                sizeF = sizeF,
+                bright = bright,
+                color = Color(
+                    red = (color.red * rgbF).coerceIn(0f, 1f),
+                    green = (color.green * rgbF).coerceIn(0f, 1f),
+                    blue = (color.blue * rgbF).coerceIn(0f, 1f),
+                ),
+            )
+        }
+    }
+    val paths = remember { Array(MAX_PARTICLES) { Path() } }
+
+    val transition = rememberInfiniteTransition(label = "trianglesFillTime")
+    val progress by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = TIME_CYCLE_MS, easing = LinearEasing),
+        ),
+        label = "trianglesFillProgress",
+    )
+
+    return drawWithCache {
+        onDrawBehind {
+            drawTrianglesFill(
+                timeMs = progress * TIME_CYCLE_MS,
+                particles = particles,
+                paths = paths,
+                alpha = alpha,
+                scaleAdjust = scaleAdjust,
+                velocity = velocity,
+                spawnRatio = spawnRatio,
+                shadowAlpha = shadowAlpha,
+                shadowOffsetY = shadowOffsetY,
+                fixedSizePx = fixedSizePx,
+            )
+        }
+    }
+}
+
+/** Standalone component — wraps [Modifier.trianglesFill] with [Spacer]. */
+@Composable
+fun TrianglesFill(
+    modifier: Modifier = Modifier,
+    color: Color = Color.White,
+    alpha: Float = 0.35f,
+    scaleAdjust: Float = 0.35f,
+    velocity: Float = 0.7f,
+    spawnRatio: Float = 3.5f,
+    depth: Float = 1f,
+    shadowAlpha: Float = 0.25f,
+    shadowOffsetY: Float = 4f,
+    fixedSizePx: Float? = null,
+) {
+    Spacer(
+        modifier.trianglesFill(
+            color = color,
+            alpha = alpha,
+            scaleAdjust = scaleAdjust,
+            velocity = velocity,
+            spawnRatio = spawnRatio,
+            depth = depth,
+            shadowAlpha = shadowAlpha,
+            shadowOffsetY = shadowOffsetY,
+            fixedSizePx = fixedSizePx,
+        ),
+    )
+}
+
+/** Draw filled triangles with shadow — the trianglesFill implementation. */
+private fun DrawScope.drawTrianglesFill(
+    timeMs: Float,
+    particles: Array<TriangleParticle>,
+    paths: Array<Path>,
+    alpha: Float,
+    scaleAdjust: Float,
+    velocity: Float,
+    spawnRatio: Float,
+    shadowAlpha: Float,
+    shadowOffsetY: Float,
+    fixedSizePx: Float? = null,
+) {
+    val unit = size.height / 60f
+    val baseTriW = fixedSizePx ?: (100f * scaleAdjust * unit)
+    val baseTriH = baseTriW * 0.866f
+    val relH = baseTriH / size.height
+    val rate = if (fixedSizePx != null) velocity * 50f / size.height else velocity * 50f / 60f
+    val wrap = 1f + relH
+
+    val count = if (fixedSizePx != null) {
+        max(1, (size.width * 0.02f * spawnRatio).toInt())
+            .coerceAtMost(MAX_PARTICLES)
+    } else {
+        val drawWidthUnits = size.width / unit
+        max(1, (drawWidthUnits * 0.02f * spawnRatio).toInt())
+            .coerceAtMost(MAX_PARTICLES)
+    }
+
+    for (i in 0 until count) {
+        val p = particles[i]
+        val travel = (timeMs / 1000f) * rate * max(0.5f, p.speed) + p.phase
+        val y = (1f - (travel % wrap)) * size.height
+        val x = p.x * size.width
+
+        val triW = baseTriW * p.sizeF
+        val triH = baseTriH * p.sizeF
+
+        val fade = min(
+            (size.height - y) / triH,
+            (y + triH) / triH,
+        ).coerceIn(0f, 1f)
+
+        val path = paths[i]
+        path.rewind()
+        path.moveTo(x, y)
+        path.lineTo(x + triW / 2f, y + triH)
+        path.lineTo(x - triW / 2f, y + triH)
+        path.close()
+
+        val finalAlpha = alpha * fade * p.bright
+
+        // Shadow — drawn offset below for 3D floating effect
+        if (shadowAlpha > 0f && finalAlpha > 0.01f) {
+            withTransform({
+                translate(left = 0f, top = shadowOffsetY * p.sizeF)
+            }) {
+                drawPath(
+                    path,
+                    Color.Black,
+                    alpha = shadowAlpha * fade * p.bright,
+                )
+            }
+        }
+
+        // Filled triangle
+        drawPath(path, p.color, alpha = finalAlpha)
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Shared internals
+// ═══════════════════════════════════════════════════════════════════════════
 
 /** Attributes of one triangle particle (static — only the y position changes). */
 private data class TriangleParticle(
     val x: Float,
     val speed: Float,
     val phase: Float,
-    val sizeF: Float,     // perspective size factor (depth)
-    val bright: Float,    // brightness factor (depth)
-    val color: Color,     // color already depth-faded (built once)
+    val sizeF: Float,
+    val bright: Float,
+    val color: Color,
 )
 
-/** Simple float lerp (no extra dependencies). */
 private fun lerp(a: Float, b: Float, t: Float): Float = a + (b - a) * t
 
-/** Speed multiplier persis `CreateTriangle` — Box-Muller N(0.5, 0.16²), min 0.1. */
 private fun normalSpeed(rng: Random): Float {
-    val u1 = 1f - rng.nextFloat()   // uniform (0,1]
+    val u1 = 1f - rng.nextFloat()
     val u2 = 1f - rng.nextFloat()
     val randStdNormal = sqrt(-2.0 * ln(u1.toDouble())) * sin(2.0 * PI * u2)
     return max(0.1f, (0.5f + 0.16f * randStdNormal.toFloat()))

@@ -19,12 +19,12 @@ import retrofit2.HttpException
 import java.io.IOException
 
 /**
- * Auth interceptor — counterpart of `_AuthInterceptor` in `dio_client.dart`.
+ * Auth interceptor.
  *
  * 1. Injects `Authorization: Bearer <token>` into every request.
  * 2. On 401: refresh the token via the worker ONCE (shared across all
  *    concurrent 401 requests), then retry the request once.
- * 3. Refresh result semantics (same as the Flutter version):
+ * 3. Refresh result semantics:
  *    - success  → new token stored, retry the request.
  *    - definite (worker returned an error) → clear the token + call
  *      [onSessionExpired] (logout).

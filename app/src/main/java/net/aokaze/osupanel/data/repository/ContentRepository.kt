@@ -8,6 +8,8 @@ package net.aokaze.osupanel.data.repository
 import net.aokaze.osupanel.data.local.DataCache
 import net.aokaze.osupanel.data.model.BeatmapDto
 import net.aokaze.osupanel.data.model.BeatmapsetDto
+import net.aokaze.osupanel.data.model.DailyChallengeResponse
+import net.aokaze.osupanel.data.model.FavouriteBody
 import net.aokaze.osupanel.data.model.MostPlayedBeatmapDto
 import net.aokaze.osupanel.data.model.RankingEntryDto
 import net.aokaze.osupanel.data.model.ScoreDto
@@ -15,8 +17,7 @@ import net.aokaze.osupanel.data.model.UserDto
 import net.aokaze.osupanel.data.remote.OsuApi
 
 /**
- * Content repository — every endpoint except auth (counterpart of how the
- * Flutter pages use `AuthRemoteDataSource`).
+ * Content repository — every endpoint except auth.
  *
  * Cache: per-session in-memory [DataCache], invalidated on refresh.
  * `force` = true → skip the cache (pull-to-refresh).
@@ -117,6 +118,37 @@ class ContentRepository(private val osuApi: OsuApi) {
     /** GET /search?mode=user — search users globally. */
     suspend fun searchUsers(query: String): List<UserDto> =
         osuApi.searchUsers(q = query).user?.data ?: emptyList()
+
+    /** GET /rankings/daily_challenge — current daily challenge beatmap. */
+    suspend fun getDailyChallenge(
+        cacheKey: String? = null,
+        force: Boolean = false,
+    ): DailyChallengeResponse {
+        if (!force && cacheKey != null && DataCache.has(cacheKey)) {
+            return DataCache.get(cacheKey) ?: osuApi.getDailyChallenge()
+        }
+        val result = osuApi.getDailyChallenge()
+        if (cacheKey != null) DataCache.set(cacheKey, result)
+        return result
+    }
+
+    /** POST /beatmapsets/{id}/favourites — add to favourites. */
+    suspend fun addFavourite(beatmapsetId: Int) {
+        osuApi.addFavourite(beatmapsetId, FavouriteBody(beatmapsetId))
+    }
+
+    /** DELETE /beatmapsets/{id}/favourites — remove from favourites. */
+    suspend fun removeFavourite(beatmapsetId: Int) {
+        osuApi.removeFavourite(beatmapsetId)
+    }
+
+    /** GET /me/beatmapset-favourites — current user's favourites. */
+    suspend fun getMyFavourites(
+        cacheKey: String? = null,
+        force: Boolean = false,
+    ): List<BeatmapsetDto> = cachedList(cacheKey, force) {
+        osuApi.getMyFavourites()
+    }
 
     private suspend fun <T> cachedList(
         key: String?,

@@ -5,7 +5,6 @@
 
 package net.aokaze.osupanel.feature.auth.ui
 
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,11 +24,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +44,7 @@ import net.aokaze.osupanel.feature.auth.AuthStatus
 import net.aokaze.osupanel.feature.auth.AuthViewModel
 import net.aokaze.osupanel.ui.components.TopBanner
 import net.aokaze.osupanel.ui.components.OsuSpinner
-import net.aokaze.osupanel.ui.components.trianglesBackground
+import net.aokaze.osupanel.ui.components.trianglesLine
 
 /**
  * Login — minimal: heart icon, title, subtitle, and a Login button.
@@ -52,19 +56,28 @@ fun LoginScreen(viewModel: AuthViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val colorScheme = MaterialTheme.colorScheme
     val authenticating = state.status == AuthStatus.AUTHENTICATING
-    // Button locked while a login is in progress (anti double-tap).
-    val blocked = authenticating
+    val hasError = state.status == AuthStatus.ERROR && state.errorMessage != null
 
-    // Tap on an empty area → lose focus (if the keyboard is open).
-    val focusManager = LocalFocusManager.current
+    // 10-second cooldown after login error
+    var cooldown by remember { mutableIntStateOf(0) }
+    LaunchedEffect(Unit) {
+        snapshotFlow { hasError }.collect { error ->
+            if (error && cooldown == 0) {
+                cooldown = 10
+                while (cooldown > 0) {
+                    delay(1000)
+                    cooldown--
+                }
+            }
+        }
+    }
+
+    val blocked = authenticating || cooldown > 0
 
     Box(Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = { focusManager.clearFocus() })
-                }
                 .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -119,11 +132,11 @@ fun LoginScreen(viewModel: AuthViewModel) {
                     .height(52.dp),
             ) {
                 // Laser triangles via modifier — other elements/buttons can use
-                // the exact same `Modifier.trianglesBackground()`.
+                // the exact same `Modifier.trianglesLine()`.
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .trianglesBackground(),
+                        .trianglesLine(),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxSize(),
@@ -135,6 +148,9 @@ fun LoginScreen(viewModel: AuthViewModel) {
                                 OsuSpinner(size = 20.dp)
                                 Spacer(Modifier.width(8.dp))
                                 Text(stringResource(R.string.login_loading))
+                            }
+                            cooldown > 0 -> {
+                                Text(stringResource(R.string.login_cooldown, cooldown))
                             }
                             else -> {
                                 Text(stringResource(R.string.login_button))

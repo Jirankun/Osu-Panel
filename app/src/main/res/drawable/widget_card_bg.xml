@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Widget card background — matches the app's dark surface (#22191C). -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#FF1C1B1F" />
+    <solid android:color="#FF22191C" />
     <corners android:radius="12dp" />
 </shape>

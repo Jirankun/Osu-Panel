@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Widget progress bar — aligned with the in-app design:
+  amber fill (accent_amber #FFC107) on a dark surfaceContainerHighest track,
+  same look as the Compose LinearProgressIndicator on Profile/Dashboard.
+-->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Track -->
+    <!-- Track (matches in-app track: surfaceVariant #514347, visible on the card) -->
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <corners android:radius="4dp" />
-            <solid android:color="#33FFFFFF" />
+            <corners android:radius="2dp" />
+            <solid android:color="#FF514347" />
         </shape>
     </item>
-    <!-- Fill -->
+    <!-- Fill (amber, same as OsuColors.amber) -->
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="rectangle">
-                <corners android:radius="4dp" />
-                <solid android:color="#FFE86E9E" />
+                <corners android:radius="2dp" />
+                <solid android:color="#FFC107" />
             </shape>
         </clip>
     </item>

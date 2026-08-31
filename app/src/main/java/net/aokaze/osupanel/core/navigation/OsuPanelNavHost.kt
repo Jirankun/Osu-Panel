@@ -5,6 +5,11 @@
 
 package net.aokaze.osupanel.core.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -24,11 +29,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import net.aokaze.osupanel.R
+import net.aokaze.osupanel.rememberClickGuard
 import net.aokaze.osupanel.feature.auth.AuthStatus
 import net.aokaze.osupanel.feature.auth.AuthViewModel
 import net.aokaze.osupanel.feature.auth.ui.LoginScreen
 import net.aokaze.osupanel.feature.auth.ui.SplashScreen
 import net.aokaze.osupanel.feature.beatmap.ui.BeatmapDetailScreen
+import net.aokaze.osupanel.feature.beatmap.ui.QrCodeScreen
+import net.aokaze.osupanel.feature.chat.ui.ChatEditAccountScreen
+import net.aokaze.osupanel.feature.chat.ui.ChatSettingsScreen
+import net.aokaze.osupanel.feature.chat.ui.GroupChatScreen
+import net.aokaze.osupanel.feature.chat.ui.PmChatScreen
 import net.aokaze.osupanel.feature.home.ui.MainShell
 import net.aokaze.osupanel.feature.profile.ui.ProfileScreen
 import net.aokaze.osupanel.feature.settings.ui.ContributorsScreen
@@ -38,7 +49,7 @@ import net.aokaze.osupanel.ui.components.BannerType
 import net.aokaze.osupanel.ui.components.TopBanner
 
 /**
- * Auth-status based navigation (counterpart of the Flutter router):
+ * Auth-status based navigation:
  *   authenticated   → home (MainShell: Dashboard/Maps/Rankings/Settings)
  *   unauthenticated → login
  *   error           → home (the home screen shows the error + retry)
@@ -53,6 +64,11 @@ fun OsuPanelNavHost(
     val navController = rememberNavController()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val updateInfo by updateViewModel.updateInfo.collectAsStateWithLifecycle()
+
+    // One central double-tap guard for every push-navigation entry point
+    // (profile, beatmap, licenses, contributors, chat screens…): a double
+    // tap must never push the same screen twice.
+    val guard = rememberClickGuard()
 
     LaunchedEffect(state.status) {
         val current = navController.currentDestination?.route
@@ -82,6 +98,22 @@ fun OsuPanelNavHost(
     NavHost(
         navController = navController,
         startDestination = Routes.SPLASH,
+        // Standard forward/back screen motion (300ms, app-wide): pushing a
+        // screen slides it in from the right; popping slides it back out to
+        // the right, with a light cross-fade on both. Tuned so the pinned
+        // detail headers stay visually calm while switching screens.
+        enterTransition = {
+            slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300)) + fadeIn(tween(300))
+        },
+        exitTransition = {
+            slideOutHorizontally(targetOffsetX = { -it / 3 }, animationSpec = tween(300)) + fadeOut(tween(300))
+        },
+        popEnterTransition = {
+            slideInHorizontally(initialOffsetX = { -it / 3 }, animationSpec = tween(300)) + fadeIn(tween(300))
+        },
+        popExitTransition = {
+            slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300)) + fadeOut(tween(300))
+        },
     ) {
         composable(Routes.SPLASH) { SplashScreen(viewModel) }
         composable(Routes.LOGIN) { LoginScreen(viewModel) }
@@ -89,18 +121,52 @@ fun OsuPanelNavHost(
             MainShell(
                 viewModel = viewModel,
                 onOpenProfile = { userId ->
-                    navController.navigate(Routes.profile(userId))
+                    if (guard()) navController.navigate(Routes.profile(userId))
                 },
                 onOpenBeatmapDetail = { beatmapsetId ->
-                    navController.navigate(Routes.beatmapDetail(beatmapsetId))
+                    if (guard()) navController.navigate(Routes.beatmapDetail(beatmapsetId))
                 },
                 onOpenLicenses = {
-                    navController.navigate(Routes.LICENSES)
+                    if (guard()) navController.navigate(Routes.LICENSES)
                 },
                 onOpenContributors = {
-                    navController.navigate(Routes.CONTRIBUTORS)
+                    if (guard()) navController.navigate(Routes.CONTRIBUTORS)
+                },
+                onOpenChatSettings = {
+                    if (guard()) navController.navigate(Routes.CHAT_SETTINGS)
+                },
+                onOpenPmChat = { user ->
+                    if (guard()) navController.navigate(Routes.pmChat(user))
+                },
+                onOpenGroupChat = { group ->
+                    if (guard()) navController.navigate(Routes.groupChat(group))
                 },
             )
+        }
+        composable(Routes.CHAT_SETTINGS) {
+            ChatSettingsScreen(
+                onBack = { navController.popBackStack() },
+                onOpenEditAccount = {
+                    if (guard()) navController.navigate(Routes.CHAT_EDIT)
+                },
+            )
+        }
+        composable(Routes.CHAT_EDIT) {
+            ChatEditAccountScreen(onBack = { navController.popBackStack() })
+        }
+        composable(
+            route = "${Routes.PM_CHAT}/{user}",
+            arguments = listOf(navArgument("user") { type = NavType.StringType }),
+        ) { entry ->
+            val user = entry.arguments?.getString("user") ?: return@composable
+            PmChatScreen(user = user, onBack = { navController.popBackStack() })
+        }
+        composable(
+            route = "${Routes.GROUP_CHAT}/{group}",
+            arguments = listOf(navArgument("group") { type = NavType.StringType }),
+        ) { entry ->
+            val group = entry.arguments?.getString("group") ?: return@composable
+            GroupChatScreen(group = group, onBack = { navController.popBackStack() })
         }
         composable(Routes.LICENSES) {
             LicensesScreen(onBack = { navController.popBackStack() })
@@ -117,7 +183,7 @@ fun OsuPanelNavHost(
                 userId = userId,
                 onBack = { navController.popBackStack() },
                 onOpenBeatmapDetail = { beatmapsetId ->
-                    navController.navigate(Routes.beatmapDetail(beatmapsetId))
+                    if (guard()) navController.navigate(Routes.beatmapDetail(beatmapsetId))
                 },
             )
         }
@@ -131,8 +197,21 @@ fun OsuPanelNavHost(
                 currentUserId = state.user?.id,
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { userId ->
-                    navController.navigate(Routes.profile(userId))
+                    if (guard()) navController.navigate(Routes.profile(userId))
                 },
+                onOpenQr = { id ->
+                    if (guard()) navController.navigate(Routes.qrScreen(id))
+                },
+            )
+        }
+        composable(
+            route = "${Routes.QR_SCREEN}/{beatmapsetId}",
+            arguments = listOf(navArgument("beatmapsetId") { type = NavType.IntType }),
+        ) { entry ->
+            val beatmapsetId = entry.arguments?.getInt("beatmapsetId") ?: return@composable
+            QrCodeScreen(
+                beatmapsetId = beatmapsetId,
+                onBack = { navController.popBackStack() },
             )
         }
     }

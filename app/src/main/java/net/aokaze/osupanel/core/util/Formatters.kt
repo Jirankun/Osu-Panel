@@ -5,9 +5,11 @@
 
 package net.aokaze.osupanel.core.util
 
+import java.text.NumberFormat
 import java.time.OffsetDateTime
+import java.util.Locale
 
-/** "Xh Ym" — counterpart of the Flutter `_formatDuration`. */
+/** "Xh Ym" format. */
 fun formatDuration(seconds: Int): String {
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60
@@ -21,7 +23,7 @@ fun formatDuration(seconds: Int): String {
 fun accuracyPercent(accuracy: Double): Double =
     if (accuracy <= 1.0) accuracy * 100 else accuracy
 
-/** "1.2M" / "1.2K" — counterpart of the Flutter `_formatNumber`. */
+/** "1.2M" / "1.2K" format. */
 fun formatNumber(number: Long): String = when {
     number >= 1_000_000 -> "${(number / 1_000_000.0).format1() }M"
     number >= 1_000 -> "${(number / 1_000.0).format1()}K"
@@ -53,18 +55,31 @@ private fun Double.format1(): String =
 
 private fun Double.format2(): String = String.format("%.2f", this)
 
-/** Date "2024-01-15" from ISO-8601. */
-fun formatJoinDate(iso: String?): String =
-    iso?.take(10) ?: ""
+private val monthNames = listOf(
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+)
 
-/** Display date "15 January 2024" (profile `_formatDate` counterpart). */
-fun formatLongDate(iso: String): String {
-    val months = listOf(
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December",
-    )
-    return runCatching {
-        val d = OffsetDateTime.parse(iso)
-        "${d.dayOfMonth} ${months[d.monthValue - 1]} ${d.year}"
-    }.getOrElse { iso.take(10) }
+/** Display date "15 January 2024" (profile screen). */
+fun formatLongDate(iso: String): String = runCatching {
+    val d = OffsetDateTime.parse(iso)
+    "${d.dayOfMonth} ${monthNames[d.monthValue - 1]} ${d.year}"
+}.getOrElse { iso.take(10) }
+
+/** Display date "2024, January, 15" (medal/badge achieved date). */
+fun formatAchievedDate(iso: String): String = runCatching {
+    val d = OffsetDateTime.parse(iso)
+    "${d.year}, ${monthNames[d.monthValue - 1]}, ${d.dayOfMonth}"
+}.getOrElse { iso.take(10) }
+
+/** Comma-grouped number: "12,345" (osu! web style — for pp, ranks, counts). */
+fun formatNumberGrouped(value: Long): String =
+    NumberFormat.getIntegerInstance(Locale.US).format(value)
+
+/** stat-sign playtime: "134d 10h 38m" (or "10h 38m" when < 1 day). */
+fun formatPlaytimeSig(seconds: Int): String {
+    val days = seconds / 86400
+    val hours = (seconds % 86400) / 3600
+    val minutes = (seconds % 3600) / 60
+    return if (days > 0) "${days}d ${hours}h ${minutes}m" else "${hours}h ${minutes}m"
 }

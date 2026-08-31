@@ -78,7 +78,7 @@ fun RetryButton(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .trianglesBackground(),
+                .trianglesLine(),
         ) {
             Row(
                 modifier = Modifier.fillMaxSize(),

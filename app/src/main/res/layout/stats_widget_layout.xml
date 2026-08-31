@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/widget_zero_percent"
-            android:textColor="#FFE86E9E"
+            android:textColor="#FFC107"
             android:textSize="11sp"
             android:fontFamily="@font/torus"
             android:textStyle="bold"
@@ -119,7 +119,7 @@
         android:id="@+id/level_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="4dp"
         android:max="100"
         android:progress="0"
         android:progressDrawable="@drawable/widget_progress_bar" />

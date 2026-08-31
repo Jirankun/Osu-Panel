@@ -73,7 +73,7 @@ import net.aokaze.osupanel.ui.components.OsuSpinner
 import net.aokaze.osupanel.ui.components.RetryButton
 
 /**
- * Maps — counterpart of the Flutter `MapPage`: 4 tabs (Last Play / Best Scores /
+ * Maps — 4 tabs (Last Play / Best Scores /
  * Most Played / Loved), each with 100-per-page pagination,
  * pull-to-refresh, and tapping an item → Beatmap Detail.
  */
@@ -95,7 +95,7 @@ fun MapsScreen(
     val recentListState = rememberLazyListState()
     val bestListState = rememberLazyListState()
     val mostPlayedListState = rememberLazyListState()
-    val lovedListState = rememberLazyListState()
+    val favouriteListState = rememberLazyListState()
 
     LaunchedEffect(userId) {
         if (userId != null) viewModel.load(userId)
@@ -176,12 +176,12 @@ fun MapsScreen(
                     )
                 }
                 else -> {
-                    val state by viewModel.loved.collectAsStateWithLifecycle()
-                    LovedTabContent(
+                    val state by viewModel.favourite.collectAsStateWithLifecycle()
+                    FavouriteTabContent(
                         state = state,
-                        listState = lovedListState,
+                        listState = favouriteListState,
                         onRefresh = { viewModel.refresh(userId) },
-                        onLoadMore = { viewModel.loadMoreLoved(userId) },
+                        onLoadMore = { viewModel.loadMoreFavourite(userId) },
                         onOpenBeatmapDetail = onOpenBeatmapDetail,
                     )
                 }
@@ -242,7 +242,7 @@ private fun ScoreTabContent(
             else -> {
                 LazyColumn(
                     state = listState,
-                    contentPadding = PaddingValues(12.dp),
+                    contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 120.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxSize(),
                 ) {
@@ -432,7 +432,7 @@ private fun MostPlayedTabContent(
             )
             else -> LazyColumn(
                 state = listState,
-                contentPadding = PaddingValues(12.dp),
+                contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 120.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
@@ -511,11 +511,11 @@ private fun MostPlayedTabContent(
     }
 }
 
-// ── Loved (favourites) ──
+// ── Favourite (user favourites) ──
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LovedTabContent(
+private fun FavouriteTabContent(
     state: MapsTabState<BeatmapsetDto>,
     listState: LazyListState,
     onRefresh: () -> Unit,
@@ -552,7 +552,7 @@ private fun LovedTabContent(
             )
             else -> LazyColumn(
                 state = listState,
-                contentPadding = PaddingValues(12.dp),
+                contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 120.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {

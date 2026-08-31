@@ -9,20 +9,26 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import net.aokaze.osupanel.core.util.accuracyPercent
 import net.aokaze.osupanel.core.util.formatDuration
 import net.aokaze.osupanel.core.util.formatNumber
+import net.aokaze.osupanel.core.util.formatNumberGrouped
+import net.aokaze.osupanel.core.util.formatPlaytimeSig
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.aokaze.osupanel.data.model.UserDto
 import net.aokaze.osupanel.widget.PpWidgetProvider
 import net.aokaze.osupanel.widget.ProfileLargeWidgetProvider
-import net.aokaze.osupanel.widget.SignatureDataMapper
 import net.aokaze.osupanel.widget.SignatureRenderer
 import net.aokaze.osupanel.widget.StatsWidgetProvider
 import net.aokaze.osupanel.widget.WidgetBitmapCache
 import java.util.Locale
+
+/** Lenient JSON — old stored skill payloads (pre-7-skill) decode safely. */
+private val lenientJson = Json { ignoreUnknownKeys = true }
 
 /**
  * Single source of data for home screen widgets.
@@ -111,11 +117,16 @@ object WidgetDataStore {
         updateAllWidgets(context)
     }
 
-    /** Last successfully fetched skills data (osuskills.com) — null when absent. */
+    /** Last successfully fetched osu!skills (osuskills.com) — null when absent. */
     fun getSkillsData(context: Context): SignatureRenderer.SkillsData? {
         val json = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_SKILLS_JSON, null) ?: return null
-        return runCatching { Json.decodeFromString<SignatureRenderer.SkillsData>(json) }.getOrNull()
+        val data = runCatching { lenientJson.decodeFromString<SignatureRenderer.SkillsData>(json) }.getOrNull()
+            ?: return null
+        // Stale payloads from an older schema decode as all-zero skills —
+        // treat them as absent so the widget shows "No skills data".
+        if (data.radarSkills.all { it.percent == 0f }) return null
+        return data
     }
 
     fun setSkillsData(context: Context, data: SignatureRenderer.SkillsData) {
@@ -157,14 +168,14 @@ object WidgetDataStore {
             .edit()
             .putString(KEY_USERNAME, user.username.orEmpty())
             .putString(KEY_USER_ID, "#${user.id}")
-            .putString(KEY_PP, SignatureDataMapper.formatNumber((stats?.pp ?: 0.0).toLong()))
+            .putString(KEY_PP, formatNumberGrouped((stats?.pp ?: 0.0).toLong()))
             .putString(
                 KEY_GLOBAL_RANK,
-                stats?.globalRank?.let { "#${SignatureDataMapper.formatNumber(it.toLong())}" }.orEmpty(),
+                stats?.globalRank?.let { "#${formatNumberGrouped(it.toLong())}" }.orEmpty(),
             )
             .putString(
                 KEY_COUNTRY_RANK,
-                stats?.countryRank?.let { "#${SignatureDataMapper.formatNumber(it.toLong())}" }.orEmpty(),
+                stats?.countryRank?.let { "#${formatNumberGrouped(it.toLong())}" }.orEmpty(),
             )
             .putInt(KEY_LEVEL, stats?.levelCurrent ?: 0)
             .putFloat(KEY_LEVEL_PROGRESS, (stats?.levelProgress ?: 0.0).toFloat().coerceIn(0f, 1f))
@@ -173,10 +184,10 @@ object WidgetDataStore {
 
             // Full stats for the large widget.
             .putString(KEY_ACCURACY, String.format(Locale.US, "%.2f%%", accuracyPercent(stats?.accuracy ?: 0.0)))
-            .putString(KEY_PLAY_COUNT, SignatureDataMapper.formatNumber((stats?.playCount ?: 0).toLong()))
+            .putString(KEY_PLAY_COUNT, formatNumberGrouped((stats?.playCount ?: 0).toLong()))
             .putString(KEY_PLAY_TIME, formatDuration(stats?.playTime ?: 0))
-            .putString(KEY_TOTAL_HITS, SignatureDataMapper.formatNumber(stats?.totalHits ?: 0L))
-            .putString(KEY_MAX_COMBO, "${SignatureDataMapper.formatNumber(stats?.maximumCombo ?: 0L)}x")
+            .putString(KEY_TOTAL_HITS, formatNumberGrouped(stats?.totalHits ?: 0L))
+            .putString(KEY_MAX_COMBO, "${formatNumberGrouped(stats?.maximumCombo ?: 0L)}x")
             .putString(KEY_RANKED_SCORE, formatNumber(stats?.rankedScore ?: 0L))
             .putString(KEY_TOTAL_SCORE, formatNumber(stats?.totalScore ?: 0L))
             .putInt(KEY_GRADE_SS, (grades?.ss ?: 0) + (grades?.ssh ?: 0))
@@ -186,9 +197,9 @@ object WidgetDataStore {
             // Signature-widget specific data.
             .putString(KEY_COUNTRY_CODE, (user.country?.code ?: user.countryCode).orEmpty())
             .putString(KEY_COUNTRY_NAME, user.country?.name.orEmpty())
-            .putString(KEY_MEDALS_COUNT, SignatureDataMapper.formatNumber(user.achievements.size.toLong()))
-            .putString(KEY_PLAYTIME_SIG, SignatureDataMapper.formatPlaytimeSig(stats?.playTime ?: 0))
-            .putString(KEY_REPLAYS, SignatureDataMapper.formatNumber((stats?.replaysWatchedByOthers ?: 0).toLong()))
+            .putString(KEY_MEDALS_COUNT, formatNumberGrouped(user.achievements.size.toLong()))
+            .putString(KEY_PLAYTIME_SIG, formatPlaytimeSig(stats?.playTime ?: 0))
+            .putString(KEY_REPLAYS, formatNumberGrouped((stats?.replaysWatchedByOthers ?: 0).toLong()))
             .putString(KEY_BP, "-")
             .putString(KEY_FIRST_PLACE, "-")
             .putString(KEY_PROFILE_COLOUR, user.profileColour.orEmpty())
@@ -213,20 +224,24 @@ object WidgetDataStore {
         updateAllWidgets(context)
     }
 
-    /** Send an APPWIDGET_UPDATE broadcast to every installed provider. */
+    /** Send an APPWIDGET_UPDATE broadcast to every installed provider.
+     *  Posts with a 150ms delay so that SharedPreferences.apply() completes
+     *  before the widget provider reads the data — prevents stale renders. */
     private fun updateAllWidgets(context: Context) {
-        val manager = AppWidgetManager.getInstance(context)
-        for (clazz in widgetProviders) {
-            runCatching {
-                val ids = manager.getAppWidgetIds(ComponentName(context, clazz))
-                if (ids.isNotEmpty()) {
-                    val intent = Intent(context, clazz).apply {
-                        action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+        Handler(Looper.getMainLooper()).postDelayed({
+            val manager = AppWidgetManager.getInstance(context)
+            for (clazz in widgetProviders) {
+                runCatching {
+                    val ids = manager.getAppWidgetIds(ComponentName(context, clazz))
+                    if (ids.isNotEmpty()) {
+                        val intent = Intent(context, clazz).apply {
+                            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+                        }
+                        context.sendBroadcast(intent)
                     }
-                    context.sendBroadcast(intent)
                 }
             }
-        }
+        }, 150L)
     }
 }
