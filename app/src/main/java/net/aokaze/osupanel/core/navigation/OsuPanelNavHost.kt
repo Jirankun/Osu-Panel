@@ -41,6 +41,7 @@ import net.aokaze.osupanel.feature.chat.ui.ChatSettingsScreen
 import net.aokaze.osupanel.feature.chat.ui.GroupChatScreen
 import net.aokaze.osupanel.feature.chat.ui.PmChatScreen
 import net.aokaze.osupanel.feature.home.ui.MainShell
+import net.aokaze.osupanel.feature.home.ui.SavedMapsScreen
 import net.aokaze.osupanel.feature.profile.ui.ProfileScreen
 import net.aokaze.osupanel.feature.settings.ui.ContributorsScreen
 import net.aokaze.osupanel.feature.settings.ui.LicensesScreen
@@ -141,6 +142,9 @@ fun OsuPanelNavHost(
                 onOpenGroupChat = { group ->
                     if (guard()) navController.navigate(Routes.groupChat(group))
                 },
+                onOpenSavedMaps = {
+                    if (guard()) navController.navigate(Routes.SAVED_MAPS)
+                },
             )
         }
         composable(Routes.CHAT_SETTINGS) {
@@ -167,6 +171,14 @@ fun OsuPanelNavHost(
         ) { entry ->
             val group = entry.arguments?.getString("group") ?: return@composable
             GroupChatScreen(group = group, onBack = { navController.popBackStack() })
+        }
+        composable(Routes.SAVED_MAPS) {
+            SavedMapsScreen(
+                onBack = { navController.popBackStack() },
+                onOpenBeatmapDetail = { beatmapsetId ->
+                    if (guard()) navController.navigate(Routes.beatmapDetail(beatmapsetId))
+                },
+            )
         }
         composable(Routes.LICENSES) {
             LicensesScreen(onBack = { navController.popBackStack() })

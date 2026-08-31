@@ -10,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -34,6 +36,7 @@ import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -82,6 +85,7 @@ import net.aokaze.osupanel.ui.components.RetryButton
 fun MapsScreen(
     userId: Int?,
     onOpenBeatmapDetail: (Int) -> Unit,
+    onOpenSavedMaps: () -> Unit = {},
     viewModel: MapsViewModel = viewModel(),
 ) {
     // rememberSaveable: the selected tab survives navigating to beatmap
@@ -101,11 +105,31 @@ fun MapsScreen(
         if (userId != null) viewModel.load(userId)
     }
 
+    val colorScheme = MaterialTheme.colorScheme
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(stringResource(R.string.nav_maps), fontWeight = FontWeight.Bold)
+                },
+                actions = {
+                    IconButton(onClick = onOpenSavedMaps) {
+                        Box {
+                            Icon(
+                                Icons.Rounded.Bookmark,
+                                contentDescription = stringResource(R.string.saved_maps_title),
+                                modifier = Modifier.offset(x = (-2).dp, y = 2.dp).size(22.dp),
+                                tint = colorScheme.onSurface.copy(alpha = 0.4f),
+                            )
+                            Icon(
+                                Icons.Rounded.Bookmark,
+                                contentDescription = null,
+                                modifier = Modifier.offset(x = 2.dp, y = (-2).dp).size(22.dp),
+                                tint = colorScheme.primary,
+                            )
+                        }
+                    }
                 },
             )
         },

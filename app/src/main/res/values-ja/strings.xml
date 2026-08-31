@@ -4,7 +4,7 @@
     <string name="app_name">Osu! Panel</string>
 
     <!-- ── Login ── -->
-    <string name="login_subtitle">Login with osu account...</string>
+    <string name="login_subtitle">Login with osu...</string>
     <string name="login_button">Login</string>
     <string name="login_cooldown">Wait %1$ds</string>
     <string name="login_loading">Logging in…</string>
@@ -338,7 +338,7 @@
     <string name="chat_bio_see_more">see more &gt;</string>
     <string name="chat_bio_title">About %1$s</string>
     <string name="chat_close">Close</string>
-    <string name="saved_maps_title">Saved Maps</string>
+    <string name="saved_maps_title">Maps saved</string>
     <string name="saved_maps_subtitle">Your bookmarked beatmaps</string>
     <string name="saved_maps_empty">No saved maps yet</string>
     <string name="saved_maps_empty_hint">Tap the bookmark icon on any beatmap to save it here</string>

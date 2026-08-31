@@ -122,9 +122,9 @@ class BeatmapDetailViewModel(application: Application) : BaseViewModel(applicati
                 var scores = emptyList<ScoreDto>()
                 var myScore: ScoreDto? = null
                 if (targetId != null) {
-                    runCatching { scores = repository.getBeatmapScores(targetId) }
+                    runCatching { scores = repository.getBeatmapScores(targetId, cacheKey = DataCache.beatmapScores(targetId)) }
                     if (currentUserId != null) {
-                        myScore = repository.getUserBeatmapScore(targetId, currentUserId)
+                        myScore = repository.getUserBeatmapScore(targetId, currentUserId, cacheKey = DataCache.userBeatmapScore(targetId, currentUserId))
                     }
                     // Cache initial difficulty so switchDifficulty is instant.
                     scoreCache[targetId] = scores to myScore
@@ -171,6 +171,7 @@ class BeatmapDetailViewModel(application: Application) : BaseViewModel(applicati
             DataCache.invalidate(DataCache.recentScores(it))
         }
         scoreCache.clear()
+        DataCache.invalidate(DataCache.beatmapScores(beatmapsetId))
         loadedBeatmapsetId = null
         load(beatmapsetId, currentUserId)
     }
@@ -196,9 +197,9 @@ class BeatmapDetailViewModel(application: Application) : BaseViewModel(applicati
                 myScore = null,
             )
             var scores = emptyList<ScoreDto>()
-            runCatching { scores = repository.getBeatmapScores(beatmapId) }
+            runCatching { scores = repository.getBeatmapScores(beatmapId, cacheKey = DataCache.beatmapScores(beatmapId)) }
             val my = if (currentUserId != null) {
-                repository.getUserBeatmapScore(beatmapId, currentUserId)
+                repository.getUserBeatmapScore(beatmapId, currentUserId, cacheKey = DataCache.userBeatmapScore(beatmapId, currentUserId))
             } else null
             scoreCache[beatmapId] = scores to my
             _state.value = _state.value.copy(

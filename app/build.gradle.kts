@@ -117,14 +117,8 @@ dependencies {
     // Render SVG -> Bitmap (stat-sign widget signature)
     implementation("com.caverock:androidsvg-aar:1.4")
 
-    // Beatmap audio preview (counterpart of Flutter's just_audio)
+    // Beatmap audio preview (Media3 ExoPlayer + disk cache)
     implementation("androidx.media3:media3-exoplayer:1.4.1")
-
-    // QR code scanner (CameraX + ML Kit barcode)
-    implementation("androidx.camera:camera-camera2:1.3.4")
-    implementation("androidx.camera:camera-lifecycle:1.3.4")
-    implementation("androidx.camera:camera-view:1.3.4")
-    implementation("com.google.mlkit:barcode-scanning:17.3.0")
 
     // QR code generation (ZXing — encode beatmap data into QR bitmap)
     implementation("com.google.zxing:core:3.5.3")

@@ -4,43 +4,43 @@
     <string name="app_name">Osu! Panel</string>
 
     <!-- ── Login ── -->
-    <string name="login_subtitle">Login with osu account...</string>
+    <string name="login_subtitle">Login dengan akun osu!...</string>
     <string name="login_button">Login</string>
-    <string name="login_cooldown">Wait %1$ds</string>
-    <string name="login_loading">Logging in…</string>
-    <string name="error_login_generic">Login failed. Try again.</string>
+    <string name="login_cooldown">Tunggu %1$ds</string>
+    <string name="login_loading">Mencoba login…</string>
+    <string name="error_login_generic">Gagal login. coba lagi.</string>
 
     <!-- ── Home ── -->
-    <string name="home_unknown_username">Unknown</string>
-    <string name="error_retry_title">Something went wrong. Try again.</string>
+    <string name="home_unknown_username">Tidak diketahui</string>
+    <string name="error_retry_title">Terjadi kesalahan. Coba lagi.</string>
 
     <!-- ── Common error messages (used by AuthViewModel & ApiError) ── -->
-    <string name="error_no_internet">No internet connection. Check your connection and try again.</string>
-    <string name="error_request_timeout">Request timed out. Try again.</string>
-    <string name="error_worker">There is a problem with the app server. Try again in a moment.</string>
-    <string name="error_osu_server">The osu! server is having issues. Try again in a moment.</string>
-    <string name="error_osu_rate_limit">Rate limit by osu! server. Please try again later.</string>
-    <string name="error_login_too_many">Too many login attempts. Please wait a moment.</string>
-    <string name="error_app">An error occurred in the app. Try again.</string>
+    <string name="error_no_internet">Koneksi internet tidak tersedia. Periksa koneksi dan coba lagi.</string>
+    <string name="error_request_timeout">Reques terlalu lama. Coba lagi.</string>
+    <string name="error_worker">Terdapat masalah pada server Osu! Panel. Coba bebrapa saat lagi.</string>
+    <string name="error_osu_server">Terdapat masalah pada Osu! Bancho. Coba beberapa saat lagi.</string>
+    <string name="error_osu_rate_limit">Osu! Bancho membatasi permintaan. Coba lagi nanti.</string>
+    <string name="error_login_too_many">terlalu banyak mencoba. Silahkan tunggu sebentar.</string>
+    <string name="error_app">Terjadi kesalahan pada aplikasi Osu! Panel. Coba lagi.</string>
     <string name="error_generic">Something went wrong. Try again.</string>
 
     <!-- ── Shell (bottom nav) ── -->
     <string name="nav_dashboard">Dashboard</string>
-    <string name="nav_maps">Maps</string>
-    <string name="nav_rankings">Rankings</string>
-    <string name="nav_settings">Settings</string>
+    <string name="nav_maps">Map</string>
+    <string name="nav_rankings">Ranking</string>
+    <string name="nav_settings">Pengaturan</string>
 
     <!-- ── Dashboard ── -->
-    <string name="dashboard_edit_profile">Edit Profile</string>
-    <string name="dashboard_edit_profile_title">Edit Profile?</string>
-    <string name="dashboard_edit_profile_confirm">Are you sure you want to edit your profile?</string>
-    <string name="dashboard_edit_profile_yes">Yes</string>
-    <string name="dashboard_edit_profile_no">No</string>
-    <string name="dashboard_refresh">Refresh</string>
+    <string name="dashboard_edit_profile">Edit Profil</string>
+    <string name="dashboard_edit_profile_title">Edit Profil?</string>
+    <string name="dashboard_edit_profile_confirm">Kamu yakin, pengen edit profil?</string>
+    <string name="dashboard_edit_profile_yes">Ya</string>
+    <string name="dashboard_edit_profile_no">Tidak</string>
+    <string name="dashboard_refresh">Segarkan</string>
 
     <!-- Skills radar (osu!skills — osuskills.com, the osu-stats-signature source) -->
-    <string name="daily_challenge_title">Daily Challenge</string>
-    <string name="dashboard_skills_radar">Skills Radar</string>
+    <string name="daily_challenge_title">Tantangan Harian</string>
+    <string name="dashboard_skills_radar">Skill Radar</string>
     <string name="dashboard_skills_radar_sub">osu!skills — same as your widget</string>
     <string name="dashboard_first_place">#1 Scores</string>
     <string name="dashboard_favourites">Favourites</string>
@@ -338,7 +338,7 @@
     <string name="chat_bio_see_more">see more &gt;</string>
     <string name="chat_bio_title">About %1$s</string>
     <string name="chat_close">Close</string>
-    <string name="saved_maps_title">Saved Maps</string>
+    <string name="saved_maps_title">Maps saved</string>
     <string name="saved_maps_subtitle">Your bookmarked beatmaps</string>
     <string name="saved_maps_empty">No saved maps yet</string>
     <string name="saved_maps_empty_hint">Tap the bookmark icon on any beatmap to save it here</string>

@@ -62,6 +62,7 @@ fun MainShell(
     onOpenChatSettings: () -> Unit,
     onOpenPmChat: (String) -> Unit,
     onOpenGroupChat: (String) -> Unit,
+    onOpenSavedMaps: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -140,6 +141,7 @@ fun MainShell(
                 1 -> MapsScreen(
                     userId = user?.id,
                     onOpenBeatmapDetail = onOpenBeatmapDetail,
+                    onOpenSavedMaps = onOpenSavedMaps,
                 )
                 2 -> RankingsScreen(onOpenProfile = onOpenProfile)
                 3 -> ChatScreen(

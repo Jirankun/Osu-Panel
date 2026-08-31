@@ -36,5 +36,7 @@ class OsuPanelApp : Application(), ImageLoaderFactory {
         OsuColors.init(this)
         // Load the medal index from assets once — used by dashboard & profile.
         MedalService.init(this)
+        // Local bookmark storage (no API involved).
+        net.aokaze.osupanel.data.local.BookmarkStore.init(this)
     }
 }

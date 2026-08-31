@@ -38,9 +38,16 @@ const OS_TOKEN_URL = 'https://osu.ppy.sh/oauth/token';
 // validates it.
 const FALLBACK_ALLOWED_REDIRECT_URIS = ['osupanel://callback'];
 
-// Rate limit: 30 requests / 60 seconds per IP for every /auth/* endpoint.
-const RATE_LIMIT_MAX = 30;
-const RATE_LIMIT_WINDOW_MS = 60_000;
+// ── Rate limiting ──
+// osu! API limits are PER CLIENT_ID (shared by ALL users).
+// We need two layers:
+//   1. Per-IP — prevents a single user from flooding the API.
+//   2. Global — protects the shared Client ID quota for everyone.
+//
+// Adjust these values based on your osu! app quota.
+const RATE_LIMIT_PER_IP_MAX = 30;       // requests per IP per window
+const RATE_LIMIT_GLOBAL_MAX = 200;       // requests total per window (all IPs)
+const RATE_LIMIT_WINDOW_MS = 60_000;     // 1 minute sliding window
 
 // ── Token cache (client_credentials) ──
 // Client-credentials tokens are NOT user-specific and can be shared across
@@ -263,6 +270,8 @@ body{font-family:'Torus', var(--font);background:var(--bg);color:var(--text);use
 .open-link:active{transform:translateY(0)}
 .footer{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--text-muted);opacity:.3;z-index:3;white-space:nowrap}
 @media(max-width:699px){.app{padding:16px}.camera-box{max-width:300px}}
+.upload-qr-btn{color:var(--pink);text-decoration:underline;cursor:pointer;font-weight:600;border:none;background:none;padding:0;font-size:inherit;font-family:inherit}
+.upload-qr-btn:hover{opacity:.8}
 </style>
 </head>
 <body>
@@ -291,7 +300,8 @@ body{font-family:'Torus', var(--font);background:var(--bg);color:var(--text);use
         <div class="steps">
           <div class="step"><span class="step-num">1</span><span>Open <strong>Osu! Panel</strong> on your Android phone</span></div>
           <div class="step"><span class="step-num">2</span><span>Go to <strong>Beatmap Detail</strong> → tap the <i class="fas fa-qrcode" style="font-size:14px"></i> icon</span></div>
-          <div class="step"><span class="step-num">3</span><span>Point this page's camera at the QR code on your phone</span></div>
+          <div class="step"><span class="step-num">3</span><span>Point this page's camera at the QR code on your phone <span class="upload-qr-btn" id="uploadQrBtn">or upload QR</span></span></div>
+          <input type="file" id="qrFileInput" accept="image/png,image/jpeg,image/webp" style="display:none">
         </div>
       </div>
     </div>
@@ -355,6 +365,7 @@ function showData(d){
 }
 function tryHash(){var h=location.hash.slice(1);if(!h)return false;var d=decodeB64(h);if(d&&d.title){showData(d);return true}return false}
 function tryParam(){var p=new URLSearchParams(location.search).get('d');if(!p)return false;var d=decodeB64(p);if(d&&d.title){showData(d);return true}return false}
+function tryPathId(){var m=location.pathname.match(/\/qr\/(\d+)/);if(!m)return;fetch('/qr/data/'+m[1]).then(function(r){return r.json()}).then(function(d){if(d&&d.title){showData(d)}}).catch(function(){})}
 var scanned=false;
 var camStream=null;
 function showNoCam(title,desc){document.getElementById('scannerView').classList.remove('active');document.getElementById('noCamTitle').textContent=title;document.getElementById('noCamDesc').textContent=desc;document.getElementById('noCamView').classList.add('active')}
@@ -362,9 +373,10 @@ function showScanner(){document.getElementById('noCamView').classList.remove('ac
 function startCam(){var v=document.getElementById('video'),st=document.getElementById('camStatus');if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){showNoCam('Camera Unavailable','Your browser does not support camera access.');return}
 var opts={video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}},audio:false};
 navigator.mediaDevices.getUserMedia(opts)
-.then(function(s){camStream=s;v.srcObject=s;st.textContent='Scanning…';if('BarcodeDetector' in window){var det=new BarcodeDetector({formats:['qr_code']});scanLoop(v,det)}else{st.textContent='Point at QR code'}}).catch(function(e){var msg='Camera access denied. Please allow camera access in your browser settings and tap Retry.';if(e&&e.name==='NotAllowedError')msg='Camera permission denied. Please allow camera access in your browser settings and tap Retry.';else if(e&&e.name==='NotFoundError')msg='No camera found on this device.';else if(e&&e.name==='NotReadableError')msg='Camera is in use by another app. Please close other camera apps and tap Retry.';showNoCam('Camera Error',msg)})}
+.then(function(s){camStream=s;v.srcObject=s;var p=v.play();if(p&&p.catch)p.catch(function(){});st.textContent='Scanning…';if('BarcodeDetector' in window){var det=new BarcodeDetector({formats:['qr_code']});scanLoop(v,det)}else{st.textContent='Point at QR code'}}).catch(function(e){var msg='Camera access denied. Please allow camera access in your browser settings and tap Retry.';if(e&&e.name==='NotAllowedError')msg='Camera permission denied. Please allow camera access in your browser settings and tap Retry.';else if(e&&e.name==='NotFoundError')msg='No camera found on this device.';else if(e&&e.name==='NotReadableError')msg='Camera is in use by another app. Please close other camera apps and tap Retry.';showNoCam('Camera Error',msg)})}
 function requestCameraPermission(){showScanner();document.getElementById('camStatus').textContent='Requesting permission…';startCam()}
 var retryBtn=document.getElementById('retryCamBtn');if(retryBtn)retryBtn.addEventListener('click',function(){requestCameraPermission()});
+var uploadBtn=document.getElementById('uploadQrBtn');var fileInput=document.getElementById('qrFileInput');if(uploadBtn&&fileInput){uploadBtn.addEventListener('click',function(){fileInput.click()});fileInput.addEventListener('change',function(e){var file=e.target.files&&e.target.files[0];if(!file)return;var img=new Image();img.onload=function(){if('BarcodeDetector' in window){var det=new BarcodeDetector({formats:['qr_code']});det.detect(img).then(function(b){if(b.length>0)onScan(b[0].rawValue);else{showNoCam('No QR Found','Could not detect a QR code in this image. Try another image.');setTimeout(function(){showScanner();requestCameraPermission()},2000)}}).catch(function(){showNoCam('Scan Error','Failed to scan the image.');setTimeout(function(){showScanner();requestCameraPermission()},2000)})}else{showNoCam('Not Supported','Your browser does not support image QR scanning. Use camera instead.');setTimeout(function(){showScanner();requestCameraPermission()},2000)}URL.revokeObjectURL(img.src)};img.src=URL.createObjectURL(file);fileInput.value=''})}
 function scanLoop(v,d){if(scanned)return;d.detect(v).then(function(b){if(b.length>0)onScan(b[0].rawValue);if(!scanned)requestAnimationFrame(function(){scanLoop(v,d)})}).catch(function(){if(!scanned)requestAnimationFrame(function(){scanLoop(v,d)})})}
 function onScan(val){if(scanned||!val)return;scanned=true;
 var d=null;
@@ -379,7 +391,7 @@ window._qrLink=shareUrl}}
 else if(val.startsWith('http://')||val.startsWith('https://')){try{var m=val.match(/\/qr\/(\d+)/);if(m){fetch('/qr/data/'+m[1]).then(function(r){return r.json()}).then(function(d){if(d&&d.title){showData(d);window.history.replaceState(null,'','/qr/'+m[1])}}).catch(function(){location.href=val})}else{location.href=val}}catch(e){location.href=val}}
 var shareBtn=document.getElementById('shareBtn');if(shareBtn)shareBtn.addEventListener('click',function(){if(window._qrLink&&navigator.share){navigator.share({title:'Osu! Panel — Beatmap',url:window._qrLink}).catch(function(){})}else if(window._qrLink){navigator.clipboard.writeText(window._qrLink).then(function(){shareBtn.innerHTML='<i class=\"fas fa-check\" style=\"margin-right:6px;font-size:13px\"></i>Copied!';setTimeout(function(){shareBtn.innerHTML='<i class=\"fas fa-share-alt\" style=\"margin-right:6px;font-size:13px\"></i>Share'},1500)})}});
 var backBtn=document.getElementById('backBtn');if(backBtn)backBtn.addEventListener('click',function(){window.location.href='/qr'});
-if(!tryParam()&&!tryHash())startCam();
+tryPathId();if(!tryParam()&&!tryHash())startCam();
 </script>
 </body>
 </html>`;
@@ -523,7 +535,7 @@ function buildOgHtml(data) {
   return QR_VIEWER_HTML
     .replace('<title>Osu! Panel — QR Beatmap Viewer</title>', ogTags)
     .replace(
-      'if(!tryParam()&&!tryHash())startCam();',
+      'tryPathId();if(!tryParam()&&!tryHash())startCam();',
       'showData(' + JSON.stringify(data) + ');'
     );
 }
@@ -587,24 +599,42 @@ async function fetchOsuToken(params, attempts = 3) {
 
 // ── Per-IP rate limiter (in-memory, sliding window) ──
 // Note: this Map is per-isolate — enough to curb light abuse.
+// ── Per-IP rate limiter (sliding window) ──
 const rateHits = new Map();
+// ── Global rate limiter (sliding window, protects Client ID quota) ──
+const globalRateHits = [];
 
-function isRateLimited(request) {
-  const ip = request.headers.get('CF-Connecting-IP');
-  if (!ip) return false;
-
+/**
+ * Check rate limit. Returns null if OK, or a Response if blocked.
+ * Checks BOTH per-IP and global limits.
+ */
+function checkRateLimit(request) {
   const now = Date.now();
   const cutoff = now - RATE_LIMIT_WINDOW_MS;
-  const timestamps = (rateHits.get(ip) || []).filter((t) => t > cutoff);
 
-  if (timestamps.length >= RATE_LIMIT_MAX) {
-    rateHits.set(ip, timestamps);
-    return true;
+  // ── Global limit (protects shared Client ID) ──
+  while (globalRateHits.length > 0 && globalRateHits[0] <= cutoff) {
+    globalRateHits.shift();
+  }
+  if (globalRateHits.length >= RATE_LIMIT_GLOBAL_MAX) {
+    return json({ error: 'Server busy, try again later' }, 429);
   }
 
-  timestamps.push(now);
-  rateHits.set(ip, timestamps);
-  return false;
+  // ── Per-IP limit (prevents single-user abuse) ──
+  const ip = request.headers.get('CF-Connecting-IP');
+  if (ip) {
+    const timestamps = (rateHits.get(ip) || []).filter((t) => t > cutoff);
+    if (timestamps.length >= RATE_LIMIT_PER_IP_MAX) {
+      rateHits.set(ip, timestamps);
+      return json({ error: 'Too many requests, try again later' }, 429);
+    }
+    timestamps.push(now);
+    rateHits.set(ip, timestamps);
+  }
+
+  // ── Record global hit ──
+  globalRateHits.push(now);
+  return null; // OK
 }
 
 // ── Read a JSON body safely → null when malformed ──
@@ -781,11 +811,10 @@ export default {
       return new Response(null, { headers: CORS_HEADERS });
     }
 
-    // Rate limit only the auth endpoints (prevent token spam)
+    // Rate limit auth endpoints (token exchange hits osu! directly)
     if (path.startsWith('/auth/')) {
-      if (isRateLimited(request)) {
-        return json({ error: 'Too many requests, try again later' }, 429);
-      }
+      const rl = checkRateLimit(request);
+      if (rl) return rl;
     }
 
     if (path === '/auth/code' && method === 'POST') {
@@ -853,6 +882,10 @@ export default {
     // ── QR Beatmap by ID (short link: /qr/12345) ──
     const qrIdMatch = path.match(/^\/qr\/(\d+)$/);
     if (qrIdMatch && method === 'GET') {
+      const rl = checkRateLimit(request);
+      if (rl) return new Response(injectGscMeta(QR_VIEWER_HTML), {
+        headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+      });
       return handleQrBeatmapId(parseInt(qrIdMatch[1]), env).catch(() =>
         new Response(injectGscMeta(QR_VIEWER_HTML), {
           headers: { 'Content-Type': 'text/html;charset=UTF-8' },
@@ -863,6 +896,8 @@ export default {
     // ── QR Beatmap JSON (for AJAX fetch from the scanner page) ──
     const qrJsonMatch = path.match(/^\/qr\/data\/(\d+)$/);
     if (qrJsonMatch && method === 'GET') {
+      const rl = checkRateLimit(request);
+      if (rl) return rl;
       return handleQrBeatmapIdJson(parseInt(qrJsonMatch[1]), env).catch(() =>
         json({ error: 'Failed to fetch beatmap' }, 500),
       );

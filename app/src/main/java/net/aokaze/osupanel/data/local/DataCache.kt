@@ -43,5 +43,7 @@ object DataCache {
     fun bestScores(userId: Int) = "bestScores:$userId"
     fun mostPlayedBeatmaps(userId: Int) = "mostPlayedBeatmaps:$userId"
     fun beatmapset(beatmapsetId: Int) = "beatmapset:$beatmapsetId"
+    fun beatmapScores(beatmapId: Int) = "beatmapScores:$beatmapId"
+    fun userBeatmapScore(beatmapId: Int, userId: Int) = "userBeatmapScore:$beatmapId:$userId"
     fun dailyChallenge() = "dailyChallenge"
 }

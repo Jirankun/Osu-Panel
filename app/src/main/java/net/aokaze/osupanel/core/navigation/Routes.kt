@@ -24,6 +24,9 @@ object Routes {
     /** Chat settings (Chatango login / activation / notifications). */
     const val CHAT_SETTINGS = "settings/chat"
 
+    /** Saved maps / bookmarks screen. */
+    const val SAVED_MAPS = "saved-maps"
+
     /** QR code screen (from beatmap detail). */
     const val QR_SCREEN = "qr"
 

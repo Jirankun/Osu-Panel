@@ -108,12 +108,33 @@ class ContentRepository(private val osuApi: OsuApi) {
     }
 
     /** GET /beatmaps/{beatmapId}/scores — leaderboard. */
-    suspend fun getBeatmapScores(beatmapId: Int): List<ScoreDto> =
-        osuApi.getBeatmapScores(beatmapId).scores
+    suspend fun getBeatmapScores(
+        beatmapId: Int,
+        cacheKey: String? = null,
+        force: Boolean = false,
+    ): List<ScoreDto> {
+        if (!force && cacheKey != null && DataCache.has(cacheKey)) {
+            return DataCache.get(cacheKey) ?: emptyList()
+        }
+        val scores = osuApi.getBeatmapScores(beatmapId).scores
+        if (cacheKey != null) DataCache.set(cacheKey, scores)
+        return scores
+    }
 
     /** GET /beatmaps/{beatmapId}/scores/users/{userId} — null bila 404. */
-    suspend fun getUserBeatmapScore(beatmapId: Int, userId: Int): ScoreDto? =
-        runCatching { osuApi.getUserBeatmapScore(beatmapId, userId)?.score }.getOrNull()
+    suspend fun getUserBeatmapScore(
+        beatmapId: Int,
+        userId: Int,
+        cacheKey: String? = null,
+        force: Boolean = false,
+    ): ScoreDto? {
+        if (!force && cacheKey != null && DataCache.has(cacheKey)) {
+            return DataCache.get(cacheKey)
+        }
+        val score = runCatching { osuApi.getUserBeatmapScore(beatmapId, userId)?.score }.getOrNull()
+        if (cacheKey != null && score != null) DataCache.set(cacheKey, score)
+        return score
+    }
 
     /** GET /search?mode=user — search users globally. */
     suspend fun searchUsers(query: String): List<UserDto> =
@@ -133,16 +154,19 @@ class ContentRepository(private val osuApi: OsuApi) {
     }
 
     /** POST /beatmapsets/{id}/favourites — add to favourites. */
+    @Suppress("unused")
     suspend fun addFavourite(beatmapsetId: Int) {
         osuApi.addFavourite(beatmapsetId, FavouriteBody(beatmapsetId))
     }
 
     /** DELETE /beatmapsets/{id}/favourites — remove from favourites. */
+    @Suppress("unused")
     suspend fun removeFavourite(beatmapsetId: Int) {
         osuApi.removeFavourite(beatmapsetId)
     }
 
     /** GET /me/beatmapset-favourites — current user's favourites. */
+    @Suppress("unused")
     suspend fun getMyFavourites(
         cacheKey: String? = null,
         force: Boolean = false,
