@@ -1,0 +1,12 @@
+{
+  "projectName": "Osu-Panel",
+  "projectOwner": "Jirankun",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["CONTRIBUTORS.md"],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": false
+}
