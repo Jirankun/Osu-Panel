@@ -27,6 +27,8 @@
 [Issues](https://github.com/Jirankun/Osu-Panel/issues)
 ·
 [Screenshoots](https://github.com/Jirankun/Osu-Panel/blob/main/repo/SCREENSHOOT.md)
+.
+[Contributor](https://github.com/Jirankun/Osu-Panel/blob/main/CONTRIBUTORS.md)
 
 A native Android rewrite of the Osu! Panel app, built
 with Jetpack Compose + Material 3.
